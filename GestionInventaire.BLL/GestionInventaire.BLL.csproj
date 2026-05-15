@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GestionInventaire.DAL\GestionInventaire.DAL.csproj" />
+    <ProjectReference Include="..\GestionInventaire.Domain\GestionInventaire.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

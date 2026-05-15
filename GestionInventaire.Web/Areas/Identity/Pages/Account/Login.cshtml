@@ -1,0 +1,83 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Connexion";
+    Layout = "_Layout";
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/auth.js" asp-append-version="true"></script>
+}
+
+<div class="auth-card">
+
+    @* {{!-- Brand --}} *@
+    <a class="auth-brand" href="/">
+        <div class="auth-logo-box">
+            <svg viewBox="0 0 24 24">
+                <path d="M3 7l9-4 9 4v10l-9 4-9-4V7z" />
+                <path d="M12 3v18M3 7l9 4 9-4" />
+            </svg>
+        </div>
+        <span class="auth-brand-name">Techno<span class="brand-dot">Logis</span></span>
+    </a>
+
+    <h1 class="auth-title">Bienvenue</h1>
+    <p class="auth-subtitle">Connectez-vous à votre espace de gestion d'actifs.</p>
+
+    @* {{!-- Validation summary --}} *@
+    <div asp-validation-summary="ModelOnly" class="auth-validation"></div>
+
+    @* {{!-- Formulaire --}} *@
+    <form method="post">
+
+        <div class="auth-group">
+            <label class="auth-label" asp-for="Input.Email">Adresse e-mail</label>
+            <div class="auth-input-wrap">
+                <i class="bi bi-envelope"></i>
+                <input asp-for="Input.Email" class="auth-input" autocomplete="username"
+                       placeholder="vous@technologis.com" />
+            </div>
+            <span asp-validation-for="Input.Email" class="auth-error"></span>
+        </div>
+
+        <div class="auth-group">
+            <label class="auth-label" asp-for="Input.Password">Mot de passe</label>
+            <div class="auth-input-wrap">
+                <i class="bi bi-lock"></i>
+                <input asp-for="Input.Password" class="auth-input" type="password" autocomplete="current-password"
+                       placeholder="••••••••" />
+                @* <button type="button" class="auth-eye" tabindex="-1" aria-label="Afficher le mot de passe">
+                    <i class="bi bi-eye"></i>
+                </button> *@
+            </div>
+            <span asp-validation-for="Input.Password" class="auth-error"></span>
+        </div>
+
+        <div class="auth-forgot">
+            <a asp-page="./ForgotPassword">Mot de passe oublié ?</a>
+        </div>
+
+        <div class="auth-group" style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+            <input asp-for="Input.RememberMe"
+                   style="width:15px;height:15px;accent-color:var(--accent);cursor:pointer" />
+            <label asp-for="Input.RememberMe" style="font-size:0.8rem;color:var(--muted);cursor:pointer;margin:0">
+                Se souvenir de moi
+            </label>
+        </div>
+
+        <button type="submit" class="auth-btn">
+            <i class="bi bi-box-arrow-in-right"></i>
+            Se connecter
+        </button>
+
+    </form>
+
+    <div class="auth-footer-link">
+        Pas encore de compte ?
+        <a asp-page="./Register">Créer un compte</a>
+    </div>
+
+</div>

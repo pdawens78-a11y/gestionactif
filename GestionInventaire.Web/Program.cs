@@ -1,29 +1,370 @@
+using GestionInventaire.BLL.Services;
+using GestionInventaire.DAL.Data;
+using GestionInventaire.DAL.Repositories;
+using GestionInventaire.Domain.Entities;
+using GestionInventaire.Domain.IRepositories;
+using GestionInventaire.Web.Areas.Identity.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// ======================
+// CONFIGURATION SHORTCUTS
+// ======================
+var configuration = builder.Configuration;
+
+var identityCfg =
+    configuration.GetSection("Identity");
+
+var cookieExpireMinutes =
+    configuration.GetValue<int>(
+        "Cookie:ExpireMinutes",
+        30);
+
+var emailProvider =
+    configuration.GetValue<string>(
+        "Email:Provider",
+        "Development");
+
+var seedCreateAdmin =
+    configuration.GetValue<bool>(
+        "Seed:CreateAdmin",
+        true);
+
+var seedAdminEmail =
+    configuration.GetValue<string>(
+        "Seed:AdminEmail",
+        "admin@technologis.com");
+
+var seedAdminPassword =
+    configuration.GetValue<string>(
+        "Seed:AdminPassword",
+        "Admin123!");
+
+var seedRoles =
+    configuration
+        .GetSection("Seed:Roles")
+        .Get<string[]>()
+        ?? new[]
+        {
+            "Admin",
+            "Gestionnaire",
+            "Technicien"
+        };
+
+// ======================
+// DATABASE
+// ======================
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        configuration.GetConnectionString(
+            "DefaultConnection")));
+
+// ======================
+// IDENTITY
+// ======================
+builder.Services
+    .AddIdentity<Utilisateur, IdentityRole>(options =>
+    {
+        // PASSWORD
+        options.Password.RequireDigit =
+            identityCfg.GetValue<bool>(
+                "Password:RequireDigit",
+                true);
+
+        options.Password.RequiredLength =
+            identityCfg.GetValue<int>(
+                "Password:RequiredLength",
+                6);
+
+        options.Password.RequireUppercase =
+            identityCfg.GetValue<bool>(
+                "Password:RequireUppercase",
+                false);
+
+        options.Password.RequireNonAlphanumeric =
+            identityCfg.GetValue<bool>(
+                "Password:RequireNonAlphanumeric",
+                false);
+
+        // LOCKOUT
+        options.Lockout.DefaultLockoutTimeSpan =
+            TimeSpan.FromMinutes(
+                identityCfg.GetValue<int>(
+                    "Lockout:DefaultLockoutMinutes",
+                    5));
+
+        options.Lockout.MaxFailedAccessAttempts =
+            identityCfg.GetValue<int>(
+                "Lockout:MaxFailedAccessAttempts",
+                5);
+
+        // USER
+        options.User.RequireUniqueEmail =
+            identityCfg.GetValue<bool>(
+                "UserRequireUniqueEmail",
+                true);
+
+        // EMAIL CONFIRMATION
+        options.SignIn.RequireConfirmedEmail = true;
+    })
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+// ======================
+// COOKIE CONFIG
+// ======================
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath =
+        "/Identity/Account/Login";
+
+    options.AccessDeniedPath =
+        "/Identity/Account/AccessDenied";
+
+    options.SlidingExpiration = true;
+
+    options.ExpireTimeSpan =
+        TimeSpan.FromMinutes(cookieExpireMinutes);
+});
+
+// ======================
+// EMAIL SERVICE
+// ======================
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+// ======================
+// SERVICES & REPOSITORIES
+// ======================
+builder.Services.AddHttpContextAccessor();
+
+// DAL repositories
+builder.Services.AddScoped<
+    IActifRepository,
+    ActifRepository>();
+
+builder.Services.AddScoped<
+    ICategorieRepository,
+    CategorieRepository>();
+
+builder.Services.AddScoped<
+    IAffectationRepository,
+    AffectationRepository>();
+
+builder.Services.AddScoped<
+    IStockRepository,
+    StockRepository>();
+
+builder.Services.AddScoped<
+    IMouvementStockRepository,
+    MouvementStockRepository>();
+
+builder.Services.AddScoped<
+    IMaintenanceRepository,
+    MaintenanceRepository>();
+
+builder.Services.AddScoped<
+    IAuditRepository,
+    AuditRepository>();
+
+builder.Services.AddScoped<
+    IProduitRepository,
+    ProduitRepository>();
+
+builder.Services.AddScoped<
+    IEmployeRepository,
+    EmployeRepository>();
+
+builder.Services.AddScoped<
+    IUtilisateurRepository,
+    UtilisateurRepository>();
+
+// BLL services
+builder.Services.AddScoped<
+    IActifService,
+    ActifService>();
+
+// ======================
+// MVC & RAZOR PAGES
+// ======================
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+// ======================
+// MIDDLEWARE
+// ======================
+if (!app.Environment.IsProduction())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
+// ======================
+// SEED ROLES & ADMIN
+// ======================
+try
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services =
+            scope.ServiceProvider;
+
+        var roleManager =
+            services.GetRequiredService<
+                RoleManager<IdentityRole>>();
+
+        var userManager =
+            services.GetRequiredService<
+                UserManager<Utilisateur>>();
+
+        var dbContext =
+            services.GetRequiredService<AppDbContext>();
+
+        var logger =
+            services.GetRequiredService<
+                ILogger<Program>>();
+
+        await dbContext.Database.MigrateAsync();
+
+        // CREATE ROLES
+        if (seedRoles?.Length > 0)
+        {
+            foreach (var role in seedRoles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(
+                        new IdentityRole(role));
+
+                    logger.LogInformation(
+                        "Rôle créé : {Role}",
+                        role);
+                }
+            }
+        }
+
+        // CREATE ADMIN
+        if (seedCreateAdmin)
+        {
+            var adminUser =
+                await userManager.FindByEmailAsync(
+                    seedAdminEmail);
+
+            if (adminUser == null)
+            {
+                var newAdmin =
+                    new Utilisateur
+                    {
+                        UserName = seedAdminEmail,
+                        Email = seedAdminEmail,
+
+                        Nom = "Administrateur",
+
+                        Prenom = "Système",
+
+                        EmailConfirmed = true
+                    };
+
+                var result =
+                    await userManager.CreateAsync(
+                        newAdmin,
+                        seedAdminPassword);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(
+                        newAdmin,
+                        seedRoles.FirstOrDefault()
+                        ?? "Admin");
+
+                    logger.LogInformation(
+                        "Admin créé automatiquement");
+
+                    logger.LogInformation(
+                        "Email : {Email}",
+                        seedAdminEmail);
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        logger.LogError(
+                            error.Description);
+                    }
+                }
+            }
+        }
+    }
+}
+catch (Exception ex)
+{
+    var logger =
+        app.Services.GetRequiredService<
+            ILogger<Program>>();
+
+    logger.LogError(
+        ex,
+        "Erreur initialisation BD");
+
+    if (app.Environment.IsDevelopment())
+        throw;
+}
+
+// ======================
+// ROUTING
+// ======================
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern:
+        "{controller=Dashboard}/{action=Index}/{id?}");
 
+// ======================
+// ROOT REDIRECTION
+// ======================
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        if (!context.User.Identity?.IsAuthenticated ?? true)
+        {
+            context.Response.Redirect(
+                "/Identity/Account/Login");
+
+            return;
+        }
+        else
+        {
+            context.Response.Redirect(
+                "/Dashboard");
+
+            return;
+        }
+    }
+
+    await next();
+});
 
 app.Run();

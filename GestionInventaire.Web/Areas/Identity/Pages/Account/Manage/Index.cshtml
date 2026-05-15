@@ -1,0 +1,195 @@
+﻿@page
+@model GestionInventaire.Web.Areas.Identity.Pages.Account.Manage.IndexModel
+
+@{
+    ViewData["Title"] = "Mon Profil";
+    Layout = "_AuthLayout";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/profile.css"
+          asp-append-version="true" />
+}
+
+<div class="profile-page">
+
+    <div class="profile-container">
+
+        <!-- LEFT -->
+        <div class="profile-sidebar">
+
+            <div class="profile-avatar">
+                @Model.Initiales
+            </div>
+
+            <h2 class="profile-name">
+                @Model.NomComplet
+            </h2>
+
+            <p class="profile-role">
+                @Model.TypeCompte
+            </p>
+
+            <p class="profile-company">
+                TechnoLogis
+            </p>
+
+            <a href="/Dashboard" class="profile-back-btn">
+
+                <i class="bi bi-arrow-left"></i>
+                Retour au Dashboard
+
+            </a>
+
+            <div class="profile-divider"></div>
+
+            <div class="profile-status-list">
+
+                <div class="profile-status-item">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Compte sécurisé</span>
+                </div>
+
+                <div class="profile-status-item">
+                    <i class="bi bi-envelope-check"></i>
+                    <span>Email vérifié</span>
+                </div>
+
+                <div class="profile-status-item">
+                    <i class="bi bi-person-check"></i>
+                    <span>Profil actif</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="profile-content">
+
+            <div class="profile-header">
+
+                <div class="profile-icon">
+                    <i class="bi bi-person-circle"></i>
+                </div>
+
+                <div>
+
+                    <h1>Mon Profil</h1>
+
+                    <p>
+                        Consultez et modifiez les informations
+                        de votre compte utilisateur.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <partial name="_StatusMessage"
+                     for="StatusMessage" />
+
+            <form method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="auth-validation">
+                </div>
+
+                <div class="profile-grid">
+
+                    <!-- EMAIL -->
+                    <div class="form-group-modern">
+
+                        <label>Adresse email</label>
+
+                        <div class="modern-input">
+
+                            <i class="bi bi-envelope"></i>
+
+                            <input type="email"
+                                   value="@Model.Email"
+                                   readonly />
+
+                        </div>
+
+                    </div>
+
+                    <!-- TELEPHONE -->
+                    <div class="form-group-modern">
+
+                        <label>Téléphone</label>
+
+                        <div class="modern-input">
+
+                            <i class="bi bi-telephone"></i>
+
+                            <input asp-for="Input.Telephone"
+                                   type="text"
+                                   placeholder="Entrez votre numéro de téléphone" />
+
+                        </div>
+
+                        <span asp-validation-for="Input.Telephone"
+                              class="auth-error">
+                        </span>
+
+                    </div>
+
+                    <!-- NOM COMPLET -->
+                    <div class="form-group-modern">
+
+                        <label>Nom complet</label>
+
+                        <div class="modern-input">
+
+                            <i class="bi bi-person"></i>
+
+                            <input type="text"
+                                   value="@Model.NomComplet"
+                                   readonly />
+
+                        </div>
+
+                    </div>
+
+                    <!-- ROLE -->
+                    <div class="form-group-modern">
+
+                        <label>Type de compte</label>
+
+                        <div class="modern-input">
+
+                            <i class="bi bi-shield-lock"></i>
+
+                            <input type="text"
+                                   value="@Model.TypeCompte"
+                                   readonly />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <button type="submit"
+                        class="save-button">
+
+                    <i class="bi bi-check-circle"></i>
+                    Enregistrer les modifications
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

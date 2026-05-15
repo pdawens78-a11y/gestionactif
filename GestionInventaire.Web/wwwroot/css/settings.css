@@ -1,0 +1,185 @@
+﻿/* =========================================================
+   SETTINGS PAGE
+   ========================================================= */
+
+.settings-page {
+    min-height: calc(100vh - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.settings-card {
+    width: 100%;
+    max-width: 720px;
+    position: relative;
+    background: rgba(15,23,42,.72);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 28px;
+    padding: 50px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,.45);
+}
+
+    /* Glow */
+    .settings-card::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient( 135deg, rgba(0,212,170,.18), rgba(59,130,246,.14), transparent 70% );
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.settings-icon {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 26px;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+    color: white;
+    background: linear-gradient( 135deg, var(--accent), var(--accent2) );
+    box-shadow: 0 16px 40px rgba(0,212,170,.22);
+}
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+.settings-title {
+    color: var(--text);
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.settings-subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 26px;
+}
+
+/* =========================================================
+   BADGE
+   ========================================================= */
+
+.settings-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: rgba(0,212,170,.08);
+    border: 1px solid rgba(0,212,170,.16);
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 34px;
+}
+
+.pulse {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0% {
+        opacity: .4;
+        transform: scale(.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    100% {
+        opacity: .4;
+        transform: scale(.9);
+    }
+}
+
+/* =========================================================
+   INFO
+   ========================================================= */
+
+.settings-info {
+    text-align: left;
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.04);
+    border-radius: 18px;
+    padding: 24px;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 34px;
+}
+
+    .settings-info ul {
+        margin-top: 16px;
+        padding-left: 18px;
+    }
+
+    .settings-info li {
+        margin-bottom: 10px;
+    }
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.settings-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    border-radius: 16px;
+    background: linear-gradient( 135deg, var(--accent), var(--accent2) );
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: .25s;
+    box-shadow: 0 14px 34px rgba(0,212,170,.2);
+}
+
+    .settings-back-btn:hover {
+        transform: translateY(-2px);
+        color: white;
+        box-shadow: 0 20px 44px rgba(0,212,170,.28);
+    }
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .settings-card {
+        padding: 34px 24px;
+    }
+
+    .settings-title {
+        font-size: 1.8rem;
+    }
+}

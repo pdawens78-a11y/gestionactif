@@ -1,14 +1,36 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GestionInventaire.BLL\GestionInventaire.BLL.csproj" />
-    <ProjectReference Include="..\GestionInventaire.Domain\GestionInventaire.Domain.csproj" />
-  </ItemGroup>
+	<!-- Project References -->
+	<ItemGroup>
+		<ProjectReference Include="..\GestionInventaire.BLL\GestionInventaire.BLL.csproj" />
+		<ProjectReference Include="..\GestionInventaire.Domain\GestionInventaire.Domain.csproj" />
+	</ItemGroup>
+
+	<!-- Packages -->
+	<ItemGroup>
+
+		<!-- Identity UI -->
+		<PackageReference Include="Mailjet.Api" Version="4.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0" />
+
+		<!-- EF Core Design -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+
+		<!-- EF Core Tools -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0" />
+
+		<!-- Scaffolding -->
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+
+	</ItemGroup>
 
 </Project>

@@ -1,0 +1,145 @@
+﻿@page
+@model EmailModel
+
+@{
+    ViewData["Title"] = "Adresse e-mail";
+    ViewData["ActivePage"] = ManageNavPages.Email;
+    Layout = "_AuthLayout";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/manage-email.css"
+          asp-append-version="true" />
+}
+
+<div class="manage-email-page">
+
+    <div class="manage-email-card">
+
+        <!-- HEADER -->
+        <div class="manage-email-header">
+
+            <div class="manage-email-icon">
+                <i class="bi bi-envelope"></i>
+            </div>
+
+            <div>
+
+                <h1>
+                    Gestion de l'adresse e-mail
+                </h1>
+
+                <p>
+                    Gérez et sécurisez l'adresse e-mail
+                    associée à votre compte TechnoLogis.
+                </p>
+
+            </div>
+
+        </div>
+
+        <partial name="_StatusMessage"
+                 for="StatusMessage" />
+
+        <!-- FORM -->
+        <form id="email-form"
+              method="post"
+              class="manage-email-form">
+
+            <div asp-validation-summary="All"
+                 class="auth-validation"
+                 role="alert">
+            </div>
+
+            <!-- CURRENT EMAIL -->
+            <div class="form-group-modern">
+
+                <label>
+                    Adresse e-mail actuelle
+                </label>
+
+                @if (Model.IsEmailConfirmed)
+                {
+                    <div class="modern-input success">
+
+                        <i class="bi bi-envelope-check"></i>
+
+                        <input asp-for="Email"
+                               disabled />
+
+                        <span class="verified-badge">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Vérifiée
+                        </span>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="modern-input">
+
+                        <i class="bi bi-envelope"></i>
+
+                        <input asp-for="Email"
+                               disabled />
+
+                    </div>
+
+                    <button id="email-verification"
+                            type="submit"
+                            asp-page-handler="SendVerificationEmail"
+                            class="verification-btn">
+
+                        <i class="bi bi-send"></i>
+                        Envoyer l'e-mail de vérification
+
+                    </button>
+                }
+
+            </div>
+
+            <!-- NEW EMAIL -->
+            <div class="form-group-modern">
+
+                <label asp-for="Input.NewEmail">
+                    Nouvelle adresse e-mail
+                </label>
+
+                <div class="modern-input">
+
+                    <i class="bi bi-at"></i>
+
+                    <input asp-for="Input.NewEmail"
+                           autocomplete="email"
+                           aria-required="true"
+                           placeholder="nouvel-email@technologis.com" />
+
+                </div>
+
+                <span asp-validation-for="Input.NewEmail"
+                      class="auth-error">
+                </span>
+
+            </div>
+
+            <!-- BUTTON -->
+            <button id="change-email-button"
+                    type="submit"
+                    asp-page-handler="ChangeEmail"
+                    class="save-button">
+
+                <i class="bi bi-check-circle"></i>
+                Modifier l'adresse e-mail
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

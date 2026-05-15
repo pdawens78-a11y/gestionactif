@@ -1,0 +1,222 @@
+@using GestionInventaire.Web.Models.Dashboard
+@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+}
+
+<div class="dashboard-container">
+
+    @* ══ KPI ROW ══ *@
+    <div class="kpi-grid">
+
+        <div class="kpi-card primary">
+            <div class="kpi-label">
+                <i class="bi bi-box"></i> Total
+            </div>
+            <div class="kpi-value" data-kpi="total">@Model.TotalActifs</div>
+            <div class="kpi-subtext">Actifs inventoriés</div>
+        </div>
+
+        <div class="kpi-card success">
+            <div class="kpi-label">
+                <i class="bi bi-check-circle"></i> Disponibilité
+            </div>
+            <div class="kpi-value">@Model.TauxDisponibiliteFormatted</div>
+            <div class="kpi-subtext">@Model.ActifsDisponibles actifs disponibles</div>
+        </div>
+
+        <div class="kpi-card info">
+            <div class="kpi-label">
+                <i class="bi bi-hand-index"></i> Affectation
+            </div>
+            <div class="kpi-value">@Model.TauxDAffectationFormatted</div>
+            <div class="kpi-subtext">@Model.ActifsAffectes actifs affectés</div>
+        </div>
+
+        <div class="kpi-card warning">
+            <div class="kpi-label">
+                <i class="bi bi-wrench"></i> Maintenance
+            </div>
+            <div class="kpi-value">@Model.TauxEnMaintenanceFormatted</div>
+            <div class="kpi-subtext">@Model.ActifsEnMaintenance en maintenance</div>
+        </div>
+
+        <div class="kpi-card danger">
+            <div class="kpi-label">
+                <i class="bi bi-exclamation-triangle"></i> Alertes
+            </div>
+            <div class="kpi-value">@Model.StockCritique</div>
+            <div class="kpi-subtext">Stocks critiques détectés</div>
+        </div>
+
+    </div>
+
+    @* ══ MAIN GRID ══ *@
+    <div class="dashboard-grid">
+
+        @* Colonne gauche *@
+        <div class="dash-left">
+
+            @* Donut chart *@
+            <div class="dashboard-card" style="flex-shrink:0">
+                <div class="dashboard-card-header">
+                    <h5><i class="bi bi-pie-chart"></i> Répartition des actifs</h5>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-wrapper">
+                        <canvas id="dashboardChart"
+                                data-disponible="@Model.ActifsDisponibles"
+                                data-affecte="@Model.ActifsAffectes"
+                                data-maintenance="@Model.ActifsEnMaintenance"
+                                data-hors-service="@Model.ActifsHorsService">
+                        </canvas>
+                        <div class="donut-center-label">
+                            <span class="dcl-val">@Model.TotalActifs</span>
+                            <span class="dcl-sub">actifs</span>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#00d4aa"></div>
+                            <span class="legend-label">Disponible</span>
+                            <span class="legend-count">@Model.ActifsDisponibles</span>
+                            <span class="legend-pct">
+                                @(Model.TotalActifs > 0
+                                    ? $"{(Model.ActifsDisponibles * 100.0 / Model.TotalActifs):F0}%"
+                                    : "—")
+                            </span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#3b82f6"></div>
+                            <span class="legend-label">Affecté</span>
+                            <span class="legend-count">@Model.ActifsAffectes</span>
+                            <span class="legend-pct">
+                                @(Model.TotalActifs > 0
+                                    ? $"{(Model.ActifsAffectes * 100.0 / Model.TotalActifs):F0}%"
+                                    : "—")
+                            </span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#f59e0b"></div>
+                            <span class="legend-label">Maintenance</span>
+                            <span class="legend-count">@Model.ActifsEnMaintenance</span>
+                            <span class="legend-pct">
+                                @(Model.TotalActifs > 0
+                                    ? $"{(Model.ActifsEnMaintenance * 100.0 / Model.TotalActifs):F0}%"
+                                    : "—")
+                            </span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#ef4444"></div>
+                            <span class="legend-label">Hors service</span>
+                            <span class="legend-count">@Model.ActifsHorsService</span>
+                            <span class="legend-pct">
+                                @(Model.TotalActifs > 0
+                                    ? $"{(Model.ActifsHorsService * 100.0 / Model.TotalActifs):F0}%"
+                                    : "—")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* Activités récentes *@
+            <div class="dashboard-card" style="flex:1;min-height:0">
+                <div class="dashboard-card-header">
+                    <h5><i class="bi bi-clock-history"></i> Activités récentes</h5>
+                    <span class="card-live-badge">Live</span>
+                </div>
+                <div class="activities-list">
+                    @if (Model.DerniersAudits != null && Model.DerniersAudits.Any())
+                    {
+                        @foreach (var activite in Model.DerniersAudits.Take(8))
+                        {
+                            <div class="activity-item">
+                                <div class="activity-dot"></div>
+                                <div class="activity-content">
+                                    <div class="activity-action">
+                                        <i class="bi bi-arrow-right-short"></i> @activite.Action
+                                    </div>
+                                    <div class="activity-user">
+                                        <i class="bi bi-person"></i>
+                                        @(string.IsNullOrEmpty(activite.UtilisateurNom) ? "Système" : activite.UtilisateurNom)
+                                    </div>
+                                </div>
+                                <div class="activity-time">@activite.DateFormatted</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="activity-empty">
+                            <i class="bi bi-inbox"></i> Aucune activité enregistrée
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+
+        @* Colonne droite *@
+        <div class="dash-right">
+
+            @* Alertes maintenance *@
+            <div class="dashboard-card" style="flex:1;min-height:0">
+                <div class="dashboard-card-header">
+                    <h5><i class="bi bi-exclamation-circle"></i> Alertes maintenance</h5>
+                </div>
+                <div class="alerts-container">
+                    @if (Model.AlertesMaintenance != null && Model.AlertesMaintenance.Any())
+                    {
+                        @foreach (var alerte in Model.AlertesMaintenance.OrderBy(a => a.DateMaintenance).Take(6))
+                        {
+                            <div class="alert-item @(alerte.EstUrgente ? "danger" : "warning")">
+                                <i class="bi @(alerte.EstUrgente ? "bi-exclamation-circle" : "bi-clock") alert-icon"></i>
+                                <div class="alert-header">
+                                    <div class="alert-name">
+                                        <i class="bi bi-gear"></i> @alerte.NomActif
+                                    </div>
+                                    <div class="alert-date">
+                                        <i class="bi bi-calendar3"></i> @alerte.DateFormatted
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert-item success">
+                            <i class="bi bi-check-circle alert-icon"></i>
+                            <div class="alert-header">
+                                <div class="alert-empty">Aucune maintenance urgente</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @* Critères d'alerte *@
+            <div class="info-box" style="flex-shrink:0">
+                <h6><i class="bi bi-info-circle"></i> Critères d'alerte</h6>
+                <ul>
+                    <li>Stock critique : quantité ≤ seuil minimum</li>
+                    <li>Maintenance imminente : échéance &lt; 3 jours</li>
+                    <li>Hors service : actif inactif détecté</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
+}

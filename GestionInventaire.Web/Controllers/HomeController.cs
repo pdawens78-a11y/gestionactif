@@ -1,32 +1,50 @@
-using GestionInventaire.Web.Models;
+﻿using AutoMapper;
+using GestionInventaire.BLL.Services;
+using GestionInventaire.Web.Models.Home;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace GestionInventaire.Web.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
+        private readonly IHomeService _homeService;
+        private readonly IMapper _mapper;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(
+            IHomeService homeService,
+            IMapper mapper,
+            ILogger<HomeController> logger)
         {
+            _homeService = homeService;
+            _mapper = mapper;
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            try
+            {
+                var currentUserId = User.FindFirst(
+                    System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+                var userRoles = User.Claims
+                    .Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
+                    .Select(c => c.Value)
+                    .ToArray();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                var dto = await _homeService.GetHomeDtoAsync(currentUserId, userRoles);
+                var vm = _mapper.Map<HomeViewModel>(dto);
+                return View(vm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors du chargement de la page d'accueil");
+                TempData["Erreur"] = "Une erreur est survenue lors du chargement de la page d'accueil.";
+                return View(new HomeViewModel());
+            }
         }
     }
 }

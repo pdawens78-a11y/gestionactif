@@ -16,6 +16,7 @@
 	<ItemGroup>
 
 		<!-- Identity UI -->
+		<PackageReference Include="AutoMapper" Version="16.1.1" />
 		<PackageReference Include="Mailjet.Api" Version="4.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0" />
 

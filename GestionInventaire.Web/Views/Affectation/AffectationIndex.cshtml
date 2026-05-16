@@ -1,0 +1,155 @@
+@using GestionInventaire.Web.Models.Affectations
+@model AffectationIndexViewModel
+
+@{
+    ViewData["Title"] = "Affectations";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/affectations.css" asp-append-version="true" />
+}
+
+<div class="affectations-page">
+
+    @* ── En-tête ── *@
+    <div class="aff-header">
+        <div class="aff-header-left">
+            <h1 class="aff-heading">
+                <i class="bi bi-person-check"></i>
+                Affectations
+            </h1>
+            <p class="aff-heading-sub">Gestion des affectations d'actifs aux employés</p>
+        </div>
+        <a href="/Affectations/Create" class="btn-aff-new">
+            <i class="bi bi-plus-lg"></i>
+            Nouvelle affectation
+        </a>
+    </div>
+
+    @* ── TempData ── *@
+    @if (TempData["Succes"] != null)
+    {
+        <div class="aff-alert succes">
+            <i class="bi bi-check-circle"></i>
+            @TempData["Succes"]
+        </div>
+    }
+    @if (TempData["Erreur"] != null)
+    {
+        <div class="aff-alert erreur">
+            <i class="bi bi-exclamation-circle"></i>
+            @TempData["Erreur"]
+        </div>
+    }
+
+    @* ── KPI row ── *@
+    <div class="aff-kpi-row">
+        <div class="aff-kpi total">
+            <div class="aff-kpi-icon"><i class="bi bi-list-check"></i></div>
+            <div>
+                <div class="aff-kpi-val">@(Model.TotalActives + Model.TotalTerminees)</div>
+                <div class="aff-kpi-label">Total</div>
+            </div>
+        </div>
+        <div class="aff-kpi active">
+            <div class="aff-kpi-icon"><i class="bi bi-person-check"></i></div>
+            <div>
+                <div class="aff-kpi-val">@Model.TotalActives</div>
+                <div class="aff-kpi-label">Actives</div>
+            </div>
+        </div>
+        <div class="aff-kpi closed">
+            <div class="aff-kpi-icon"><i class="bi bi-person-dash"></i></div>
+            <div>
+                <div class="aff-kpi-val">@Model.TotalTerminees</div>
+                <div class="aff-kpi-label">Terminées</div>
+            </div>
+        </div>
+    </div>
+
+    @* ── Table ── *@
+    <div class="aff-table-card">
+        <div class="aff-table-toolbar">
+            <span class="aff-table-title">
+                <i class="bi bi-table"></i>
+                Toutes les affectations
+            </span>
+        </div>
+
+        <div class="aff-table-wrap">
+            @if (Model.Affectations.Any())
+            {
+                <table class="aff-table">
+                    <thead>
+                        <tr>
+                            <th>Actif</th>
+                            <th>Employé</th>
+                            <th>Date début</th>
+                            <th>Date fin</th>
+                            <th>Statut</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Affectations)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="aff-actif-cell">
+                                        <span class="aff-actif-code">@row.CodeActif</span>
+                                        <span class="aff-actif-produit">@row.NomProduit</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="aff-employe-cell">
+                                        <span class="aff-employe-nom">@row.NomEmploye</span>
+                                        <span class="aff-employe-service">@row.ServiceEmploye</span>
+                                    </div>
+                                </td>
+                                <td><span class="aff-date">@row.DateDebutFormatted</span></td>
+                                <td><span class="aff-date">@row.DateFinFormatted</span></td>
+                                <td>
+                                    <span class="aff-badge @row.BadgeClass">
+                                        <i class="bi @(row.EstActive ? "bi-circle-fill" : "bi-circle")"></i>
+                                        @row.BadgeLabel
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (row.EstActive)
+                                    {
+                                        <form method="post"
+                                              asp-action="Retourner"
+                                              asp-route-id="@row.IdAffectation"
+                                              onsubmit="return confirm('Confirmer le retour de cet actif ?')">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn-retour">
+                                                <i class="bi bi-arrow-return-left"></i>
+                                                Retourner
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span style="font-size:0.72rem;color:var(--muted)">—</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="aff-empty">
+                    <i class="bi bi-inbox"></i>
+                    <span>Aucune affectation enregistrée</span>
+                    <a href="/Affectations/Create" class="btn-aff-new" style="margin-top:8px">
+                        <i class="bi bi-plus-lg"></i> Créer la première
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

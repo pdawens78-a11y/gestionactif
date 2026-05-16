@@ -1,0 +1,121 @@
+@using GestionInventaire.Web.Models.Affectations
+@model AffectationCreateViewModel
+
+@{
+    ViewData["Title"] = "Nouvelle affectation";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/affectations.css" asp-append-version="true" />
+}
+
+<div class="aff-form-page">
+
+    @* ── En-tête ── *@
+    <div class="aff-header">
+        <div class="aff-header-left">
+            <h1 class="aff-heading">
+                <i class="bi bi-person-plus"></i>
+                Nouvelle affectation
+            </h1>
+            <p class="aff-heading-sub">Affecter un actif disponible à un employé</p>
+        </div>
+        <a href="/Affectations" class="btn-aff-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    @* ── Formulaire ── *@
+    <div class="aff-form-card">
+
+        <div class="aff-form-header">
+            <div class="aff-form-icon">
+                <i class="bi bi-person-check"></i>
+            </div>
+            <div>
+                <p class="aff-form-card-title">Informations de l'affectation</p>
+                <p class="aff-form-card-subtitle">Seuls les actifs avec le statut <strong style="color:var(--accent)">Disponible</strong> sont listés</p>
+            </div>
+        </div>
+
+        <div class="aff-form-body">
+
+            @* Validation summary *@
+            <div asp-validation-summary="ModelOnly" class="aff-alert erreur" style="margin-bottom:16px"></div>
+
+            <form method="post" id="affectationForm">
+                @Html.AntiForgeryToken()
+
+                @* Actif *@
+                <div class="aff-form-group">
+                    <label class="aff-form-label" asp-for="IdActif">
+                        <i class="bi bi-box"></i>
+                        Actif à affecter
+                    </label>
+                    <select asp-for="IdActif"
+                            asp-items="Model.ActifsDisponibles"
+                            class="aff-select">
+                        <option value="">— Sélectionner un actif disponible —</option>
+                    </select>
+                    <span asp-validation-for="IdActif" class="aff-field-error"></span>
+                </div>
+
+                @* Employé *@
+                <div class="aff-form-group">
+                    <label class="aff-form-label" asp-for="IdEmploye">
+                        <i class="bi bi-person"></i>
+                        Employé bénéficiaire
+                    </label>
+                    <select asp-for="IdEmploye"
+                            asp-items="Model.Employes"
+                            class="aff-select">
+                        <option value="">— Sélectionner un employé —</option>
+                    </select>
+                    <span asp-validation-for="IdEmploye" class="aff-field-error"></span>
+                </div>
+
+                @* Date de début *@
+                <div class="aff-form-group">
+                    <label class="aff-form-label" asp-for="DateDebut">
+                        <i class="bi bi-calendar"></i>
+                        Date de début
+                    </label>
+                    <input asp-for="DateDebut"
+                           type="date"
+                           class="aff-input" />
+                    <span asp-validation-for="DateDebut" class="aff-field-error"></span>
+                </div>
+
+                @* Info box *@
+                <div class="aff-info-box">
+                    <i class="bi bi-info-circle"></i>
+                    <span>
+                        Lors de la création, le statut de l'actif passera automatiquement
+                        de <strong>Disponible</strong> à <strong>Affecté</strong>
+                        et le stock du produit sera décrémenté de 1.
+                    </span>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="aff-form-footer">
+            <button type="submit" form="affectationForm" class="btn-aff-submit">
+                <i class="bi bi-check-circle"></i>
+                Créer l'affectation
+            </button>
+            <a href="/Affectations" class="btn-aff-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

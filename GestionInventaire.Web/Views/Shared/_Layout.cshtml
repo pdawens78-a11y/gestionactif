@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8" />
@@ -10,28 +10,15 @@
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
     <!-- Google Fonts -->
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com" />
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin />
-
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" />
 
     <!-- Layout styles -->
-    <link rel="stylesheet"
-          href="~/css/layout.css"
-          asp-append-version="true" />
-
-    <link rel="stylesheet"
-          href="~/css/site.css"
-          asp-append-version="true" />
-
-    <link rel="stylesheet"
-          href="~/GestionInventaire.Web.styles.css"
-          asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css"  asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css"    asp-append-version="true" />
+    <link rel="stylesheet" href="~/GestionInventaire.Web.styles.css" asp-append-version="true" />
 
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -43,114 +30,82 @@
 
         <!-- BRAND -->
         <a class="nav-brand" href="/">
-
             <div class="nav-logo-box">
                 <svg viewBox="0 0 24 24">
                     <path d="M3 7l9-4 9 4v10l-9 4-9-4V7z" />
                     <path d="M12 3v18M3 7l9 4 9-4" />
                 </svg>
             </div>
-
             <span class="nav-brand-name">
                 Techno<span class="brand-dot">Logis</span>
             </span>
-
         </a>
 
         <!-- NAV LINKS -->
+        @{
+            var ctrl = ViewContext.RouteData.Values["Controller"]?.ToString() ?? "";
+        }
+
         <div class="nav-links">
 
             <a href="/"
-               class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")">
-
+               class="nav-link @(ctrl is "Home" or "" ? "active" : "")">
                 <i class="bi bi-house"></i>
-
                 <span>Accueil</span>
-
             </a>
 
             <a href="/Dashboard"
-               class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")">
-
+               class="nav-link @(ctrl == "Dashboard" ? "active" : "")">
                 <i class="bi bi-speedometer2"></i>
-
                 <span>Dashboard</span>
-
             </a>
 
-            <a href="#"
-               class="nav-link">
-
+            <a href="/Actifs"
+               class="nav-link @(ctrl == "Actifs" ? "active" : "")">
                 <i class="bi bi-box"></i>
-
                 <span>Actifs</span>
-
             </a>
 
-            <a href="#"
-               class="nav-link">
-
+            <a href="/Stock"
+               class="nav-link @(ctrl == "Stock" ? "active" : "")">
                 <i class="bi bi-archive"></i>
-
                 <span>Stock</span>
-
             </a>
 
-            <a href="#"
-               class="nav-link">
-
-                <i class="bi bi-person"></i>
-
+            <a href="/Employes"
+               class="nav-link @(ctrl == "Employes" ? "active" : "")">
+                <i class="bi bi-people"></i>
                 <span>Employés</span>
-
             </a>
 
-            <!-- CREATE USER -->
-            <a asp-controller="Users"
-               asp-action="Create"
-               class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Users" ? "active" : "")">
-
-                <i class="bi bi-person-plus"></i>
-
-                <span>Créer utilisateur</span>
-
+            <a href="/Affectations"
+               class="nav-link @(ctrl == "Affectations" ? "active" : "")">
+                <i class="bi bi-person-check"></i>
+                <span>Affectations</span>
             </a>
 
-            <a href="#"
-               class="nav-link">
-
-                <i class="bi bi-gear"></i>
-
+            <a href="/Maintenance"
+               class="nav-link @(ctrl == "Maintenance" ? "active" : "")">
+                <i class="bi bi-wrench-adjustable"></i>
                 <span>Maintenance</span>
-
             </a>
 
-            <a href="#"
-               class="nav-link">
-
-                <i class="bi bi-file-earmark-text"></i>
-
+            <a href="/Rapports"
+               class="nav-link @(ctrl == "Rapports" ? "active" : "")">
+                <i class="bi bi-file-earmark-bar-graph"></i>
                 <span>Rapports</span>
-
             </a>
 
-            <a href="#"
-               class="nav-link">
-
+            <a href="/Audit"
+               class="nav-link @(ctrl == "Audit" ? "active" : "")">
                 <i class="bi bi-shield-check"></i>
-
                 <span>Audit</span>
-
             </a>
 
-            <a asp-controller="Settings"
-               asp-action="Index"
-               class="nav-link">
-
+            <a asp-controller="Settings" asp-action="Index"
+               class="nav-link @(ctrl == "Settings" ? "active" : "")">
                 <i class="bi bi-sliders"></i>
-
                 <span>Paramètres</span>
-
             </a>
 
         </div>
@@ -160,113 +115,71 @@
 
             <!-- SEARCH -->
             <div class="nav-search">
-
                 <i class="bi bi-search"></i>
-
-                <input type="text"
-                       placeholder="Rechercher…" />
-
+                <input type="text" placeholder="Rechercher… (/)" />
             </div>
 
             <!-- NOTIFICATIONS -->
-            <div class="btn-icon"
-                 title="Notifications">
-
+            <div class="btn-icon" title="Notifications">
                 <i class="bi bi-bell"></i>
-
                 <span class="nav-badge">3</span>
-
             </div>
 
             <!-- USER MENU -->
             <div class="nav-user">
-
-                <button class="btn-user"
-                        id="userMenuBtn">
-
+                <button class="btn-user" id="userMenuBtn">
                     <div class="user-avatar">
-
                         <img src="https://ui-avatars.com/api/?name=Admin+User&background=00d4aa&color=0b0f1a&bold=true"
                              alt="Admin User" />
-
                     </div>
-
-                    <span class="user-name">
-                        Admin User
-                    </span>
-
-                    <i class="bi bi-chevron-down"
-                       style="font-size:10px;color:var(--muted)">
-                    </i>
-
+                    <span class="user-name">Admin User</span>
+                    <i class="bi bi-chevron-down" style="font-size:10px;color:var(--muted)"></i>
                 </button>
 
-                <div class="nav-dropdown"
-                     id="userDropdown">
-
+                <div class="nav-dropdown" id="userDropdown">
                     <a href="/Identity/Account/Manage/Index">
-                        <i class="bi bi-person"></i>
-                        Profil
+                        <i class="bi bi-person"></i> Profil
                     </a>
-
-                    <a asp-controller="Settings"
-                       asp-action="Index">
-
-                        <i class="bi bi-sliders"></i>
-
-                        Paramètres
-
+                    <a asp-controller="Settings" asp-action="Index">
+                        <i class="bi bi-sliders"></i> Paramètres
                     </a>
-
                     <hr />
-
                     <a href="/Identity/Account/Logout">
-
-                        <i class="bi bi-box-arrow-right"></i>
-
-                        Déconnexion
-
+                        <i class="bi bi-box-arrow-right"></i> Déconnexion
                     </a>
-
                 </div>
-
             </div>
 
         </div>
-
     </nav>
 
     <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
     <div class="app-body">
-
         <main class="app-main">
 
             @{
-                var isDashboard =
-                ViewContext.RouteData.Values["Controller"]?.ToString()
-                == "Dashboard";
+                // Pages qui gèrent leur propre layout (padding, scroll, etc.)
+                // → pas de container-lg ni de breadcrumb injecté par le layout
+                var fullWidthControllers = new[] { "Dashboard", "Home", "Affectations" };
+                var isFullWidth = fullWidthControllers.Contains(ctrl);
             }
 
-            @if (isDashboard)
+            @if (ctrl == "Dashboard")
             {
                 <div class="page-breadcrumb">
-
-                    <i class="bi bi-house"
-                       style="font-size:11px"></i>
-
+                    <i class="bi bi-house" style="font-size:11px"></i>
                     <span class="bc-sep">›</span>
-
                     <span>Dashboard</span>
-
                     <span class="bc-sep">·</span>
-
                     <span class="bc-time">
-                        Dernière mise à jour :
-                        @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                        Dernière mise à jour : @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
                     </span>
-
                 </div>
-
+                @RenderBody()
+            }
+            else if (isFullWidth)
+            {
+                @* Home, Affectations et futures pages full-width gèrent leur propre padding *@
                 @RenderBody()
             }
             else
@@ -277,39 +190,23 @@
             }
 
         </main>
-
     </div>
 
     <!-- ═══════════════ FOOTER ═══════════════ -->
     <footer class="app-footer">
-
-        <p>
-            © 2026 TechnoLogis S.A.
-            — Gestion d'inventaire d'actifs informatiques
-        </p>
-
+        <p>© 2026 TechnoLogis S.A. — Gestion d'inventaire d'actifs informatiques</p>
         <div class="footer-links">
-
             <a href="#">Aide</a>
-
             <a href="#">Confidentialité</a>
-
             <a href="#">Conditions</a>
-
         </div>
-
     </footer>
 
     <!-- SCRIPTS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="~/js/layout.js"
-            asp-append-version="true"></script>
-
-    <script src="~/js/site.js"
-            asp-append-version="true"></script>
+    <script src="~/js/layout.js" asp-append-version="true"></script>
+    <script src="~/js/site.js"   asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 

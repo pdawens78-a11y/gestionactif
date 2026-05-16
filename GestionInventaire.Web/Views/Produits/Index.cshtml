@@ -1,0 +1,133 @@
+@using GestionInventaire.Web.Models.Produits
+@model ProduitIndexViewModel
+
+@{
+    ViewData["Title"] = "Produits";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/produits.css" asp-append-version="true" />
+}
+
+<div class="produits-page">
+
+    <div class="prod-header">
+        <div class="prod-header-left">
+            <h1 class="prod-heading">
+                <i class="bi bi-box-seam"></i>
+                Produits
+            </h1>
+            <p class="prod-heading-sub">Catalogue des produits informatiques</p>
+        </div>
+        <a href="/Produits/Create" class="btn-prod-new">
+            <i class="bi bi-plus-lg"></i>
+            Nouveau produit
+        </a>
+    </div>
+
+    @if (TempData["Succes"] != null)
+    {
+        <div class="prod-alert succes">
+            <i class="bi bi-check-circle"></i>
+            @TempData["Succes"]
+        </div>
+    }
+    @if (TempData["Erreur"] != null)
+    {
+        <div class="prod-alert erreur">
+            <i class="bi bi-exclamation-circle"></i>
+            @TempData["Erreur"]
+        </div>
+    }
+
+    <div class="prod-table-card">
+        <div class="prod-table-toolbar">
+            <span class="prod-table-title">
+                <i class="bi bi-table"></i>
+                Tous les produits
+            </span>
+            <span class="prod-count-badge">@Model.TotalCount</span>
+        </div>
+
+        <div class="prod-table-wrap">
+            @if (Model.Produits.Any())
+            {
+                <table class="prod-table">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Description</th>
+                            <th>Catégorie</th>
+                            <th>Actifs</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Produits)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="prod-nom">
+                                        <i class="bi bi-box"></i>
+                                        @row.NomProduit
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="prod-desc">@row.DescriptionFormatted</span>
+                                </td>
+                                <td>
+                                    <span class="prod-cat-badge">
+                                        <i class="bi bi-tag"></i>
+                                        @row.NomCategorie
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--accent2)">
+                                        @row.NombreActifs
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="prod-stock-badge @row.StockBadgeClass">
+                                        <i class="bi bi-archive"></i>
+                                        @row.StockFormatted
+                                        @if (row.StockSeuil.HasValue)
+                                        {
+                                            <span style="opacity:0.6">/ @row.StockSeuil</span>
+                                        }
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="prod-actions">
+                                        <a href="/Produits/Edit/@row.IdProduit"
+                                           class="btn-prod-icon edit"
+                                           title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/Produits/Delete/@row.IdProduit"
+                                           class="btn-prod-icon delete"
+                                           title="Supprimer">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="prod-empty">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Aucun produit enregistré</span>
+                    <a href="/Produits/Create" class="btn-prod-new" style="margin-top:8px">
+                        <i class="bi bi-plus-lg"></i> Créer le premier
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

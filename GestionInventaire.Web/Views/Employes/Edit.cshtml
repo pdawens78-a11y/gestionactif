@@ -1,0 +1,123 @@
+﻿@using GestionInventaire.Web.Models.Employes
+@model EmployeEditViewModel
+
+@{
+    ViewData["Title"] = "Modifier l'employé";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/employes.css" asp-append-version="true" />
+}
+
+<div class="employe-form-page">
+
+    <div class="emp-header">
+        <div class="emp-header-left">
+            <h1 class="emp-heading">
+                <i class="bi bi-pencil-square"></i>
+                Modifier l'employé
+            </h1>
+            <p class="emp-heading-sub">@Model.Prenom @Model.Nom</p>
+        </div>
+        <a href="/Employes" class="btn-emp-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="emp-form-card">
+        <div class="emp-form-header">
+            <div class="emp-form-icon">
+                <i class="bi bi-pencil"></i>
+            </div>
+            <div>
+                <p class="emp-form-card-title">Modifier les informations</p>
+                <p class="emp-form-card-subtitle">
+                    @Model.ActifsActifs actif(s) actuellement affecté(s)
+                </p>
+            </div>
+        </div>
+
+        <div class="emp-form-body">
+            <div asp-validation-summary="ModelOnly"
+                 class="emp-alert erreur"
+                 style="margin-bottom:16px"></div>
+
+            <form method="post" id="editForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="IdEmploye" />
+                <input type="hidden" asp-for="NombreAffectations" />
+                <input type="hidden" asp-for="ActifsActifs" />
+
+                <div class="emp-form-grid">
+
+                    <div class="emp-form-group">
+                        <label class="emp-form-label" asp-for="Prenom">
+                            <i class="bi bi-person"></i> Prénom
+                        </label>
+                        <input asp-for="Prenom" class="emp-input" />
+                        <span asp-validation-for="Prenom" class="emp-field-error"></span>
+                    </div>
+
+                    <div class="emp-form-group">
+                        <label class="emp-form-label" asp-for="Nom">
+                            <i class="bi bi-person"></i> Nom
+                        </label>
+                        <input asp-for="Nom" class="emp-input" />
+                        <span asp-validation-for="Nom" class="emp-field-error"></span>
+                    </div>
+
+                    <div class="emp-form-group">
+                        <label class="emp-form-label" asp-for="Email">
+                            <i class="bi bi-envelope"></i> E-mail
+                            <span class="opt">(optionnel)</span>
+                        </label>
+                        <input asp-for="Email" class="emp-input" />
+                        <span asp-validation-for="Email" class="emp-field-error"></span>
+                    </div>
+
+                    <div class="emp-form-group">
+                        <label class="emp-form-label" asp-for="Tel">
+                            <i class="bi bi-telephone"></i> Téléphone
+                            <span class="opt">(optionnel)</span>
+                        </label>
+                        <input asp-for="Tel" class="emp-input" />
+                        <span asp-validation-for="Tel" class="emp-field-error"></span>
+                    </div>
+
+                    <div class="emp-form-group full-width">
+                        <label class="emp-form-label" asp-for="Service">
+                            <i class="bi bi-building"></i> Service / Département
+                            <span class="opt">(optionnel)</span>
+                        </label>
+                        <input asp-for="Service" class="emp-input" />
+                        <span asp-validation-for="Service" class="emp-field-error"></span>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="emp-form-footer">
+            <button type="submit" form="editForm" class="btn-emp-submit">
+                <i class="bi bi-check-circle"></i>
+                Enregistrer les modifications
+            </button>
+            <a href="/Employes" class="btn-emp-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}

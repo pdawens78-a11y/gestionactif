@@ -1,0 +1,111 @@
+@using GestionInventaire.Web.Models.Produits
+@model ProduitDeleteViewModel
+
+@{
+    ViewData["Title"] = "Supprimer le produit";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/produits.css" asp-append-version="true" />
+}
+
+<div class="produit-form-page">
+
+    <div class="prod-header">
+        <div class="prod-header-left">
+            <h1 class="prod-heading">
+                <i class="bi bi-trash" style="color:var(--danger)"></i>
+                Supprimer le produit
+            </h1>
+            <p class="prod-heading-sub">Cette action est irréversible</p>
+        </div>
+        <a href="/Produits" class="btn-prod-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="prod-delete-card">
+        <div class="prod-delete-header">
+            <div class="prod-delete-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div>
+                <p class="prod-form-card-title" style="color:var(--danger)">
+                    Confirmer la suppression
+                </p>
+                <p class="prod-form-card-subtitle">
+                    Vérifiez les informations avant de confirmer
+                </p>
+            </div>
+        </div>
+
+        <div class="prod-delete-body">
+
+            <div class="prod-delete-info">
+                <div class="prod-delete-row">
+                    <span class="dr-label">Produit</span>
+                    <span class="dr-val">@Model.NomProduit</span>
+                </div>
+                <div class="prod-delete-row">
+                    <span class="dr-label">Catégorie</span>
+                    <span class="dr-val">@Model.NomCategorie</span>
+                </div>
+                <div class="prod-delete-row">
+                    <span class="dr-label">Description</span>
+                    <span class="dr-val">
+                        @(string.IsNullOrEmpty(Model.Description) ? "—" : Model.Description)
+                    </span>
+                </div>
+                <div class="prod-delete-row">
+                    <span class="dr-label">Actifs liés</span>
+                    <span class="dr-val">@Model.NombreActifs actif(s)</span>
+                </div>
+            </div>
+
+            @if (Model.NombreActifs > 0)
+            {
+                <div class="prod-delete-warning blocked">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <span>
+                        Impossible de supprimer « <strong>@Model.NomProduit</strong> » :
+                        <strong>@Model.NombreActifs actif(s)</strong> y sont associés.
+                        Supprimez ou réaffectez les actifs avant de continuer.
+                    </span>
+                </div>
+            }
+            else
+            {
+                <div class="prod-delete-warning">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <span>
+                        Le produit <strong>@Model.NomProduit</strong> sera
+                        définitivement supprimé. Cette action est irréversible.
+                    </span>
+                </div>
+            }
+
+        </div>
+
+        <div class="prod-delete-footer">
+            @if (Model.NombreActifs == 0)
+            {
+                <form method="post"
+                      asp-action="Delete"
+                      asp-route-id="@Model.IdProduit">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-prod-delete-confirm">
+                        <i class="bi bi-trash"></i>
+                        Confirmer la suppression
+                    </button>
+                </form>
+            }
+            <a href="/Produits" class="btn-prod-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>

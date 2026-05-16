@@ -1,0 +1,134 @@
+﻿@using GestionInventaire.Web.Models.Employes
+@model EmployeIndexViewModel
+
+@{
+    ViewData["Title"] = "Employés";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/employes.css" asp-append-version="true" />
+}
+
+<div class="employes-page">
+
+    <div class="emp-header">
+        <div class="emp-header-left">
+            <h1 class="emp-heading">
+                <i class="bi bi-people"></i>
+                Employés
+            </h1>
+            <p class="emp-heading-sub">Gestion du personnel et affectations d'actifs</p>
+        </div>
+        <a href="/Employes/Create" class="btn-emp-new">
+            <i class="bi bi-person-plus"></i>
+            Nouvel employé
+        </a>
+    </div>
+
+    @if (TempData["Succes"] != null)
+    {
+        <div class="emp-alert succes">
+            <i class="bi bi-check-circle"></i>
+            @TempData["Succes"]
+        </div>
+    }
+    @if (TempData["Erreur"] != null)
+    {
+        <div class="emp-alert erreur">
+            <i class="bi bi-exclamation-circle"></i>
+            @TempData["Erreur"]
+        </div>
+    }
+
+    <div class="emp-table-card">
+        <div class="emp-table-toolbar">
+            <span class="emp-table-title">
+                <i class="bi bi-table"></i>
+                Tous les employés
+            </span>
+            <span class="emp-count-badge">@Model.TotalCount</span>
+        </div>
+
+        <div class="emp-table-wrap">
+            @if (Model.Employes.Any())
+            {
+                <table class="emp-table">
+                    <thead>
+                        <tr>
+                            <th>Employé</th>
+                            <th>Contact</th>
+                            <th>Actifs affectés</th>
+                            <th>Total affectations</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Employes)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="emp-identity">
+                                        <div class="emp-avatar">@row.InitialesAvatar</div>
+                                        <div>
+                                            <div class="emp-nom">@row.NomComplet</div>
+                                            <div class="emp-service">@row.ServiceFormatted</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="emp-contact">
+                                        <span class="emp-email">
+                                            <i class="bi bi-envelope" style="font-size:11px"></i>
+                                            @row.EmailFormatted
+                                        </span>
+                                        <span class="emp-tel">
+                                            <i class="bi bi-telephone" style="font-size:11px"></i>
+                                            @row.TelFormatted
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="emp-aff-badge @(row.ActifsActifs > 0 ? "has-aff" : "no-aff")">
+                                        <i class="bi bi-box"></i>
+                                        @row.ActifsActifs
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--muted)">
+                                        @row.NombreAffectations
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="emp-actions">
+                                        <a href="/Employes/Edit/@row.IdEmploye"
+                                           class="btn-emp-icon edit"
+                                           title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/Employes/Delete/@row.IdEmploye"
+                                           class="btn-emp-icon delete"
+                                           title="Supprimer">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="emp-empty">
+                    <i class="bi bi-people"></i>
+                    <span>Aucun employé enregistré</span>
+                    <a href="/Employes/Create" class="btn-emp-new" style="margin-top:8px">
+                        <i class="bi bi-person-plus"></i> Ajouter le premier
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

@@ -106,6 +106,10 @@ builder.Services.AddScoped<IAuditRepository, AuditRepository>();
 builder.Services.AddScoped<IProduitRepository, ProduitRepository>();
 builder.Services.AddScoped<IEmployeRepository, EmployeRepository>();
 builder.Services.AddScoped<IUtilisateurRepository, UtilisateurRepository>();
+builder.Services.AddScoped<ICategorieService, CategorieService>();
+builder.Services.AddScoped<IProduitService, ProduitService>();
+builder.Services.AddScoped<IStockService, StockService>();
+builder.Services.AddScoped<IEmployeService, EmployeService>();
 
 // ======================
 // SERVICES (BLL)
@@ -125,6 +129,10 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<AffectationProfile>();
     cfg.AddProfile<DashboardProfile>();
     cfg.AddProfile<HomeProfile>();
+    cfg.AddProfile<CategorieProfile>();
+    cfg.AddProfile<ProduitProfile>();
+    cfg.AddProfile<StockProfile>();
+    cfg.AddProfile<EmployeProfile>();
 });
 
 // ======================

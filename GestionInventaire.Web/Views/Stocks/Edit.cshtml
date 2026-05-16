@@ -1,0 +1,114 @@
+﻿@using GestionInventaire.Web.Models.Stocks
+@model StockEditViewModel
+
+@{
+    ViewData["Title"] = "Modifier le stock";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/stock.css" asp-append-version="true" />
+}
+
+<div class="stock-form-page">
+
+    <div class="stock-header">
+        <div class="stock-header-left">
+            <h1 class="stock-heading">
+                <i class="bi bi-pencil-square"></i>
+                Modifier le stock
+            </h1>
+            <p class="stock-heading-sub">@Model.NomProduit</p>
+        </div>
+        <a href="/Stocks" class="btn-stock-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="stock-form-card">
+        <div class="stock-form-header">
+            <div class="stock-form-icon">
+                <i class="bi bi-archive"></i>
+            </div>
+            <div>
+                <p class="stock-form-card-title">Quantité et seuil d'alerte</p>
+                <p class="stock-form-card-subtitle">
+                    Modifiez la quantité initiale ou le seuil de réapprovisionnement
+                </p>
+            </div>
+        </div>
+
+        <div class="stock-form-body">
+            <div asp-validation-summary="ModelOnly"
+                 class="stock-alert erreur"
+                 style="margin-bottom:16px"></div>
+
+            @* Infos produit en lecture seule *@
+            <div class="stock-product-info">
+                <span class="stock-product-nom">
+                    <i class="bi bi-box"></i>
+                    @Model.NomProduit
+                </span>
+                <span class="stock-product-cat">
+                    <i class="bi bi-tag" style="font-size:11px"></i>
+                    @Model.NomCategorie
+                </span>
+            </div>
+
+            <form method="post" id="stockForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="IdStock" />
+                <input type="hidden" asp-for="IdProduit" />
+                <input type="hidden" asp-for="NomProduit" />
+                <input type="hidden" asp-for="NomCategorie" />
+
+                <div class="stock-form-group">
+                    <label class="stock-form-label" asp-for="Quantite">
+                        <i class="bi bi-archive"></i>
+                        Quantité en stock
+                    </label>
+                    <input asp-for="Quantite"
+                           type="number"
+                           min="0"
+                           class="stock-input"
+                           placeholder="0" />
+                    <span asp-validation-for="Quantite" class="stock-field-error"></span>
+                </div>
+
+                <div class="stock-form-group">
+                    <label class="stock-form-label" asp-for="SeuilAlerte">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Seuil d'alerte
+                    </label>
+                    <input asp-for="SeuilAlerte"
+                           type="number"
+                           min="0"
+                           class="stock-input"
+                           placeholder="0" />
+                    <span asp-validation-for="SeuilAlerte" class="stock-field-error"></span>
+                    <small style="font-size:0.72rem;color:var(--muted)">
+                        Une alerte sera déclenchée quand la quantité ≤ ce seuil
+                    </small>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="stock-form-footer">
+            <button type="submit" form="stockForm" class="btn-stock-submit">
+                <i class="bi bi-check-circle"></i>
+                Enregistrer
+            </button>
+            <a href="/Stocks" class="btn-stock-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

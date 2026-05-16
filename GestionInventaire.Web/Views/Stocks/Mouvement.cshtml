@@ -1,0 +1,127 @@
+﻿@using GestionInventaire.Web.Models.Stocks
+@model StockMouvementViewModel
+
+@{
+    ViewData["Title"] = "Mouvement de stock";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/stock.css" asp-append-version="true" />
+}
+
+<div class="stock-form-page">
+
+    <div class="stock-header">
+        <div class="stock-header-left">
+            <h1 class="stock-heading">
+                <i class="bi bi-arrow-left-right"></i>
+                Mouvement de stock
+            </h1>
+            <p class="stock-heading-sub">@Model.NomProduit</p>
+        </div>
+        <a href="/Stocks" class="btn-stock-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="stock-form-card">
+        <div class="stock-form-header">
+            <div class="stock-form-icon">
+                <i class="bi bi-arrow-left-right"></i>
+            </div>
+            <div>
+                <p class="stock-form-card-title">Entrée ou sortie de stock</p>
+                <p class="stock-form-card-subtitle">
+                    Stock actuel :
+                    <strong style="color:var(--accent);font-family:'Space Mono',monospace">
+                        @Model.QuantiteActuelle unité(s)
+                    </strong>
+                </p>
+            </div>
+        </div>
+
+        <div class="stock-form-body">
+            <div asp-validation-summary="ModelOnly"
+                 class="stock-alert erreur"
+                 style="margin-bottom:16px"></div>
+
+            <form method="post" id="mouvementForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="IdStock" />
+                <input type="hidden" asp-for="NomProduit" />
+                <input type="hidden" asp-for="QuantiteActuelle" />
+
+                @* Type de mouvement *@
+                <div class="stock-form-group">
+                    <label class="stock-form-label">
+                        <i class="bi bi-arrow-left-right"></i>
+                        Type de mouvement
+                    </label>
+                    <div class="mouvement-type-row">
+                        <label class="mouvement-pill entree @(Model.Type == "Entree" ? "selected" : "")">
+                            <input type="radio" asp-for="Type" value="Entree"
+                                   style="display:none"
+                                   onchange="updatePills(this)" />
+                            <i class="bi bi-plus-circle"></i>
+                            Entrée
+                        </label>
+                        <label class="mouvement-pill sortie @(Model.Type == "Sortie" ? "selected" : "")">
+                            <input type="radio" asp-for="Type" value="Sortie"
+                                   style="display:none"
+                                   onchange="updatePills(this)" />
+                            <i class="bi bi-dash-circle"></i>
+                            Sortie
+                        </label>
+                    </div>
+                    <span asp-validation-for="Type" class="stock-field-error"></span>
+                </div>
+
+                @* Quantité *@
+                <div class="stock-form-group">
+                    <label class="stock-form-label" asp-for="Quantite">
+                        <i class="bi bi-hash"></i>
+                        Quantité
+                    </label>
+                    <input asp-for="Quantite"
+                           type="number"
+                           min="1"
+                           class="stock-input"
+                           placeholder="ex. 10" />
+                    <span asp-validation-for="Quantite" class="stock-field-error"></span>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="stock-form-footer">
+            <button type="submit" form="mouvementForm" class="btn-stock-submit">
+                <i class="bi bi-check-circle"></i>
+                Enregistrer le mouvement
+            </button>
+            <a href="/Stocks" class="btn-stock-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function updatePills(radio) {
+            document.querySelectorAll('.mouvement-pill').forEach(p => {
+                p.classList.remove('selected');
+            });
+            radio.closest('.mouvement-pill').classList.add('selected');
+        }
+
+        // Init au chargement
+        document.querySelectorAll('.mouvement-pill input[type="radio"]').forEach(r => {
+            r.addEventListener('change', function () { updatePills(this); });
+        });
+    </script>
+}

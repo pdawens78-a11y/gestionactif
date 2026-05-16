@@ -1,0 +1,121 @@
+﻿@using GestionInventaire.Web.Models.Categories
+@model CategorieIndexViewModel
+
+@{
+    ViewData["Title"] = "Catégories";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/categories.css" asp-append-version="true" />
+}
+
+<div class="categories-page">
+
+    @* ── En-tête ── *@
+    <div class="cat-header">
+        <div class="cat-header-left">
+            <h1 class="cat-heading">
+                <i class="bi bi-tags"></i>
+                Catégories
+            </h1>
+            <p class="cat-heading-sub">
+                Gestion des catégories de produits
+            </p>
+        </div>
+        <a href="/Categories/Create" class="btn-cat-new">
+            <i class="bi bi-plus-lg"></i>
+            Nouvelle catégorie
+        </a>
+    </div>
+
+    @* ── Alerts ── *@
+    @if (TempData["Succes"] != null)
+    {
+        <div class="cat-alert succes">
+            <i class="bi bi-check-circle"></i>
+            @TempData["Succes"]
+        </div>
+    }
+    @if (TempData["Erreur"] != null)
+    {
+        <div class="cat-alert erreur">
+            <i class="bi bi-exclamation-circle"></i>
+            @TempData["Erreur"]
+        </div>
+    }
+
+    @* ── Table ── *@
+    <div class="cat-table-card">
+        <div class="cat-table-toolbar">
+            <span class="cat-table-title">
+                <i class="bi bi-table"></i>
+                Toutes les catégories
+            </span>
+            <span class="cat-count-badge">@Model.TotalCount</span>
+        </div>
+
+        <div class="cat-table-wrap">
+            @if (Model.Categories.Any())
+            {
+                <table class="cat-table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Produits</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Categories)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="cat-nom">
+                                        <i class="bi bi-tag"></i>
+                                        @row.NomCategorie
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="cat-desc">@row.DescriptionFormatted</span>
+                                </td>
+                                <td>
+                                    <span class="cat-produits-badge @(row.NombreProduits > 0 ? "has-produits" : "no-produits")">
+                                        <i class="bi bi-box"></i>
+                                        @row.NombreProduits
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="cat-actions">
+                                        <a href="/Categories/Edit/@row.IdCategorie"
+                                           class="btn-cat-icon edit"
+                                           title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/Categories/Delete/@row.IdCategorie"
+                                           class="btn-cat-icon delete"
+                                           title="Supprimer">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="cat-empty">
+                    <i class="bi bi-tags"></i>
+                    <span>Aucune catégorie enregistrée</span>
+                    <a href="/Categories/Create" class="btn-cat-new" style="margin-top:8px">
+                        <i class="bi bi-plus-lg"></i> Créer la première
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

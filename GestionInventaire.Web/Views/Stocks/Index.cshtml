@@ -1,0 +1,159 @@
+﻿@using GestionInventaire.Web.Models.Stocks
+@model StockIndexViewModel
+
+@{
+    ViewData["Title"] = "Stock";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/stock.css" asp-append-version="true" />
+}
+
+<div class="stocks-page">
+
+    <div class="stock-header">
+        <div class="stock-header-left">
+            <h1 class="stock-heading">
+                <i class="bi bi-archive"></i>
+                Gestion du Stock
+            </h1>
+            <p class="stock-heading-sub">Niveaux de stock et alertes de réapprovisionnement</p>
+        </div>
+    </div>
+
+    @if (TempData["Succes"] != null)
+    {
+        <div class="stock-alert succes">
+            <i class="bi bi-check-circle"></i>
+            @TempData["Succes"]
+        </div>
+    }
+    @if (TempData["Erreur"] != null)
+    {
+        <div class="stock-alert erreur">
+            <i class="bi bi-exclamation-circle"></i>
+            @TempData["Erreur"]
+        </div>
+    }
+
+    @* ── KPI row ── *@
+    <div class="stock-kpi-row">
+        <div class="stock-kpi total">
+            <div class="stock-kpi-icon"><i class="bi bi-archive"></i></div>
+            <div>
+                <div class="stock-kpi-val">@Model.TotalCount</div>
+                <div class="stock-kpi-label">Produits suivis</div>
+            </div>
+        </div>
+        <div class="stock-kpi critical">
+            <div class="stock-kpi-icon"><i class="bi bi-exclamation-triangle"></i></div>
+            <div>
+                <div class="stock-kpi-val">@Model.StocksCritiques</div>
+                <div class="stock-kpi-label">Stocks critiques</div>
+            </div>
+        </div>
+        <div class="stock-kpi empty">
+            <div class="stock-kpi-icon"><i class="bi bi-x-circle"></i></div>
+            <div>
+                <div class="stock-kpi-val">@Model.SansStock</div>
+                <div class="stock-kpi-label">Épuisés</div>
+            </div>
+        </div>
+    </div>
+
+    @* ── Table ── *@
+    <div class="stock-table-card">
+        <div class="stock-table-toolbar">
+            <span class="stock-table-title">
+                <i class="bi bi-table"></i>
+                Tous les stocks
+            </span>
+            <span class="stock-count-badge">@Model.TotalCount</span>
+        </div>
+
+        <div class="stock-table-wrap">
+            @if (Model.Stocks.Any())
+            {
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                            <th>Seuil alerte</th>
+                            <th>Actifs</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Stocks)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="stock-produit-cell">
+                                        <span class="stock-produit-nom">@row.NomProduit</span>
+                                        <span class="stock-produit-cat">
+                                            <i class="bi bi-tag" style="font-size:11px"></i>
+                                            @row.NomCategorie
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="stock-quantite-cell">
+                                        <span class="stock-quantite-val @row.StatusClass">
+                                            @row.Quantite unité(s)
+                                        </span>
+                                        <div class="stock-bar-wrap">
+                                            <div class="stock-bar @row.StatusClass"
+                                                 style="width:@row.PourcentageStock%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="stock-seuil">≤ @row.SeuilAlerte</span>
+                                </td>
+                                <td>
+                                    <span style="font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--accent2)">
+                                        @row.NombreActifs
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="stock-status-badge @row.StatusClass">
+                                        <i class="bi @(row.Quantite == 0 ? "bi-x-circle" : row.EstCritique ? "bi-exclamation-triangle" : "bi-check-circle")"></i>
+                                        @row.StatusLabel
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="stock-actions">
+                                        <a href="/Stocks/Edit/@row.IdStock"
+                                           class="btn-stock-icon edit"
+                                           title="Modifier seuil/quantité">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/Stocks/Mouvement/@row.IdStock"
+                                           class="btn-stock-icon mouvement"
+                                           title="Entrée / Sortie de stock">
+                                            <i class="bi bi-arrow-left-right"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="stock-empty">
+                    <i class="bi bi-archive"></i>
+                    <span>Aucun stock enregistré</span>
+                    <small style="color:var(--muted)">
+                        Les stocks sont créés automatiquement lors de l'ajout de produits.
+                    </small>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

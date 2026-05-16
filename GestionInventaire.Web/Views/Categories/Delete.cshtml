@@ -1,0 +1,109 @@
+@using GestionInventaire.Web.Models.Categories
+@model CategorieDeleteViewModel
+
+@{
+    ViewData["Title"] = "Supprimer la catégorie";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/categories.css" asp-append-version="true" />
+}
+
+<div class="cat-form-page">
+
+    <div class="cat-header">
+        <div class="cat-header-left">
+            <h1 class="cat-heading">
+                <i class="bi bi-trash" style="color:var(--danger)"></i>
+                Supprimer la catégorie
+            </h1>
+            <p class="cat-heading-sub">Cette action est irréversible</p>
+        </div>
+        <a href="/Categories" class="btn-cat-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="cat-delete-card">
+        <div class="cat-delete-header">
+            <div class="cat-delete-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div>
+                <p class="cat-form-card-title" style="color:var(--danger)">
+                    Confirmer la suppression
+                </p>
+                <p class="cat-form-card-subtitle">
+                    Vérifiez les informations avant de confirmer
+                </p>
+            </div>
+        </div>
+
+        <div class="cat-delete-body">
+
+            @* Infos catégorie *@
+            <div class="cat-delete-info">
+                <div class="cat-delete-row">
+                    <span class="dr-label">Nom</span>
+                    <span class="dr-val">@Model.NomCategorie</span>
+                </div>
+                <div class="cat-delete-row">
+                    <span class="dr-label">Description</span>
+                    <span class="dr-val">
+                        @(string.IsNullOrEmpty(Model.Description) ? "—" : Model.Description)
+                    </span>
+                </div>
+                <div class="cat-delete-row">
+                    <span class="dr-label">Produits</span>
+                    <span class="dr-val">@Model.NombreProduits produit(s) lié(s)</span>
+                </div>
+            </div>
+
+            @* Avertissement *@
+            @if (Model.NombreProduits > 0)
+            {
+                <div class="cat-delete-warning blocked">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <span>
+                        Impossible de supprimer cette catégorie — elle contient
+                        <strong>@Model.NombreProduits produit(s)</strong>.
+                        Supprimez ou réaffectez les produits avant de continuer.
+                    </span>
+                </div>
+            }
+            else
+            {
+                <div class="cat-delete-warning">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <span>
+                        La catégorie <strong>@Model.NomCategorie</strong> sera
+                        définitivement supprimée. Cette action est irréversible.
+                    </span>
+                </div>
+            }
+
+        </div>
+
+        <div class="cat-delete-footer">
+            @if (Model.NombreProduits == 0)
+            {
+                <form method="post"
+                      asp-action="Delete"
+                      asp-route-id="@Model.IdCategorie">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-cat-delete-confirm">
+                        <i class="bi bi-trash"></i>
+                        Confirmer la suppression
+                    </button>
+                </form>
+            }
+            <a href="/Categories" class="btn-cat-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,105 @@
+@using GestionInventaire.Web.Models.Produits
+@model ProduitCreateViewModel
+
+@{
+    ViewData["Title"] = "Nouveau produit";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/produits.css" asp-append-version="true" />
+}
+
+<div class="produit-form-page">
+
+    <div class="prod-header">
+        <div class="prod-header-left">
+            <h1 class="prod-heading">
+                <i class="bi bi-box-seam"></i>
+                Nouveau produit
+            </h1>
+            <p class="prod-heading-sub">Ajouter un produit au catalogue</p>
+        </div>
+        <a href="/Produits" class="btn-prod-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="prod-form-card">
+        <div class="prod-form-header">
+            <div class="prod-form-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <div>
+                <p class="prod-form-card-title">Informations du produit</p>
+                <p class="prod-form-card-subtitle">
+                    Le nom doit être unique dans sa catégorie
+                </p>
+            </div>
+        </div>
+
+        <div class="prod-form-body">
+            <div asp-validation-summary="ModelOnly"
+                 class="prod-alert erreur"
+                 style="margin-bottom:16px"></div>
+
+            <form method="post" id="produitForm">
+                @Html.AntiForgeryToken()
+
+                <div class="prod-form-group">
+                    <label class="prod-form-label" asp-for="NomProduit">
+                        <i class="bi bi-box"></i>
+                        Nom du produit
+                    </label>
+                    <input asp-for="NomProduit"
+                           class="prod-input"
+                           placeholder="ex. Laptop Dell XPS 15, Switch HP 24 ports..." />
+                    <span asp-validation-for="NomProduit" class="prod-field-error"></span>
+                </div>
+
+                <div class="prod-form-group">
+                    <label class="prod-form-label" asp-for="IdCategorie">
+                        <i class="bi bi-tag"></i>
+                        Catégorie
+                    </label>
+                    <select asp-for="IdCategorie"
+                            asp-items="Model.Categories"
+                            class="prod-select">
+                        <option value="">— Sélectionner une catégorie —</option>
+                    </select>
+                    <span asp-validation-for="IdCategorie" class="prod-field-error"></span>
+                </div>
+
+                <div class="prod-form-group">
+                    <label class="prod-form-label" asp-for="Description">
+                        <i class="bi bi-text-left"></i>
+                        Description
+                        <span style="color:var(--muted);font-weight:400">(optionnel)</span>
+                    </label>
+                    <textarea asp-for="Description"
+                              class="prod-textarea"
+                              placeholder="Description du produit..."></textarea>
+                    <span asp-validation-for="Description" class="prod-field-error"></span>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="prod-form-footer">
+            <button type="submit" form="produitForm" class="btn-prod-submit">
+                <i class="bi bi-check-circle"></i>
+                Créer le produit
+            </button>
+            <a href="/Produits" class="btn-prod-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

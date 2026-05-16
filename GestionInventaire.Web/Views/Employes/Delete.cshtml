@@ -1,0 +1,111 @@
+﻿@using GestionInventaire.Web.Models.Employes
+@model EmployeDeleteViewModel
+
+@{
+    ViewData["Title"] = "Supprimer l'employé";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/employes.css" asp-append-version="true" />
+}
+
+<div class="employe-form-page">
+
+    <div class="emp-header">
+        <div class="emp-header-left">
+            <h1 class="emp-heading">
+                <i class="bi bi-trash" style="color:var(--danger)"></i>
+                Supprimer l'employé
+            </h1>
+            <p class="emp-heading-sub">Cette action est irréversible</p>
+        </div>
+        <a href="/Employes" class="btn-emp-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="emp-delete-card">
+        <div class="emp-delete-header">
+            <div class="emp-delete-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div>
+                <p class="emp-form-card-title" style="color:var(--danger)">
+                    Confirmer la suppression
+                </p>
+                <p class="emp-form-card-subtitle">
+                    Vérifiez les informations avant de confirmer
+                </p>
+            </div>
+        </div>
+
+        <div class="emp-delete-body">
+
+            <div class="emp-delete-info">
+                <div class="emp-delete-row">
+                    <span class="dr-label">Employé</span>
+                    <span class="dr-val">@Model.NomComplet</span>
+                </div>
+                <div class="emp-delete-row">
+                    <span class="dr-label">Service</span>
+                    <span class="dr-val">
+                        @(string.IsNullOrEmpty(Model.Service) ? "—" : Model.Service)
+                    </span>
+                </div>
+                <div class="emp-delete-row">
+                    <span class="dr-label">Affectations</span>
+                    <span class="dr-val">@Model.NombreAffectations au total</span>
+                </div>
+                <div class="emp-delete-row">
+                    <span class="dr-label">Actifs actifs</span>
+                    <span class="dr-val">@Model.ActifsActifs en cours</span>
+                </div>
+            </div>
+
+            @if (Model.ActifsActifs > 0)
+            {
+                <div class="emp-delete-warning blocked">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <span>
+                        Impossible de supprimer <strong>@Model.NomComplet</strong> :
+                        <strong>@Model.ActifsActifs affectation(s) active(s)</strong> en cours.
+                        Retournez les actifs avant de supprimer l'employé.
+                    </span>
+                </div>
+            }
+            else
+            {
+                <div class="emp-delete-warning">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <span>
+                        <strong>@Model.NomComplet</strong> sera définitivement supprimé(e).
+                        L'historique des affectations sera conservé.
+                    </span>
+                </div>
+            }
+
+        </div>
+
+        <div class="emp-delete-footer">
+            @if (Model.ActifsActifs == 0)
+            {
+                <form method="post"
+                      asp-action="Delete"
+                      asp-route-id="@Model.IdEmploye">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-emp-delete-confirm">
+                        <i class="bi bi-trash"></i>
+                        Confirmer la suppression
+                    </button>
+                </form>
+            }
+            <a href="/Employes" class="btn-emp-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>

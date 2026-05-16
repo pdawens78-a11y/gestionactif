@@ -1,0 +1,93 @@
+@using GestionInventaire.Web.Models.Categories
+@model CategorieEditViewModel
+
+@{
+    ViewData["Title"] = "Modifier la catégorie";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/categories.css" asp-append-version="true" />
+}
+
+<div class="cat-form-page">
+
+    <div class="cat-header">
+        <div class="cat-header-left">
+            <h1 class="cat-heading">
+                <i class="bi bi-pencil-square"></i>
+                Modifier la catégorie
+            </h1>
+            <p class="cat-heading-sub">@Model.NomCategorie</p>
+        </div>
+        <a href="/Categories" class="btn-cat-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="cat-form-card">
+        <div class="cat-form-header">
+            <div class="cat-form-icon">
+                <i class="bi bi-pencil"></i>
+            </div>
+            <div>
+                <p class="cat-form-card-title">Modifier les informations</p>
+                <p class="cat-form-card-subtitle">
+                    @Model.NombreProduits produit(s) lié(s) à cette catégorie
+                </p>
+            </div>
+        </div>
+
+        <div class="cat-form-body">
+            <div asp-validation-summary="ModelOnly"
+                 class="cat-alert erreur"
+                 style="margin-bottom:16px"></div>
+
+            <form method="post" id="editForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="IdCategorie" />
+                <input type="hidden" asp-for="NombreProduits" />
+
+                <div class="cat-form-group">
+                    <label class="cat-form-label" asp-for="NomCategorie">
+                        <i class="bi bi-tag"></i>
+                        Nom de la catégorie
+                    </label>
+                    <input asp-for="NomCategorie"
+                           class="cat-input"
+                           placeholder="ex. Informatique, Réseau..." />
+                    <span asp-validation-for="NomCategorie" class="cat-field-error"></span>
+                </div>
+
+                <div class="cat-form-group">
+                    <label class="cat-form-label" asp-for="Description">
+                        <i class="bi bi-text-left"></i>
+                        Description <span style="color:var(--muted);font-weight:400">(optionnel)</span>
+                    </label>
+                    <textarea asp-for="Description"
+                              class="cat-textarea"
+                              placeholder="Description de la catégorie..."></textarea>
+                    <span asp-validation-for="Description" class="cat-field-error"></span>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="cat-form-footer">
+            <button type="submit" form="editForm" class="btn-cat-submit">
+                <i class="bi bi-check-circle"></i>
+                Enregistrer les modifications
+            </button>
+            <a href="/Categories" class="btn-cat-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,185 @@
+﻿@using GestionInventaire.Web.Models.Actifs
+@model ActifIndexViewModel
+
+@{
+    ViewData["Title"] = "Actifs";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/actifs.css" asp-append-version="true" />
+}
+
+<div class="actifs-page">
+
+    <div class="actif-header">
+        <div class="actif-header-left">
+            <h1 class="actif-heading">
+                <i class="bi bi-box-seam"></i>
+                Actifs informatiques
+            </h1>
+            <p class="actif-heading-sub">
+                Inventaire complet — approvisionnez depuis le module
+                <a href="/Produits" style="color:var(--accent2)">Produits</a>
+            </p>
+        </div>
+    </div>
+
+    @if (TempData["Succes"] != null)
+    {
+        <div class="actif-alert succes">
+            <i class="bi bi-check-circle"></i>
+            @TempData["Succes"]
+        </div>
+    }
+    @if (TempData["Erreur"] != null)
+    {
+        <div class="actif-alert erreur">
+            <i class="bi bi-exclamation-circle"></i>
+            @TempData["Erreur"]
+        </div>
+    }
+
+    @* ── KPI + filtre cliquable ── *@
+    <div class="actif-kpi-row">
+        <a href="/Actifs" class="actif-kpi total @(string.IsNullOrEmpty(Model.FiltreStatut) ? "active-filter" : "")">
+            <div class="actif-kpi-icon"><i class="bi bi-box-seam"></i></div>
+            <div>
+                <div class="actif-kpi-val">@Model.TotalCount</div>
+                <div class="actif-kpi-label">Total</div>
+            </div>
+        </a>
+        <a href="/Actifs?filtreStatut=Disponible"
+           class="actif-kpi disponible @(Model.FiltreStatut == "Disponible" ? "active-filter" : "")">
+            <div class="actif-kpi-icon"><i class="bi bi-check-circle"></i></div>
+            <div>
+                <div class="actif-kpi-val">@Model.TotalDisponibles</div>
+                <div class="actif-kpi-label">Disponibles</div>
+            </div>
+        </a>
+        <a href="/Actifs?filtreStatut=Affecte"
+           class="actif-kpi affecte @(Model.FiltreStatut == "Affecte" ? "active-filter" : "")">
+            <div class="actif-kpi-icon"><i class="bi bi-person-check"></i></div>
+            <div>
+                <div class="actif-kpi-val">@Model.TotalAffectes</div>
+                <div class="actif-kpi-label">Affectés</div>
+            </div>
+        </a>
+        <a href="/Actifs?filtreStatut=EnMaintenance"
+           class="actif-kpi maintenance @(Model.FiltreStatut == "EnMaintenance" ? "active-filter" : "")">
+            <div class="actif-kpi-icon"><i class="bi bi-wrench"></i></div>
+            <div>
+                <div class="actif-kpi-val">@Model.TotalEnMaintenance</div>
+                <div class="actif-kpi-label">Maintenance</div>
+            </div>
+        </a>
+        <a href="/Actifs?filtreStatut=HorsService"
+           class="actif-kpi hors-service @(Model.FiltreStatut == "HorsService" ? "active-filter" : "")">
+            <div class="actif-kpi-icon"><i class="bi bi-x-circle"></i></div>
+            <div>
+                <div class="actif-kpi-val">@Model.TotalHorsService</div>
+                <div class="actif-kpi-label">Hors service</div>
+            </div>
+        </a>
+    </div>
+
+    @* ── Table ── *@
+    <div class="actif-table-card">
+        <div class="actif-table-toolbar">
+            <span class="actif-table-title">
+                <i class="bi bi-table"></i>
+                @(string.IsNullOrEmpty(Model.FiltreStatut)
+                                ? "Tous les actifs"
+                                : $"Filtre : {Model.FiltreStatut}")
+            </span>
+            <span class="actif-count-badge">@Model.Actifs.Count</span>
+        </div>
+
+        <div class="actif-table-wrap">
+            @if (Model.Actifs.Any())
+            {
+                <table class="actif-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Produit</th>
+                            <th>Localisation</th>
+                            <th>Acquisition</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Actifs)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="actif-code">@row.CodeInventaire</span>
+                                </td>
+                                <td>
+                                    <div class="actif-produit-cell">
+                                        <span class="actif-produit-nom">@row.NomProduit</span>
+                                        <span class="actif-produit-cat">
+                                            <i class="bi bi-tag" style="font-size:10px"></i>
+                                            @row.NomCategorie
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-size:0.78rem;color:var(--muted)">
+                                        <i class="bi bi-geo-alt" style="font-size:11px"></i>
+                                        @row.Localisation
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted)">
+                                        @row.DateFormatted
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="actif-statut-badge @row.StatutClass">
+                                        <i class="bi @(row.Statut == "Disponible" ? "bi-check-circle" : row.Statut == "Affecte" ? "bi-person-check" : row.Statut == "EnMaintenance" ? "bi-wrench" : "bi-x-circle")"></i>
+                                        @row.StatutLabel
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="actif-actions">
+                                        @* Seuls les actifs Disponibles ou HorsService peuvent être modifiés *@
+                                        @if (row.Statut == "Disponible" || row.Statut == "HorsService")
+                                        {
+                                            <a href="/Actifs/Edit/@row.IdActif"
+                                               class="btn-actif-icon edit"
+                                               title="Modifier localisation / statut">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="btn-actif-icon"
+                                                  style="opacity:0.3;cursor:default"
+                                                  title="Non modifiable (affecté ou en maintenance)">
+                                                <i class="bi bi-lock"></i>
+                                            </span>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="actif-empty">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Aucun actif trouvé</span>
+                    <small style="color:var(--muted)">
+                        Approvisionnez depuis
+                        <a href="/Produits" style="color:var(--accent2)">Produits</a>
+                    </small>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

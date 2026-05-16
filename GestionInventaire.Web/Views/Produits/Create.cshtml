@@ -18,7 +18,9 @@
                 <i class="bi bi-box-seam"></i>
                 Nouveau produit
             </h1>
-            <p class="prod-heading-sub">Ajouter un produit au catalogue</p>
+            <p class="prod-heading-sub">
+                Créer un produit, configurer son stock et générer ses actifs en une seule étape
+            </p>
         </div>
         <a href="/Produits" class="btn-prod-cancel">
             <i class="bi bi-arrow-left"></i>
@@ -26,26 +28,26 @@
         </a>
     </div>
 
-    <div class="prod-form-card">
-        <div class="prod-form-header">
-            <div class="prod-form-icon">
-                <i class="bi bi-box-seam"></i>
-            </div>
-            <div>
-                <p class="prod-form-card-title">Informations du produit</p>
-                <p class="prod-form-card-subtitle">
-                    Le nom doit être unique dans sa catégorie
-                </p>
-            </div>
-        </div>
+    <form method="post" id="produitForm">
+        @Html.AntiForgeryToken()
 
-        <div class="prod-form-body">
-            <div asp-validation-summary="ModelOnly"
-                 class="prod-alert erreur"
-                 style="margin-bottom:16px"></div>
+        <div asp-validation-summary="ModelOnly"
+             class="prod-alert erreur"
+             style="margin-bottom:0"></div>
 
-            <form method="post" id="produitForm">
-                @Html.AntiForgeryToken()
+        @* ══ SECTION 1 — Informations produit ══ *@
+        <div class="prod-form-card" style="margin-bottom:16px">
+            <div class="prod-form-header">
+                <div class="prod-form-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div>
+                    <p class="prod-form-card-title">1 — Informations du produit</p>
+                    <p class="prod-form-card-subtitle">Nom, catégorie et description</p>
+                </div>
+            </div>
+
+            <div class="prod-form-body">
 
                 <div class="prod-form-group">
                     <label class="prod-form-label" asp-for="NomProduit">
@@ -69,6 +71,13 @@
                         <option value="">— Sélectionner une catégorie —</option>
                     </select>
                     <span asp-validation-for="IdCategorie" class="prod-field-error"></span>
+                    <small style="font-size:0.72rem;color:var(--muted)">
+                        Catégorie manquante ?
+                        <a href="/Categories/Create" target="_blank" style="color:var(--accent2)">
+                            Créer une catégorie
+                        </a>
+                        (s'ouvre dans un nouvel onglet)
+                    </small>
                 </div>
 
                 <div class="prod-form-group">
@@ -83,23 +92,151 @@
                     <span asp-validation-for="Description" class="prod-field-error"></span>
                 </div>
 
-            </form>
+            </div>
         </div>
 
-        <div class="prod-form-footer">
-            <button type="submit" form="produitForm" class="btn-prod-submit">
-                <i class="bi bi-check-circle"></i>
-                Créer le produit
-            </button>
-            <a href="/Produits" class="btn-prod-cancel">
-                <i class="bi bi-x"></i>
-                Annuler
-            </a>
+        @* ══ SECTION 2 — Stock ══ *@
+        <div class="prod-form-card" style="margin-bottom:16px">
+            <div class="prod-form-header">
+                <div class="prod-form-icon" style="background:linear-gradient(135deg,var(--warn),#d97706)">
+                    <i class="bi bi-archive"></i>
+                </div>
+                <div>
+                    <p class="prod-form-card-title">2 — Configuration du stock</p>
+                    <p class="prod-form-card-subtitle">
+                        Un stock sera créé automatiquement pour ce produit
+                    </p>
+                </div>
+            </div>
+
+            <div class="prod-form-body">
+
+                <div class="prod-form-group">
+                    <label class="prod-form-label" asp-for="SeuilAlerte">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Seuil d'alerte
+                    </label>
+                    <input asp-for="SeuilAlerte"
+                           type="number"
+                           min="0"
+                           class="prod-input"
+                           style="max-width:200px"
+                           placeholder="5" />
+                    <span asp-validation-for="SeuilAlerte" class="prod-field-error"></span>
+                    <small style="font-size:0.72rem;color:var(--muted)">
+                        Une alerte sera déclenchée quand le stock ≤ ce seuil
+                    </small>
+                </div>
+
+            </div>
         </div>
-    </div>
+
+        @* ══ SECTION 3 — Actifs ══ *@
+        <div class="prod-form-card">
+            <div class="prod-form-header">
+                <div class="prod-form-icon" style="background:linear-gradient(135deg,var(--accent),#00b894)">
+                    <i class="bi bi-boxes"></i>
+                </div>
+                <div>
+                    <p class="prod-form-card-title">3 — Génération des actifs</p>
+                    <p class="prod-form-card-subtitle">
+                        Les codes inventaire seront générés automatiquement · Vous pourrez en ajouter plus tard
+                    </p>
+                </div>
+            </div>
+
+            <div class="prod-form-body">
+
+                <div style="display:grid;grid-template-columns:1fr 2fr;gap:14px">
+
+                    <div class="prod-form-group">
+                        <label class="prod-form-label" asp-for="QuantiteActifs">
+                            <i class="bi bi-hash"></i>
+                            Nombre d'actifs
+                        </label>
+                        <input asp-for="QuantiteActifs"
+                               type="number"
+                               min="0"
+                               max="10000"
+                               class="prod-input"
+                               id="quantiteActifs"
+                               placeholder="0" />
+                        <span asp-validation-for="QuantiteActifs" class="prod-field-error"></span>
+                        <small style="font-size:0.72rem;color:var(--muted)">
+                            Entrez 0 pour ne pas générer d'actifs maintenant
+                        </small>
+                    </div>
+
+                    <div class="prod-form-group" id="localisationGroup">
+                        <label class="prod-form-label" asp-for="Localisation">
+                            <i class="bi bi-geo-alt"></i>
+                            Localisation
+                            <span style="color:var(--muted);font-weight:400" id="locReqLabel"></span>
+                        </label>
+                        <input asp-for="Localisation"
+                               class="prod-input"
+                               id="localisationInput"
+                               placeholder="ex. Salle Serveur A, Entrepôt B..." />
+                        <span asp-validation-for="Localisation" class="prod-field-error"></span>
+                    </div>
+
+                </div>
+
+                @* Aperçu dynamique *@
+                <div id="approPreview"
+                     style="display:none;margin-top:4px;padding:10px 14px;
+                            background:rgba(0,212,170,0.06);
+                            border:1px solid rgba(0,212,170,0.2);
+                            border-radius:8px;font-size:0.8rem;color:var(--accent);
+                            display:flex;align-items:center;gap:8px">
+                    <i class="bi bi-info-circle"></i>
+                    <span id="previewText"></span>
+                </div>
+
+            </div>
+
+            <div class="prod-form-footer">
+                <button type="submit" form="produitForm" class="btn-prod-submit">
+                    <i class="bi bi-check-circle"></i>
+                    Créer le produit
+                </button>
+                <a href="/Produits" class="btn-prod-cancel">
+                    <i class="bi bi-x"></i>
+                    Annuler
+                </a>
+            </div>
+        </div>
+
+    </form>
 
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        const qInput   = document.getElementById('quantiteActifs');
+        const preview  = document.getElementById('approPreview');
+        const prevText = document.getElementById('previewText');
+        const locReq   = document.getElementById('locReqLabel');
+        const locInput = document.getElementById('localisationInput');
+
+        function updatePreview() {
+            const qty = parseInt(qInput.value) || 0;
+
+            if (qty > 0) {
+                preview.style.display = 'flex';
+                locReq.textContent = '(obligatoire)';
+                locReq.style.color = 'var(--danger)';
+                prevText.textContent =
+                    `${qty} actif(s) seront générés automatiquement avec des codes inventaire séquentiels.`;
+            } else {
+                preview.style.display = 'none';
+                locReq.textContent = '(optionnel si 0 actif)';
+                locReq.style.color = 'var(--muted)';
+            }
+        }
+
+        qInput?.addEventListener('input', updatePreview);
+        updatePreview();
+    </script>
 }

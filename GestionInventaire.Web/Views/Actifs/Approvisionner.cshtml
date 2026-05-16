@@ -1,0 +1,140 @@
+﻿@using GestionInventaire.Web.Models.Actifs
+@model ApprovisionnerViewModel
+
+@{
+    ViewData["Title"] = "Approvisionner";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/actifs.css" asp-append-version="true" />
+}
+
+<div class="actif-form-page">
+
+    <div class="actif-header">
+        <div class="actif-header-left">
+            <h1 class="actif-heading">
+                <i class="bi bi-boxes"></i>
+                Approvisionner
+            </h1>
+            <p class="actif-heading-sub">
+                Générer des actifs en masse pour un produit
+            </p>
+        </div>
+        <a href="/Produits" class="btn-actif-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour aux produits
+        </a>
+    </div>
+
+    <div class="actif-form-card" style="max-width:580px">
+        <div class="actif-form-header">
+            <div class="actif-form-icon" style="background:linear-gradient(135deg,var(--accent),#00b894)">
+                <i class="bi bi-boxes"></i>
+            </div>
+            <div>
+                <p class="actif-form-card-title">Génération automatique d'actifs</p>
+                <p class="actif-form-card-subtitle">
+                    Les codes inventaire seront générés automatiquement
+                </p>
+            </div>
+        </div>
+
+        <div class="actif-form-body">
+            <div asp-validation-summary="ModelOnly"
+                 class="actif-alert erreur"
+                 style="margin-bottom:16px"></div>
+
+            @* Info produit *@
+            <div class="appro-produit-card">
+                <div class="appro-produit-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div>
+                    <div class="appro-produit-nom">@Model.NomProduit</div>
+                    <div class="appro-produit-cat">
+                        <i class="bi bi-tag" style="font-size:11px"></i>
+                        @Model.NomCategorie
+                    </div>
+                </div>
+            </div>
+
+            <form method="post" id="approForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="IdProduit" />
+                <input type="hidden" asp-for="NomProduit" />
+                <input type="hidden" asp-for="NomCategorie" />
+
+                <div class="actif-form-group">
+                    <label class="actif-form-label" asp-for="Quantite">
+                        <i class="bi bi-hash"></i>
+                        Nombre d'actifs à générer
+                    </label>
+                    <input asp-for="Quantite"
+                           type="number"
+                           min="1"
+                           max="10000"
+                           class="actif-input"
+                           placeholder="ex. 50"
+                           id="quantiteInput" />
+                    <span asp-validation-for="Quantite" class="actif-field-error"></span>
+                    <div class="appro-preview" id="approPreview">
+                        <i class="bi bi-info-circle"></i>
+                        <span id="previewText">
+                            Entrez une quantité pour voir l'aperçu des codes générés.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="actif-form-group">
+                    <label class="actif-form-label" asp-for="Localisation">
+                        <i class="bi bi-geo-alt"></i>
+                        Localisation (commune à tous les actifs générés)
+                    </label>
+                    <input asp-for="Localisation"
+                           class="actif-input"
+                           placeholder="ex. Salle Serveur A, Entrepôt B..." />
+                    <span asp-validation-for="Localisation" class="actif-field-error"></span>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="actif-form-footer">
+            <button type="submit" form="approForm" class="btn-actif-submit"
+                    style="background:linear-gradient(135deg,var(--accent),#00b894);box-shadow:none">
+                <i class="bi bi-boxes"></i>
+                Générer les actifs
+            </button>
+            <a href="/Produits" class="btn-actif-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Aperçu dynamique du premier et dernier code généré
+        const input    = document.getElementById('quantiteInput');
+        const preview  = document.getElementById('previewText');
+        const prodNom  = '@Model.NomProduit';
+        const firstLetter = prodNom.trim().charAt(0).toUpperCase();
+
+        input?.addEventListener('input', () => {
+            const qty = parseInt(input.value);
+            if (!qty || qty < 1) {
+                preview.textContent = 'Entrez une quantité pour voir l\'aperçu.';
+                return;
+            }
+            preview.textContent =
+                `${qty} actif(s) seront générés : ` +
+                `${firstLetter}001 → ${firstLetter}${String(qty).padStart(3, '0')} ` +
+                `(les numéros exacts dépendent des actifs existants)`;
+        });
+    </script>
+}

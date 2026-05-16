@@ -33,9 +33,10 @@ namespace GestionInventaire.Web.Models.Produits
             : "stock-ok";
     }
 
-    // ── Création ──
+    // ── Création avec approvisionnement ──
     public class ProduitCreateViewModel
     {
+        // ── Infos produit ──
         [Required(ErrorMessage = "Le nom est obligatoire")]
         [StringLength(100, MinimumLength = 2,
             ErrorMessage = "Le nom doit contenir entre 2 et 100 caractères")]
@@ -50,7 +51,37 @@ namespace GestionInventaire.Web.Models.Produits
         [Display(Name = "Catégorie")]
         public int IdCategorie { get; set; }
 
+        // ── Stock ──
+        [Range(0, int.MaxValue, ErrorMessage = "Le seuil ne peut pas être négatif")]
+        [Display(Name = "Seuil d'alerte stock")]
+        public int SeuilAlerte { get; set; } = 5;
+
+        // ── Actifs ──
+        [Range(0, 10000,
+            ErrorMessage = "La quantité doit être entre 0 et 10 000")]
+        [Display(Name = "Nombre d'actifs à générer")]
+        public int QuantiteActifs { get; set; } = 0;
+
+        [StringLength(100)]
+        [Display(Name = "Localisation des actifs")]
+        public string Localisation { get; set; } = string.Empty;
+
+        // Listes déroulantes
         public List<SelectListItem> Categories { get; set; } = new();
+    }
+
+    // ── Résultat création ──
+    public class ProduitCreateResultViewModel
+    {
+        public string NomProduit { get; set; } = string.Empty;
+        public int NombreActifs { get; set; }
+        public List<string> CodesGeneres { get; set; } = new();
+
+        public List<string> CodesAffiches =>
+            CodesGeneres.Take(10).ToList();
+
+        public int CodesRestants =>
+            Math.Max(0, CodesGeneres.Count - 10);
     }
 
     // ── Modification ──

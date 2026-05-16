@@ -1,0 +1,104 @@
+﻿@using GestionInventaire.Web.Models.Actifs
+@model ActifEditViewModel
+
+@{
+    ViewData["Title"] = "Modifier l'actif";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/actifs.css" asp-append-version="true" />
+}
+
+<div class="actif-form-page">
+
+    <div class="actif-header">
+        <div class="actif-header-left">
+            <h1 class="actif-heading">
+                <i class="bi bi-pencil-square"></i>
+                Modifier l'actif
+            </h1>
+            <p class="actif-heading-sub">@Model.CodeInventaire — @Model.NomProduit</p>
+        </div>
+        <a href="/Actifs" class="btn-actif-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="actif-form-card">
+        <div class="actif-form-header">
+            <div class="actif-form-icon">
+                <i class="bi bi-pencil"></i>
+            </div>
+            <div>
+                <p class="actif-form-card-title">Modifier localisation et statut</p>
+                <p class="actif-form-card-subtitle">
+                    Le code inventaire et le produit ne peuvent pas être modifiés
+                </p>
+            </div>
+        </div>
+
+        <div class="actif-form-body">
+            <div asp-validation-summary="ModelOnly"
+                 class="actif-alert erreur"
+                 style="margin-bottom:16px"></div>
+
+            @* Info lecture seule *@
+            <div class="actif-readonly-info">
+                <span class="actif-readonly-code">@Model.CodeInventaire</span>
+                <span class="actif-readonly-produit">@Model.NomProduit</span>
+            </div>
+
+            <form method="post" id="editForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="IdActif" />
+                <input type="hidden" asp-for="CodeInventaire" />
+                <input type="hidden" asp-for="NomProduit" />
+
+                <div class="actif-form-group">
+                    <label class="actif-form-label" asp-for="Localisation">
+                        <i class="bi bi-geo-alt"></i>
+                        Localisation
+                    </label>
+                    <input asp-for="Localisation"
+                           class="actif-input"
+                           placeholder="ex. Salle Serveur A, Bureau 201..." />
+                    <span asp-validation-for="Localisation" class="actif-field-error"></span>
+                </div>
+
+                <div class="actif-form-group">
+                    <label class="actif-form-label" asp-for="Statut">
+                        <i class="bi bi-flag"></i>
+                        Statut
+                    </label>
+                    <select asp-for="Statut"
+                            asp-items="Model.Statuts"
+                            class="actif-select">
+                    </select>
+                    <span asp-validation-for="Statut" class="actif-field-error"></span>
+                    <small style="font-size:0.72rem;color:var(--muted)">
+                        Seuls « Disponible » et « Hors service » sont modifiables manuellement.
+                    </small>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="actif-form-footer">
+            <button type="submit" form="editForm" class="btn-actif-submit">
+                <i class="bi bi-check-circle"></i>
+                Enregistrer
+            </button>
+            <a href="/Actifs" class="btn-actif-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

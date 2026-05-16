@@ -1,0 +1,128 @@
+﻿@using GestionInventaire.Web.Models.Produits
+@model ProduitCreateResultViewModel
+
+@{
+    ViewData["Title"] = "Produit créé";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/produits.css" asp-append-version="true" />
+}
+
+<div class="produit-form-page">
+
+    <div class="prod-header">
+        <div class="prod-header-left">
+            <h1 class="prod-heading" style="color:var(--accent)">
+                <i class="bi bi-check-circle"></i>
+                Produit créé avec succès
+            </h1>
+            <p class="prod-heading-sub">
+                « @Model.NomProduit » — stock et actifs configurés
+            </p>
+        </div>
+    </div>
+
+    <div class="prod-form-card" style="max-width:620px;border-color:rgba(0,212,170,0.3)">
+
+        <div class="prod-form-header"
+             style="background:rgba(0,212,170,0.04);border-bottom-color:rgba(0,212,170,0.2)">
+            <div class="prod-form-icon">
+                <i class="bi bi-check-lg"></i>
+            </div>
+            <div>
+                <p class="prod-form-card-title" style="color:var(--accent)">
+                    Récapitulatif
+                </p>
+                <p class="prod-form-card-subtitle">
+                    @Model.NomProduit · @Model.NombreActifs actif(s) générés
+                </p>
+            </div>
+        </div>
+
+        <div class="prod-form-body">
+
+            @* Résumé *@
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+                <div style="text-align:center;padding:12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)">
+                    <div style="font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--accent2)">
+                        1
+                    </div>
+                    <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">
+                        Produit créé
+                    </div>
+                </div>
+                <div style="text-align:center;padding:12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)">
+                    <div style="font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--warn)">
+                        1
+                    </div>
+                    <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">
+                        Stock créé
+                    </div>
+                </div>
+                <div style="text-align:center;padding:12px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)">
+                    <div style="font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--accent)">
+                        @Model.NombreActifs
+                    </div>
+                    <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">
+                        Actif(s) générés
+                    </div>
+                </div>
+            </div>
+
+            @* Codes générés *@
+            @if (Model.CodesGeneres.Any())
+            {
+                <p style="font-size:0.82rem;color:var(--muted);margin-bottom:10px">
+                    Codes inventaire générés
+                    @if (Model.CodesRestants > 0)
+                    {
+                        <span>(10 premiers affichés)</span>
+                    }
+                    :
+                </p>
+
+                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">
+                    @foreach (var code in Model.CodesAffiches)
+                    {
+                        <span style="padding:3px 10px;background:var(--surface2);
+                                             border:1px solid var(--border);border-radius:6px;
+                                             font-family:'Space Mono',monospace;font-size:0.72rem;
+                                             color:var(--accent2)">
+                            @code
+                        </span>
+                    }
+                    @if (Model.CodesRestants > 0)
+                    {
+                        <span style="font-size:0.75rem;color:var(--muted);align-self:center">
+                            + @Model.CodesRestants autre(s)
+                        </span>
+                    }
+                </div>
+            }
+
+            @* Actions *@
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <a href="/Produits" class="btn-prod-submit" style="text-decoration:none">
+                    <i class="bi bi-box-seam"></i>
+                    Retour aux produits
+                </a>
+                <a href="/Actifs" class="btn-prod-cancel" style="text-decoration:none">
+                    <i class="bi bi-boxes"></i>
+                    Voir les actifs
+                </a>
+                <a href="/Stocks" class="btn-prod-cancel" style="text-decoration:none">
+                    <i class="bi bi-archive"></i>
+                    Voir le stock
+                </a>
+                <a href="/Produits/Create" class="btn-prod-cancel" style="text-decoration:none">
+                    <i class="bi bi-plus-lg"></i>
+                    Nouveau produit
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>

@@ -36,7 +36,7 @@
                     Confirmer la suppression
                 </p>
                 <p class="prod-form-card-subtitle">
-                    Vérifiez les informations avant de confirmer
+                    Le stock et tous les actifs hors service associés seront également supprimés
                 </p>
             </div>
         </div>
@@ -70,8 +70,9 @@
                     <i class="bi bi-exclamation-triangle"></i>
                     <span>
                         Impossible de supprimer « <strong>@Model.NomProduit</strong> » :
-                        <strong>@Model.NombreActifs actif(s)</strong> y sont associés.
-                        Supprimez ou réaffectez les actifs avant de continuer.
+                        <strong>@Model.NombreActifs actif(s)</strong> encore en service
+                        (Disponible, Affecté ou En maintenance).
+                        Passez-les en <strong>Hors service</strong> avant de supprimer le produit.
                     </span>
                 </div>
             }
@@ -80,8 +81,8 @@
                 <div class="prod-delete-warning">
                     <i class="bi bi-exclamation-circle"></i>
                     <span>
-                        Le produit <strong>@Model.NomProduit</strong> sera
-                        définitivement supprimé. Cette action est irréversible.
+                        Le produit <strong>@Model.NomProduit</strong>, son stock
+                        et ses actifs hors service seront définitivement supprimés.
                     </span>
                 </div>
             }

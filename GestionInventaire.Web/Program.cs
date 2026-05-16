@@ -134,6 +134,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<EmployeProfile>();
     cfg.AddProfile<MaintenanceProfile>();
     cfg.AddProfile<AuditProfile>();
+    cfg.AddProfile<ActifProfile>();
 });
 
 // ======================

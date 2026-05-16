@@ -20,10 +20,18 @@
             </h1>
             <p class="prod-heading-sub">Catalogue des produits informatiques</p>
         </div>
-        <a href="/Produits/Create" class="btn-prod-new">
-            <i class="bi bi-plus-lg"></i>
-            Nouveau produit
-        </a>
+        <div style="display:flex;gap:8px;align-items:center">
+            <a href="/Categories/Create" target="_blank"
+               class="btn-prod-new"
+               style="background:var(--surface2);color:var(--muted);border:1px solid var(--border)">
+                <i class="bi bi-tags"></i>
+                Nouvelle catégorie
+            </a>
+            <a href="/Produits/Create" class="btn-prod-new">
+                <i class="bi bi-plus-lg"></i>
+                Nouveau produit
+            </a>
+        </div>
     </div>
 
     @if (TempData["Succes"] != null)
@@ -100,6 +108,13 @@
                                 </td>
                                 <td>
                                     <div class="prod-actions">
+                                        @* Approvisionner — ajouter des actifs après la création *@
+                                        <a href="/Actifs/Approvisionner/@row.IdProduit"
+                                           class="btn-prod-icon"
+                                           title="Approvisionner des actifs supplémentaires"
+                                           style="color:var(--accent)">
+                                            <i class="bi bi-boxes"></i>
+                                        </a>
                                         <a href="/Produits/Edit/@row.IdProduit"
                                            class="btn-prod-icon edit"
                                            title="Modifier">

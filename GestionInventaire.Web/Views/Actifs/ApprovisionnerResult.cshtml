@@ -1,0 +1,80 @@
+﻿@using GestionInventaire.Web.Models.Actifs
+@model ApprovisionnerResultViewModel
+
+@{
+    ViewData["Title"] = "Approvisionnement réussi";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/actifs.css" asp-append-version="true" />
+}
+
+<div class="actif-form-page">
+
+    <div class="actif-header">
+        <div class="actif-header-left">
+            <h1 class="actif-heading" style="color:var(--accent)">
+                <i class="bi bi-check-circle"></i>
+                Approvisionnement réussi
+            </h1>
+            <p class="actif-heading-sub">
+                @Model.NombreGenere actif(s) générés pour « @Model.NomProduit »
+            </p>
+        </div>
+    </div>
+
+    <div class="appro-result-card">
+        <div class="appro-result-header">
+            <div class="appro-result-icon">
+                <i class="bi bi-check-lg"></i>
+            </div>
+            <div>
+                <p class="actif-form-card-title" style="color:var(--accent)">
+                    @Model.NombreGenere actif(s) créés avec succès
+                </p>
+                <p class="actif-form-card-subtitle">
+                    Produit : @Model.NomProduit · Stock mis à jour automatiquement
+                </p>
+            </div>
+        </div>
+
+        <div class="appro-result-body">
+
+            <p style="font-size:0.82rem;color:var(--muted);margin-bottom:10px">
+                Codes inventaire générés
+                @if (Model.CodesRestants > 0)
+                {
+                    <span>(10 premiers affichés)</span>
+                }
+                :
+            </p>
+
+            <div class="appro-codes-grid">
+                @foreach (var code in Model.CodesAffiches)
+                {
+                    <span class="appro-code-tag">@code</span>
+                }
+                @if (Model.CodesRestants > 0)
+                {
+                    <span class="appro-codes-more">
+                        + @Model.CodesRestants autre(s)
+                    </span>
+                }
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:24px">
+                <a href="/Actifs" class="btn-actif-submit" style="text-decoration:none">
+                    <i class="bi bi-box-seam"></i>
+                    Voir les actifs
+                </a>
+                <a href="/Produits" class="btn-actif-cancel" style="text-decoration:none">
+                    <i class="bi bi-arrow-left"></i>
+                    Retour aux produits
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>

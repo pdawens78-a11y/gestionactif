@@ -1,0 +1,189 @@
+﻿@using GestionInventaire.Web.Models.Maintenances
+@model MaintenanceIndexViewModel
+
+@{
+    ViewData["Title"] = "Maintenances";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/maintenance.css" asp-append-version="true" />
+}
+
+<div class="maintenances-page">
+
+    <div class="mnt-header">
+        <div class="mnt-header-left">
+            <h1 class="mnt-heading">
+                <i class="bi bi-wrench-adjustable"></i>
+                Maintenances
+            </h1>
+            <p class="mnt-heading-sub">Planification et suivi des interventions techniques</p>
+        </div>
+        <a href="/Maintenances/Create" class="btn-mnt-new">
+            <i class="bi bi-plus-lg"></i>
+            Planifier une maintenance
+        </a>
+    </div>
+
+    @if (TempData["Succes"] != null)
+    {
+        <div class="mnt-alert succes">
+            <i class="bi bi-check-circle"></i>
+            @TempData["Succes"]
+        </div>
+    }
+    @if (TempData["Erreur"] != null)
+    {
+        <div class="mnt-alert erreur">
+            <i class="bi bi-exclamation-circle"></i>
+            @TempData["Erreur"]
+        </div>
+    }
+
+    <div class="mnt-kpi-row">
+        <div class="mnt-kpi total">
+            <div class="mnt-kpi-icon"><i class="bi bi-list-check"></i></div>
+            <div>
+                <div class="mnt-kpi-val">@Model.TotalCount</div>
+                <div class="mnt-kpi-label">Total</div>
+            </div>
+        </div>
+        <div class="mnt-kpi planifiee">
+            <div class="mnt-kpi-icon"><i class="bi bi-calendar-check"></i></div>
+            <div>
+                <div class="mnt-kpi-val">@Model.Planifiees</div>
+                <div class="mnt-kpi-label">Planifiées</div>
+            </div>
+        </div>
+        <div class="mnt-kpi encours">
+            <div class="mnt-kpi-icon"><i class="bi bi-wrench"></i></div>
+            <div>
+                <div class="mnt-kpi-val">@Model.EnCours</div>
+                <div class="mnt-kpi-label">En cours</div>
+            </div>
+        </div>
+        <div class="mnt-kpi terminee">
+            <div class="mnt-kpi-icon"><i class="bi bi-check-circle"></i></div>
+            <div>
+                <div class="mnt-kpi-val">@Model.Terminees</div>
+                <div class="mnt-kpi-label">Terminées</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mnt-table-card">
+        <div class="mnt-table-toolbar">
+            <span class="mnt-table-title">
+                <i class="bi bi-table"></i>
+                Toutes les maintenances
+            </span>
+            <span class="mnt-count-badge">@Model.TotalCount</span>
+        </div>
+
+        <div class="mnt-table-wrap">
+            @if (Model.Maintenances.Any())
+            {
+                <table class="mnt-table">
+                    <thead>
+                        <tr>
+                            <th>Actif</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Coût</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Maintenances)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="mnt-actif-cell">
+                                        <span class="mnt-actif-code">@row.CodeActif</span>
+                                        <span class="mnt-actif-produit">@row.NomProduit</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display:flex;flex-direction:column;gap:2px">
+                                        <span style="font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--text)">
+                                            @row.DateFormatted
+                                        </span>
+                                        @if (row.EstUrgente)
+                                        {
+                                            <span class="mnt-urgent">
+                                                <i class="bi bi-exclamation-triangle"></i>
+                                                Urgente
+                                            </span>
+                                        }
+                                    </div>
+                                </td>
+                                <td><span class="mnt-desc">@row.Description</span></td>
+                                <td>
+                                    <span style="font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--muted)">
+                                        @row.CoutFormatted
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="mnt-statut-badge @row.StatutClass">
+                                        <i class="bi @(row.Statut == "Terminee" ? "bi-check-circle" : row.Statut == "EnCours" ? "bi-wrench" : "bi-calendar")"></i>
+                                        @row.StatutLabel
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="mnt-actions">
+                                        @if (row.Statut == "Planifiee")
+                                        {
+                                            <form method="post" asp-action="ChangerStatut"
+                                                  asp-route-id="@row.IdMaintenance"
+                                                  asp-route-statut="EnCours" style="display:inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn-statut encours">
+                                                    <i class="bi bi-play"></i> Démarrer
+                                                </button>
+                                            </form>
+                                        }
+                                        @if (row.Statut == "EnCours")
+                                        {
+                                            <form method="post" asp-action="ChangerStatut"
+                                                  asp-route-id="@row.IdMaintenance"
+                                                  asp-route-statut="Terminee" style="display:inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn-statut terminee">
+                                                    <i class="bi bi-check"></i> Terminer
+                                                </button>
+                                            </form>
+                                        }
+                                        <a href="/Maintenances/Edit/@row.IdMaintenance"
+                                           class="btn-mnt-icon edit" title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        @if (row.Statut != "EnCours")
+                                        {
+                                            <a href="/Maintenances/Delete/@row.IdMaintenance"
+                                               class="btn-mnt-icon delete" title="Supprimer">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="mnt-empty">
+                    <i class="bi bi-wrench-adjustable"></i>
+                    <span>Aucune maintenance enregistrée</span>
+                    <a href="/Maintenances/Create" class="btn-mnt-new" style="margin-top:8px">
+                        <i class="bi bi-plus-lg"></i> Planifier la première
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

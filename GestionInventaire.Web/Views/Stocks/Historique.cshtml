@@ -1,0 +1,149 @@
+﻿@using GestionInventaire.Web.Models.Stocks
+@model StockHistoriqueViewModel
+
+@{
+    ViewData["Title"] = "Historique des mouvements";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/stock.css" asp-append-version="true" />
+    <style>
+        .mouvement-entree {
+            color: var(--accent);
+        }
+
+        .mouvement-sortie {
+            color: var(--danger);
+        }
+
+        .histo-entree-badge {
+            background: rgba(0,212,170,0.1);
+            color: var(--accent);
+            border: 1px solid rgba(0,212,170,0.25);
+        }
+
+        .histo-sortie-badge {
+            background: rgba(239,68,68,0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239,68,68,0.25);
+        }
+    </style>
+}
+
+<div class="stock-form-page">
+
+    <div class="stock-header">
+        <div class="stock-header-left">
+            <h1 class="stock-heading">
+                <i class="bi bi-clock-history"></i>
+                Historique des mouvements
+            </h1>
+            <p class="stock-heading-sub">@Model.NomProduit — @Model.NomCategorie</p>
+        </div>
+        <a href="/Stocks" class="btn-stock-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour au stock
+        </a>
+    </div>
+
+    @* ── Résumé produit ── *@
+    <div class="stock-form-card" style="max-width:100%">
+        <div class="stock-form-header">
+            <div class="stock-form-icon">
+                <i class="bi bi-archive"></i>
+            </div>
+            <div style="flex:1;display:flex;align-items:center;justify-content:space-between">
+                <div>
+                    <p class="stock-form-card-title">@Model.NomProduit</p>
+                    <p class="stock-form-card-subtitle">
+                        Catégorie : @Model.NomCategorie
+                    </p>
+                </div>
+                <div style="display:flex;gap:24px;align-items:center">
+                    <div style="text-align:center">
+                        <div style="font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;color:@(Model.EstCritique ? "var(--danger)" : "var(--accent)")">
+                            @Model.QuantiteActuelle
+                        </div>
+                        <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">
+                            En stock
+                        </div>
+                    </div>
+                    <div style="text-align:center">
+                        <div style="font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--warn)">
+                            @Model.SeuilAlerte
+                        </div>
+                        <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">
+                            Seuil alerte
+                        </div>
+                    </div>
+                    <div style="text-align:center">
+                        <div style="font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--accent2)">
+                            @Model.Mouvements.Count
+                        </div>
+                        <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px">
+                            Mouvements
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ── Table mouvements ── *@
+        <div class="stock-table-wrap" style="max-height:520px">
+            @if (Model.Mouvements.Any())
+            {
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Quantité</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Mouvements)
+                        {
+                            <tr>
+                                <td>
+                                    <span style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted)">
+                                        #@row.IdMouvement
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--text)">
+                                        @row.DateFormatted
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="stock-status-badge @(row.Type == "Entree" ? "histo-entree-badge" : "histo-sortie-badge")">
+                                        <i class="bi @row.TypeIcon"></i>
+                                        @row.TypeLabel
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="@row.TypeClass"
+                                          style="font-family:'Space Mono',monospace;font-size:0.88rem;font-weight:700">
+                                        @(row.Type == "Entree" ? "+" : "-")@row.Quantite
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="stock-empty">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Aucun mouvement enregistré pour ce produit</span>
+                    <small style="color:var(--muted)">
+                        Les mouvements sont créés automatiquement lors des affectations et des saisies manuelles.
+                    </small>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

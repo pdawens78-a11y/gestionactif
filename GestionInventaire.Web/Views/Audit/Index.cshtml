@@ -1,0 +1,173 @@
+﻿@using GestionInventaire.Web.Models.Audit
+@model AuditIndexViewModel
+
+@{
+    ViewData["Title"] = "Journal d'audit";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/audit.css" asp-append-version="true" />
+}
+
+<div class="audit-page">
+
+    <div class="audit-header">
+        <div class="audit-header-left">
+            <h1 class="audit-heading">
+                <i class="bi bi-shield-check"></i>
+                Journal d'audit
+            </h1>
+            <p class="audit-heading-sub">
+                Traçabilité complète de toutes les actions effectuées dans le système
+            </p>
+        </div>
+    </div>
+
+    @if (TempData["Erreur"] != null)
+    {
+        <div class="audit-alert erreur">
+            <i class="bi bi-exclamation-circle"></i>
+            @TempData["Erreur"]
+        </div>
+    }
+
+    @* ── Filtre ── *@
+    <div class="audit-filter-card">
+        <div class="audit-filter-title">
+            <i class="bi bi-funnel"></i>
+            Filtres de recherche
+        </div>
+
+        <form method="get" asp-action="Index">
+            <div class="audit-filter-grid">
+
+                <div class="audit-filter-group">
+                    <label class="audit-filter-label">Recherche</label>
+                    <input asp-for="Filtre.Query"
+                           class="audit-filter-input"
+                           placeholder="Action, entité..." />
+                </div>
+
+                <div class="audit-filter-group">
+                    <label class="audit-filter-label">Action</label>
+                    <input asp-for="Filtre.Action"
+                           class="audit-filter-input"
+                           placeholder="ex. Création" />
+                </div>
+
+                <div class="audit-filter-group">
+                    <label class="audit-filter-label">Date début</label>
+                    <input asp-for="Filtre.DateDebut"
+                           type="date"
+                           class="audit-filter-input" />
+                </div>
+
+                <div class="audit-filter-group">
+                    <label class="audit-filter-label">Date fin</label>
+                    <input asp-for="Filtre.DateFin"
+                           type="date"
+                           class="audit-filter-input" />
+                </div>
+
+                <div class="audit-filter-actions">
+                    <button type="submit" class="btn-audit-search">
+                        <i class="bi bi-search"></i>
+                        Filtrer
+                    </button>
+                    <a href="/Audit" class="btn-audit-reset">
+                        <i class="bi bi-x"></i>
+                        Reset
+                    </a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    @* ── Table ── *@
+    <div class="audit-table-card">
+        <div class="audit-table-toolbar">
+            <span class="audit-table-title">
+                <i class="bi bi-list-ul"></i>
+                Entrées du journal
+            </span>
+            <span class="audit-count-badge">@Model.TotalCount</span>
+        </div>
+
+        <div class="audit-table-wrap">
+            @if (Model.Logs.Any())
+            {
+                <table class="audit-table">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Entité</th>
+                            <th>ID</th>
+                            <th>Utilisateur</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Logs)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="audit-action-cell">
+                                        <div class="audit-action-icon">
+                                            <i class="bi @row.ActionIcon"></i>
+                                        </div>
+                                        <span class="audit-action-text">@row.Action</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="audit-entite-badge @row.EntiteClass">
+                                        @row.Entite
+                                    </span>
+                                </td>
+                                <td>
+                                    <span style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted)">
+                                        #@row.EntiteId
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="audit-user">
+                                        <i class="bi bi-person" style="font-size:11px"></i>
+                                        @row.UtilisateurNom
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="audit-date">@row.DateFormatted</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="audit-empty">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Aucune entrée trouvée</span>
+                    @if (!string.IsNullOrWhiteSpace(Model.Filtre.Query)
+                                    || !string.IsNullOrWhiteSpace(Model.Filtre.Action)
+                                    || Model.Filtre.DateDebut.HasValue
+                                    || Model.Filtre.DateFin.HasValue)
+                    {
+                        <small style="color:var(--muted)">
+                            Aucun résultat pour ces filtres.
+                            <a href="/Audit" style="color:var(--accent2)">Réinitialiser</a>
+                        </small>
+                    }
+                    else
+                    {
+                        <small style="color:var(--muted)">
+                            Les actions effectuées dans le système apparaîtront ici.
+                        </small>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

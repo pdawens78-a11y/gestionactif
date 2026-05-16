@@ -1,0 +1,99 @@
+﻿@using GestionInventaire.Web.Models.Maintenances
+@model MaintenanceDeleteViewModel
+
+@{
+    ViewData["Title"] = "Supprimer la maintenance";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/maintenance.css" asp-append-version="true" />
+}
+
+<div class="maintenance-form-page">
+
+    <div class="mnt-header">
+        <div class="mnt-header-left">
+            <h1 class="mnt-heading">
+                <i class="bi bi-trash" style="color:var(--danger)"></i>
+                Supprimer la maintenance
+            </h1>
+            <p class="mnt-heading-sub">Cette action est irréversible</p>
+        </div>
+        <a href="/Maintenances" class="btn-mnt-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="mnt-delete-card">
+        <div class="mnt-delete-header">
+            <div class="mnt-delete-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div>
+                <p class="mnt-form-card-title" style="color:var(--danger)">
+                    Confirmer la suppression
+                </p>
+                <p class="mnt-form-card-subtitle">
+                    Vérifiez les informations avant de confirmer
+                </p>
+            </div>
+        </div>
+
+        <div class="mnt-delete-body">
+
+            <div class="mnt-delete-info">
+                <div class="mnt-delete-row">
+                    <span class="dr-label">Actif</span>
+                    <span class="dr-val">@Model.CodeActif — @Model.NomProduit</span>
+                </div>
+                <div class="mnt-delete-row">
+                    <span class="dr-label">Date</span>
+                    <span class="dr-val">@Model.DateFormatted</span>
+                </div>
+                <div class="mnt-delete-row">
+                    <span class="dr-label">Description</span>
+                    <span class="dr-val">@Model.Description</span>
+                </div>
+                <div class="mnt-delete-row">
+                    <span class="dr-label">Statut</span>
+                    <span class="dr-val">@Model.StatutLabel</span>
+                </div>
+            </div>
+
+            <div class="mnt-delete-warning">
+                <i class="bi bi-exclamation-circle"></i>
+                <span>
+                    Cette maintenance sera définitivement supprimée.
+                    @if (Model.Statut == "Terminee")
+                    {
+                        <text>L'actif restera en statut « Disponible ».</text>
+                    }
+                    else
+                    {
+                        <text>L'actif associé repassera en statut « Disponible ».</text>
+                    }
+                </span>
+            </div>
+
+        </div>
+
+        <div class="mnt-delete-footer">
+            <form method="post"
+                  asp-action="Delete"
+                  asp-route-id="@Model.IdMaintenance">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-mnt-delete-confirm">
+                    <i class="bi bi-trash"></i>
+                    Confirmer la suppression
+                </button>
+            </form>
+            <a href="/Maintenances" class="btn-mnt-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>

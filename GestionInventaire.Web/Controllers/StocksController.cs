@@ -2,7 +2,6 @@
 using GestionInventaire.BLL.Dtos;
 using GestionInventaire.BLL.Services;
 using GestionInventaire.Web.Models.Stocks;
-using GestionInventaire.Web.Models.Stocks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -144,6 +143,24 @@ namespace GestionInventaire.Web.Controllers
             {
                 _logger.LogError(ex, "Erreur mouvement stock #{Id}", vm.IdStock);
                 TempData["Erreur"] = "Une erreur inattendue est survenue.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        // ════════════════════════════════════════════
+        // GET /Stocks/Historique/{id}
+        // ════════════════════════════════════════════
+        public async Task<IActionResult> Historique(int id)
+        {
+            try
+            {
+                var dto = await _stockService.GetHistoriqueAsync(id);
+                var vm = _mapper.Map<StockHistoriqueViewModel>(dto);
+                return View(vm);
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Erreur"] = ex.Message;
                 return RedirectToAction(nameof(Index));
             }
         }

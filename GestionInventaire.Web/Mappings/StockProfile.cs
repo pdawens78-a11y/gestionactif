@@ -18,6 +18,12 @@ namespace GestionInventaire.Web.Mappings
             // ── Écriture ──
             CreateMap<StockEditViewModel, StockUpdateDto>();
             CreateMap<StockMouvementViewModel, StockMouvementDto>();
+
+            // ── Historique ──
+            CreateMap<MouvementItemDto, MouvementRowViewModel>();
+            CreateMap<StockHistoriqueDto, StockHistoriqueViewModel>()
+                .ForMember(dest => dest.Mouvements,
+                           opt => opt.MapFrom(src => src.Mouvements));
         }
     }
 }

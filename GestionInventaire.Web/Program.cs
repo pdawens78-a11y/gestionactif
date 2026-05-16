@@ -4,11 +4,10 @@ using GestionInventaire.DAL.Repositories;
 using GestionInventaire.Domain.Entities;
 using GestionInventaire.Domain.IRepositories;
 using GestionInventaire.Web.Areas.Identity.Services;
-using GestionInventaire.Web.Mappings;              // ← une seule fois
+using GestionInventaire.Web.Mappings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -106,10 +105,6 @@ builder.Services.AddScoped<IAuditRepository, AuditRepository>();
 builder.Services.AddScoped<IProduitRepository, ProduitRepository>();
 builder.Services.AddScoped<IEmployeRepository, EmployeRepository>();
 builder.Services.AddScoped<IUtilisateurRepository, UtilisateurRepository>();
-builder.Services.AddScoped<ICategorieService, CategorieService>();
-builder.Services.AddScoped<IProduitService, ProduitService>();
-builder.Services.AddScoped<IStockService, StockService>();
-builder.Services.AddScoped<IEmployeService, EmployeService>();
 
 // ======================
 // SERVICES (BLL)
@@ -118,11 +113,15 @@ builder.Services.AddScoped<IActifService, ActifService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAffectationService, AffectationService>();
+builder.Services.AddScoped<ICategorieService, CategorieService>();
+builder.Services.AddScoped<IProduitService, ProduitService>();
+builder.Services.AddScoped<IStockService, StockService>();
+builder.Services.AddScoped<IEmployeService, EmployeService>();
+builder.Services.AddScoped<IMaintenanceService, MaintenanceService>();
+builder.Services.AddScoped<IAuditService, AuditService>();
 
 // ======================
 // AUTOMAPPER
-// Scanne tous les profils dans GestionInventaire.Web
-// (AffectationProfile, DashboardProfile, HomeProfile)
 // ======================
 builder.Services.AddAutoMapper(cfg =>
 {
@@ -133,6 +132,8 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<ProduitProfile>();
     cfg.AddProfile<StockProfile>();
     cfg.AddProfile<EmployeProfile>();
+    cfg.AddProfile<MaintenanceProfile>();
+    cfg.AddProfile<AuditProfile>();
 });
 
 // ======================

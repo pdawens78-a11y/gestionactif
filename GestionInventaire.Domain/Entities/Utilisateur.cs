@@ -23,6 +23,6 @@ namespace GestionInventaire.Domain.Entities
 
         // Navigation 
         public ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
-        public InvitationToken? InvitationToken { get; set; }
+       
     }
 }

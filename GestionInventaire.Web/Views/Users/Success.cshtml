@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Invitation envoyée";
+}
+
+<link rel="stylesheet"
+      href="~/css/create-user.css"
+      asp-append-version="true" />
+
+<div class="create-user-page">
+
+    <div class="create-user-card text-center">
+
+        <div class="create-user-icon mx-auto mb-4">
+
+            <i class="bi bi-envelope-check"></i>
+
+        </div>
+
+        <h1 class="text-white mb-3">
+            Invitation envoyée
+        </h1>
+
+        <p class="text-secondary mb-4">
+
+            Un e-mail d’activation a été envoyé
+            à l’utilisateur.
+
+        </p>
+
+        <a asp-controller="Users"
+           asp-action="Create"
+           class="create-user-btn text-decoration-none d-inline-flex align-items-center justify-content-center">
+
+            <i class="bi bi-arrow-left-circle"></i>
+
+            <span class="ms-2">
+                Retour
+            </span>
+
+        </a>
+
+    </div>
+
+</div>

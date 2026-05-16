@@ -7,7 +7,6 @@ using GestionInventaire.Web.Areas.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -134,7 +133,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 // ======================
 // EMAIL SERVICE
 // ======================
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<
+    IEmailSender,
+    EmailSender>();
 
 // ======================
 // SERVICES & REPOSITORIES
@@ -277,6 +278,7 @@ try
                     new Utilisateur
                     {
                         UserName = seedAdminEmail,
+
                         Email = seedAdminEmail,
 
                         Nom = "Administrateur",

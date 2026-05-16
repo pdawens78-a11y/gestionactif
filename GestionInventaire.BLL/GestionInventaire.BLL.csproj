@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mailjet.Api" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GestionInventaire.DAL\GestionInventaire.DAL.csproj" />
     <ProjectReference Include="..\GestionInventaire.Domain\GestionInventaire.Domain.csproj" />
   </ItemGroup>

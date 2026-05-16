@@ -1,0 +1,57 @@
+﻿@page
+@model UserInvitationSentModel
+
+@{
+    ViewData["Title"] = "Invitation envoyée";
+    Layout = "_AuthLayout";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/auth.css"
+          asp-append-version="true" />
+}
+
+<div class="auth-card text-center">
+
+    <div class="auth-success-icon">
+
+        <i class="bi bi-envelope-check"></i>
+
+    </div>
+
+    <h1 class="auth-title">
+        Invitation envoyée
+    </h1>
+
+    <p class="auth-subtitle">
+
+        Un e-mail d’activation a été envoyé à :
+
+    </p>
+
+    <div class="email-box">
+
+        @Model.Email
+
+    </div>
+
+    <p class="auth-description">
+
+        L’utilisateur doit consulter sa boîte mail
+        afin de définir son mot de passe
+        et accéder à la plateforme.
+
+    </p>
+
+    <a asp-controller="Users"
+       asp-action="Create"
+       class="auth-btn">
+
+        <i class="bi bi-arrow-left-circle"></i>
+
+        Retour
+
+    </a>
+
+</div>

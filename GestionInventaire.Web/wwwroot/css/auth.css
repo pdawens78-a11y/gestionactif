@@ -625,3 +625,25 @@
     .cp-left { display: none; }
     .auth-card { padding: 32px 24px; }
 }
+
+.auth-success-icon {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 25px;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient( 135deg, #00d2ff, #00ffb3);
+    color: white;
+    font-size: 42px;
+}
+
+.email-box {
+    margin: 20px 0;
+    padding: 16px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.05);
+    color: #00d2ff;
+    font-weight: 600;
+}

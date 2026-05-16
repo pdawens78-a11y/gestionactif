@@ -6,138 +6,267 @@
     <title>@ViewData["Title"] - TechnoLogis</title>
 
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" />
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin />
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" />
 
     <!-- Layout styles -->
-    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/GestionInventaire.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet"
+          href="~/css/layout.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/GestionInventaire.Web.styles.css"
+          asp-append-version="true" />
 
     @await RenderSectionAsync("Styles", required: false)
 </head>
+
 <body>
 
     <!-- ═══════════════ TOP NAVIGATION ═══════════════ -->
     <nav class="app-topnav">
 
-        <!-- Brand -->
+        <!-- BRAND -->
         <a class="nav-brand" href="/">
+
             <div class="nav-logo-box">
                 <svg viewBox="0 0 24 24">
-                    <path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/>
-                    <path d="M12 3v18M3 7l9 4 9-4"/>
+                    <path d="M3 7l9-4 9 4v10l-9 4-9-4V7z" />
+                    <path d="M12 3v18M3 7l9 4 9-4" />
                 </svg>
             </div>
-            <span class="nav-brand-name">Techno<span class="brand-dot">Logis</span></span>
+
+            <span class="nav-brand-name">
+                Techno<span class="brand-dot">Logis</span>
+            </span>
+
         </a>
 
-        <!-- Nav links -->
+        <!-- NAV LINKS -->
         <div class="nav-links">
+
             <a href="/"
                class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")">
+
                 <i class="bi bi-house"></i>
+
                 <span>Accueil</span>
+
             </a>
+
             <a href="/Dashboard"
                class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")">
+
                 <i class="bi bi-speedometer2"></i>
+
                 <span>Dashboard</span>
+
             </a>
-            <a href="#" class="nav-link">
+
+            <a href="#"
+               class="nav-link">
+
                 <i class="bi bi-box"></i>
+
                 <span>Actifs</span>
+
             </a>
-            <a href="#" class="nav-link">
+
+            <a href="#"
+               class="nav-link">
+
                 <i class="bi bi-archive"></i>
+
                 <span>Stock</span>
+
             </a>
-            <a href="#" class="nav-link">
+
+            <a href="#"
+               class="nav-link">
+
                 <i class="bi bi-person"></i>
+
                 <span>Employés</span>
+
             </a>
-            <a href="#" class="nav-link">
+
+            <!-- CREATE USER -->
+            <a asp-controller="Users"
+               asp-action="Create"
+               class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Users" ? "active" : "")">
+
+                <i class="bi bi-person-plus"></i>
+
+                <span>Créer utilisateur</span>
+
+            </a>
+
+            <a href="#"
+               class="nav-link">
+
                 <i class="bi bi-gear"></i>
+
                 <span>Maintenance</span>
+
             </a>
-            <a href="#" class="nav-link">
+
+            <a href="#"
+               class="nav-link">
+
                 <i class="bi bi-file-earmark-text"></i>
+
                 <span>Rapports</span>
+
             </a>
-            <a href="#" class="nav-link">
+
+            <a href="#"
+               class="nav-link">
+
                 <i class="bi bi-shield-check"></i>
+
                 <span>Audit</span>
+
             </a>
-            <a href="#" class="nav-link"> <i class="bi bi-sliders"></i> <span>Paramètres</span> </a>
+
+            <a asp-controller="Settings"
+               asp-action="Index"
+               class="nav-link">
+
+                <i class="bi bi-sliders"></i>
+
+                <span>Paramètres</span>
+
+            </a>
+
         </div>
 
-        <!-- Right zone -->
+        <!-- RIGHT ZONE -->
         <div class="nav-right">
 
-            <!-- Search -->
+            <!-- SEARCH -->
             <div class="nav-search">
+
                 <i class="bi bi-search"></i>
-                <input type="text" placeholder="Rechercher…" />
+
+                <input type="text"
+                       placeholder="Rechercher…" />
+
             </div>
 
-            <!-- Notifications -->
-            <div class="btn-icon" title="Notifications">
+            <!-- NOTIFICATIONS -->
+            <div class="btn-icon"
+                 title="Notifications">
+
                 <i class="bi bi-bell"></i>
+
                 <span class="nav-badge">3</span>
+
             </div>
 
-            <!-- User menu -->
+            <!-- USER MENU -->
             <div class="nav-user">
-                <button class="btn-user" id="userMenuBtn">
+
+                <button class="btn-user"
+                        id="userMenuBtn">
+
                     <div class="user-avatar">
+
                         <img src="https://ui-avatars.com/api/?name=Admin+User&background=00d4aa&color=0b0f1a&bold=true"
                              alt="Admin User" />
+
                     </div>
-                    <span class="user-name">Admin User</span>
-                    <i class="bi bi-chevron-down" style="font-size:10px;color:var(--muted)"></i>
+
+                    <span class="user-name">
+                        Admin User
+                    </span>
+
+                    <i class="bi bi-chevron-down"
+                       style="font-size:10px;color:var(--muted)">
+                    </i>
+
                 </button>
 
-                <div class="nav-dropdown" id="userDropdown">
-                    <a href="/Identity/Account/Manage/Index"><i class="bi bi-person"></i> Profil</a>
+                <div class="nav-dropdown"
+                     id="userDropdown">
+
+                    <a href="/Identity/Account/Manage/Index">
+                        <i class="bi bi-person"></i>
+                        Profil
+                    </a>
+
                     <a asp-controller="Settings"
-                       asp-action="Index"
-                       class="nav-link">
+                       asp-action="Index">
 
                         <i class="bi bi-sliders"></i>
 
-                        <span>Paramètres</span>
+                        Paramètres
 
                     </a>
+
                     <hr />
-                    <a href="/Identity/Account/Logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+
+                    <a href="/Identity/Account/Logout">
+
+                        <i class="bi bi-box-arrow-right"></i>
+
+                        Déconnexion
+
+                    </a>
+
                 </div>
+
             </div>
 
         </div>
+
     </nav>
 
     <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
     <div class="app-body">
+
         <main class="app-main">
 
             @{
-                var isDashboard = ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard";
+                var isDashboard =
+                ViewContext.RouteData.Values["Controller"]?.ToString()
+                == "Dashboard";
             }
 
             @if (isDashboard)
             {
-                <!-- Breadcrumb Dashboard -->
                 <div class="page-breadcrumb">
-                    <i class="bi bi-house" style="font-size:11px"></i>
+
+                    <i class="bi bi-house"
+                       style="font-size:11px"></i>
+
                     <span class="bc-sep">›</span>
+
                     <span>Dashboard</span>
+
                     <span class="bc-sep">·</span>
-                    <span class="bc-time">Dernière mise à jour : @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</span>
+
+                    <span class="bc-time">
+                        Dernière mise à jour :
+                        @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                    </span>
+
                 </div>
+
                 @RenderBody()
             }
             else
@@ -148,24 +277,41 @@
             }
 
         </main>
+
     </div>
 
     <!-- ═══════════════ FOOTER ═══════════════ -->
     <footer class="app-footer">
-        <p>© 2026 TechnoLogis S.A. — Gestion d'inventaire d'actifs informatiques</p>
+
+        <p>
+            © 2026 TechnoLogis S.A.
+            — Gestion d'inventaire d'actifs informatiques
+        </p>
+
         <div class="footer-links">
+
             <a href="#">Aide</a>
+
             <a href="#">Confidentialité</a>
+
             <a href="#">Conditions</a>
+
         </div>
+
     </footer>
 
-    <!-- Scripts -->
+    <!-- SCRIPTS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/layout.js" asp-append-version="true"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="~/js/layout.js"
+            asp-append-version="true"></script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

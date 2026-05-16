@@ -1,6 +1,7 @@
 ﻿using Mailjet.Client;
 using Mailjet.Client.TransactionalEmails;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace GestionInventaire.Web.Areas.Identity.Services
 {

@@ -1,0 +1,138 @@
+﻿@model GestionInventaire.Web.Models.Users.CreateUserViewModel
+
+@{
+    ViewData["Title"] = "Créer utilisateur";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/users.css" asp-append-version="true" />
+}
+
+<div class="page-content">
+
+    @* {{!-- En-tête --}} *@
+    <div class="page-header">
+        <div class="page-header-left">
+            <h1 class="page-heading">
+                <i class="bi bi-person-plus"></i>
+                Créer un utilisateur
+            </h1>
+            <p class="page-heading-sub">Ajoutez un nouveau membre à l'équipe TechnoLogis</p>
+        </div>
+        <a href="/Users" class="btn-tl-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    @* {{!-- Carte formulaire --}} *@
+    <div class="form-card">
+
+        <div class="form-card-header">
+            <div class="form-card-icon">
+                <i class="bi bi-person-vcard"></i>
+            </div>
+            <div>
+                <p class="form-card-title">Informations du nouvel utilisateur</p>
+                <p class="form-card-subtitle">Tous les champs marqués sont requis</p>
+            </div>
+        </div>
+
+        <div class="form-card-body">
+
+            <form method="post" id="createUserForm">
+
+                @* {{!-- Validation summary --}} *@
+                <div asp-validation-summary="ModelOnly" class="validation-summary-modern"></div>
+
+                <div class="create-user-grid">
+
+                  @*   {{!-- NOM --}} *@
+                    <div class="form-group-modern">
+                        <label asp-for="Nom">Nom</label>
+                        <div class="input-icon-wrap">
+                            <i class="bi bi-person field-icon"></i>
+                            <input asp-for="Nom"
+                                   class="modern-input"
+                                   placeholder="ex. Princivil" />
+                        </div>
+                        <span asp-validation-for="Nom" class="field-error"></span>
+                    </div>
+
+                    @* {{!-- PRENOM --}} *@
+                    <div class="form-group-modern">
+                        <label asp-for="Prenom">Prénom</label>
+                        <div class="input-icon-wrap">
+                            <i class="bi bi-person field-icon"></i>
+                            <input asp-for="Prenom"
+                                   class="modern-input"
+                                   placeholder="ex. Valdaya" />
+                        </div>
+                        <span asp-validation-for="Prenom" class="field-error"></span>
+                    </div>
+
+                    @* {{!-- EMAIL --}} *@
+                    <div class="form-group-modern">
+                        <label asp-for="Email">Adresse e-mail</label>
+                        <div class="input-icon-wrap">
+                            <i class="bi bi-envelope field-icon"></i>
+                            <input asp-for="Email"
+                                   class="modern-input"
+                                   placeholder="ex. v.princivil@technologis.com" />
+                        </div>
+                        <span asp-validation-for="Email" class="field-error"></span>
+                    </div>
+
+                    @* {{!-- TELEPHONE --}} *@
+                    <div class="form-group-modern">
+                        <label asp-for="Telephone">Téléphone</label>
+                        <div class="input-icon-wrap">
+                            <i class="bi bi-telephone field-icon"></i>
+                            <input asp-for="Telephone"
+                                   class="modern-input"
+                                   placeholder="ex. +509 3700 0000" />
+                        </div>
+                        <span asp-validation-for="Telephone" class="field-error"></span>
+                    </div>
+
+                    @* {{!-- ROLE --}} *@
+                    <div class="form-group-modern full-width">
+                        <label asp-for="Role">Rôle</label>
+                        <div class="input-icon-wrap">
+                            <i class="bi bi-shield field-icon"></i>
+                            <select asp-for="Role" class="modern-input">
+                                <option value="">Sélectionner un rôle</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Gestionnaire">Gestionnaire</option>
+                                <option value="Technicien">Technicien</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="Role" class="field-error"></span>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        @* {{!-- Footer avec actions --}} *@
+        <div class="form-actions">
+            <button type="submit" form="createUserForm" class="create-user-btn">
+                <i class="bi bi-check-circle"></i>
+                Créer l'utilisateur
+            </button>
+            <a href="/Users" class="btn-tl-secondary">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

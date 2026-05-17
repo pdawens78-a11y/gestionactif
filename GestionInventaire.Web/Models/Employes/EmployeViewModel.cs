@@ -54,9 +54,17 @@ namespace GestionInventaire.Web.Models.Employes
         [Display(Name = "Téléphone")]
         public string? Tel { get; set; }
 
-        [StringLength(100)]
         [Display(Name = "Service / Département")]
-        public string? Service { get; set; }
+        public int? IdService { get; set; }
+
+        // Services list for dropdown
+        public List<ServiceDropdownItem> Services { get; set; } = new();
+    }
+
+    public class ServiceDropdownItem
+    {
+        public int IdService { get; set; }
+        public string NomService { get; set; } = string.Empty;
     }
 
     // ── Modification ──
@@ -86,9 +94,11 @@ namespace GestionInventaire.Web.Models.Employes
         [Display(Name = "Téléphone")]
         public string? Tel { get; set; }
 
-        [StringLength(100)]
         [Display(Name = "Service / Département")]
-        public string? Service { get; set; }
+        public int? IdService { get; set; }
+
+        // Services list for dropdown
+        public List<ServiceDropdownItem> Services { get; set; } = new();
 
         public int NombreAffectations { get; set; }
         public int ActifsActifs { get; set; }

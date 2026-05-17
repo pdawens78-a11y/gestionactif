@@ -1,0 +1,106 @@
+﻿@using GestionInventaire.Web.Models.Services
+@model ServiceDeleteViewModel
+
+@{
+    ViewData["Title"] = "Supprimer le service";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/services.css" asp-append-version="true" />
+}
+
+<div class="service-form-page">
+
+    <div class="svc-header">
+        <div class="svc-header-left">
+            <h1 class="svc-heading">
+                <i class="bi bi-trash" style="color:var(--danger)"></i>
+                Supprimer le service
+            </h1>
+            <p class="svc-heading-sub">Cette action est irréversible</p>
+        </div>
+        <a href="/Services" class="btn-svc-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="svc-delete-card">
+        <div class="svc-delete-header">
+            <div class="svc-delete-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div>
+                <p class="svc-form-card-title" style="color:var(--danger)">
+                    Confirmer la suppression
+                </p>
+                <p class="svc-form-card-subtitle">
+                    Vérifiez qu'aucun employé n'est rattaché à ce service
+                </p>
+            </div>
+        </div>
+
+        <div class="svc-delete-body">
+
+            <div class="svc-delete-info">
+                <div class="svc-delete-row">
+                    <span class="dr-label">Service</span>
+                    <span class="dr-val">@Model.NomService</span>
+                </div>
+                <div class="svc-delete-row">
+                    <span class="dr-label">Description</span>
+                    <span class="dr-val">
+                        @(string.IsNullOrEmpty(Model.Description) ? "—" : Model.Description)
+                    </span>
+                </div>
+                <div class="svc-delete-row">
+                    <span class="dr-label">Employés</span>
+                    <span class="dr-val">@Model.NombreEmployes employé(s)</span>
+                </div>
+            </div>
+
+            @if (Model.NombreEmployes > 0)
+            {
+                <div class="svc-delete-warning">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <span>
+                        Impossible de supprimer « <strong>@Model.NomService</strong> » :
+                        <strong>@Model.NombreEmployes employé(s)</strong> sont rattachés à ce service.
+                        Réaffectez-les vers un autre service avant de supprimer.
+                    </span>
+                </div>
+            }
+            else
+            {
+                <div class="svc-delete-warning">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <span>
+                        Le service « <strong>@Model.NomService</strong> » sera définitivement supprimé.
+                    </span>
+                </div>
+            }
+
+        </div>
+
+        <div class="svc-delete-footer">
+            @if (Model.NombreEmployes == 0)
+            {
+                <form method="post"
+                      asp-action="Delete"
+                      asp-route-id="@Model.IdService">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-svc-delete-confirm">
+                        <i class="bi bi-trash"></i>
+                        Confirmer la suppression
+                    </button>
+                </form>
+            }
+            <a href="/Services" class="btn-svc-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,90 @@
+﻿@using GestionInventaire.Web.Models.Services
+@model ServiceCreateViewModel
+
+@{
+    ViewData["Title"] = "Nouveau service";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/services.css" asp-append-version="true" />
+}
+
+<div class="service-form-page">
+
+    <div class="svc-header">
+        <div class="svc-header-left">
+            <h1 class="svc-heading">
+                <i class="bi bi-diagram-3"></i>
+                Nouveau service
+            </h1>
+            <p class="svc-heading-sub">Ajouter un département à l'entreprise</p>
+        </div>
+        <a href="/Services" class="btn-svc-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="svc-form-card">
+        <div class="svc-form-header">
+            <div class="svc-form-icon">
+                <i class="bi bi-diagram-3"></i>
+            </div>
+            <div>
+                <p class="svc-form-card-title">Informations du service</p>
+                <p class="svc-form-card-subtitle">Le nom est obligatoire</p>
+            </div>
+        </div>
+
+        <div class="svc-form-body">
+            <div asp-validation-summary="ModelOnly"
+                 class="svc-alert erreur"
+                 style="margin-bottom:16px"></div>
+
+            <form method="post" id="svcForm">
+                @Html.AntiForgeryToken()
+
+                <div class="svc-form-group">
+                    <label class="svc-form-label" asp-for="NomService">
+                        <i class="bi bi-diagram-3"></i>
+                        Nom du service
+                    </label>
+                    <input asp-for="NomService"
+                           class="svc-input"
+                           placeholder="ex. Informatique, RH, Finance..." />
+                    <span asp-validation-for="NomService" class="svc-field-error"></span>
+                </div>
+
+                <div class="svc-form-group">
+                    <label class="svc-form-label" asp-for="Description">
+                        <i class="bi bi-text-left"></i>
+                        Description
+                        <span style="color:var(--muted);font-weight:400">(optionnel)</span>
+                    </label>
+                    <textarea asp-for="Description"
+                              class="svc-textarea"
+                              placeholder="Description du service..."></textarea>
+                    <span asp-validation-for="Description" class="svc-field-error"></span>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="svc-form-footer">
+            <button type="submit" form="svcForm" class="btn-svc-submit">
+                <i class="bi bi-check-circle"></i>
+                Créer le service
+            </button>
+            <a href="/Services" class="btn-svc-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -22,9 +22,6 @@ var identityCfg =
 var cookieExpireMinutes =
     configuration.GetValue<int>("Cookie:ExpireMinutes", 30);
 
-var emailProvider =
-    configuration.GetValue<string>("Email:Provider", "Development");
-
 var seedCreateAdmin =
     configuration.GetValue<bool>("Seed:CreateAdmin", true);
 
@@ -106,6 +103,7 @@ builder.Services.AddScoped<IAuditRepository, AuditRepository>();
 builder.Services.AddScoped<IProduitRepository, ProduitRepository>();
 builder.Services.AddScoped<IEmployeRepository, EmployeRepository>();
 builder.Services.AddScoped<IUtilisateurRepository, UtilisateurRepository>();
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 
 // ======================
 // SERVICES (BLL)
@@ -122,6 +120,7 @@ builder.Services.AddScoped<IMaintenanceService, MaintenanceService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<IRapportService, RapportService>();
 builder.Services.AddScoped<IUtilisateurService, UtilisateurService>();
+builder.Services.AddScoped<IServiceService, ServiceService>();
 
 // ======================
 // AUTOMAPPER
@@ -140,6 +139,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<ActifProfile>();
     cfg.AddProfile<RapportProfile>();
     cfg.AddProfile<UtilisateurProfile>();
+    cfg.AddProfile<ServiceProfile>();
 });
 
 // ======================

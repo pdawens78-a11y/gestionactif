@@ -40,9 +40,7 @@
         </div>
 
         <div class="emp-form-body">
-            <div asp-validation-summary="ModelOnly"
-                 class="emp-alert erreur"
-                 style="margin-bottom:16px"></div>
+            <div asp-validation-summary="ModelOnly" class="emp-alert erreur" style="margin-bottom:16px"></div>
 
             <form method="post" id="editForm">
                 @Html.AntiForgeryToken()
@@ -87,12 +85,25 @@
                     </div>
 
                     <div class="emp-form-group full-width">
-                        <label class="emp-form-label" asp-for="Service">
+                        <label class="emp-form-label" for="IdService">
                             <i class="bi bi-building"></i> Service / Département
                             <span class="opt">(optionnel)</span>
                         </label>
-                        <input asp-for="Service" class="emp-input" />
-                        <span asp-validation-for="Service" class="emp-field-error"></span>
+                        <div style="display: flex; gap: 8px;">
+                            <select asp-for="IdService" class="emp-input" style="flex: 1;">
+                                <option value="">-- Sélectionner un service --</option>
+                                @foreach (var service in Model.Services)
+                                {
+                                    <option value="@service.IdService">@service.NomService</option>
+                                }
+                            </select>
+                            <button type="button" id="btnAddService" class="btn-emp-submit"
+                                    style="margin-top: 0; white-space: nowrap;">
+                                <i class="bi bi-plus"></i>
+                                Nouveau
+                            </button>
+                        </div>
+                        <span asp-validation-for="IdService" class="emp-field-error"></span>
                     </div>
 
                 </div>
@@ -113,11 +124,126 @@
 
 </div>
 
+<!-- Modal pour créer un service -->
+<div id="serviceModal" class="emp-modal">
+    <div class="emp-modal-content">
+        <div class="emp-modal-header">
+            <h3 class="emp-modal-title">
+                <i class="bi bi-building"></i> Nouveau Service
+            </h3>
+            <button type="button" class="emp-modal-close" id="closeServiceModal">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+        <div class="emp-modal-body">
+            <div class="emp-form-group">
+                <label class="emp-form-label" for="newServiceName">
+                    Nom du service
+                </label>
+                <input type="text" id="newServiceName" class="emp-input"
+                       placeholder="ex. Direction, Informatique, RH..." />
+                <span id="serviceError" class="emp-field-error"></span>
+            </div>
+        </div>
+        <div class="emp-modal-footer">
+            <button type="button" class="btn-emp-submit" id="btnSaveService">
+                <i class="bi bi-check-circle"></i>
+                Créer
+            </button>
+            <button type="button" class="btn-emp-cancel" id="btnCancelService">
+                <i class="bi bi-x"></i>
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-}
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnAddService = document.getElementById('btnAddService');
+            const serviceModal = document.getElementById('serviceModal');
+            const closeServiceModal = document.getElementById('closeServiceModal');
+            const btnSaveService = document.getElementById('btnSaveService');
+            const btnCancelService = document.getElementById('btnCancelService');
+            const newServiceName = document.getElementById('newServiceName');
+            const serviceError = document.getElementById('serviceError');
+            const serviceSelect = document.querySelector('select[name="IdService"]');
+
+            function openModal() {
+                serviceModal.classList.add('open');
+                newServiceName.focus();
+            }
+
+            function closeModal() {
+                serviceModal.classList.remove('open');
+                newServiceName.value = '';
+                serviceError.textContent = '';
+            }
+
+            btnAddService.addEventListener('click', function (e) {
+                e.preventDefault();
+                openModal();
+            });
+
+            closeServiceModal.addEventListener('click', closeModal);
+            btnCancelService.addEventListener('click', closeModal);
+
+            serviceModal.addEventListener('click', function (e) {
+                if (e.target === serviceModal) {
+                    closeModal();
+                }
+            });
+
+            btnSaveService.addEventListener('click', async function () {
+                const nomService = newServiceName.value.trim();
+                if (!nomService) {
+                    serviceError.textContent = 'Le nom du service est obligatoire.';
+                    return;
+                }
+
+                btnSaveService.disabled = true;
+                serviceError.textContent = '';
+
+                try {
+                    const response = await fetch('/Employes/CreateServiceAjax', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: JSON.stringify({ nomService: nomService })
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        serviceError.textContent = error.message || 'Erreur lors de la création du service.';
+                        return;
+                    }
+
+                    const data = await response.json();
+
+                    const option = document.createElement('option');
+                    option.value = data.idService;
+                    option.textContent = data.nomService;
+                    option.selected = true;
+                    serviceSelect.appendChild(option);
+
+                    closeModal();
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    serviceError.textContent = 'Une erreur inattendue est survenue.';
+                } finally {
+                    btnSaveService.disabled = false;
+                }
+            });
+
+            newServiceName.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    btnSaveService.click();
+                }
+            });
+        });
+    </script>
 }

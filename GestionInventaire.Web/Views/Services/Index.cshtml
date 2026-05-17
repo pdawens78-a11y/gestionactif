@@ -1,0 +1,114 @@
+﻿@using GestionInventaire.Web.Models.Services
+@model ServiceIndexViewModel
+
+@{
+    ViewData["Title"] = "Services";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/services.css" asp-append-version="true" />
+}
+
+<div class="services-page">
+
+    <div class="svc-header">
+        <div class="svc-header-left">
+            <h1 class="svc-heading">
+                <i class="bi bi-diagram-3"></i>
+                Services / Départements
+            </h1>
+            <p class="svc-heading-sub">Gestion des départements de l'entreprise</p>
+        </div>
+        <a href="/Services/Create" class="btn-svc-new">
+            <i class="bi bi-plus-lg"></i>
+            Nouveau service
+        </a>
+    </div>
+
+    @if (TempData["Succes"] != null)
+    {
+        <div class="svc-alert succes">
+            <i class="bi bi-check-circle"></i>
+            @TempData["Succes"]
+        </div>
+    }
+    @if (TempData["Erreur"] != null)
+    {
+        <div class="svc-alert erreur">
+            <i class="bi bi-exclamation-circle"></i>
+            @TempData["Erreur"]
+        </div>
+    }
+
+    <div class="svc-table-card">
+        <div class="svc-table-toolbar">
+            <span class="svc-table-title">
+                <i class="bi bi-table"></i>
+                Tous les services
+            </span>
+            <span class="svc-count-badge">@Model.TotalCount</span>
+        </div>
+
+        <div class="svc-table-wrap">
+            @if (Model.Services.Any())
+            {
+                <table class="svc-table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Employés</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Services)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="svc-nom">
+                                        <i class="bi bi-diagram-3" style="font-size:12px;margin-right:5px;color:var(--accent)"></i>
+                                        @row.NomService
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="svc-desc">@row.DescriptionFormatted</span>
+                                </td>
+                                <td>
+                                    <span class="svc-employes-badge @(row.NombreEmployes > 0 ? "has-employes" : "no-employes")">
+                                        <i class="bi bi-people"></i>
+                                        @row.NombreEmployes
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="svc-actions">
+                                        <a href="/Services/Edit/@row.IdService"
+                                           class="btn-svc-icon edit" title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/Services/Delete/@row.IdService"
+                                           class="btn-svc-icon delete" title="Supprimer">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="svc-empty">
+                    <i class="bi bi-diagram-3"></i>
+                    <span>Aucun service enregistré</span>
+                    <a href="/Services/Create" class="btn-svc-new" style="margin-top:8px">
+                        <i class="bi bi-plus-lg"></i> Créer le premier
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

@@ -85,8 +85,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 // ======================
 // EMAIL SERVICE
 // ======================
-builder.Services.AddTransient<IEmailSender, EmailSender>();
-builder.Services.AddTransient<EmailSender>();
+builder.Services.AddTransient<IEmailSender, MailjetEmailSender>();
 
 // ======================
 // REPOSITORIES (DAL)
@@ -248,6 +247,8 @@ app.Use(async (context, next) =>
 // ======================
 // ROUTING
 // ======================
+app.MapControllers();
+
 app.MapRazorPages();
 
 app.MapControllerRoute(

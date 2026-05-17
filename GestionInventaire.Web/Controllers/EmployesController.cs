@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestionInventaire.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Gestionnaire")]
     public class EmployesController : Controller
     {
         private readonly IEmployeService _employeService;

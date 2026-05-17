@@ -20,18 +20,21 @@
             </h1>
             <p class="prod-heading-sub">Catalogue des produits informatiques</p>
         </div>
-        <div style="display:flex;gap:8px;align-items:center">
-            <a href="/Categories/Create" target="_blank"
-               class="btn-prod-new"
-               style="background:var(--surface2);color:var(--muted);border:1px solid var(--border)">
-                <i class="bi bi-tags"></i>
-                Nouvelle catégorie
-            </a>
-            <a href="/Produits/Create" class="btn-prod-new">
-                <i class="bi bi-plus-lg"></i>
-                Nouveau produit
-            </a>
-        </div>
+        @if (User.CanManageProduits())
+        {
+            <div style="display:flex;gap:8px;align-items:center">
+                <a href="/Categories/Create" target="_blank"
+                   class="btn-prod-new"
+                   style="background:var(--surface2);color:var(--muted);border:1px solid var(--border)">
+                    <i class="bi bi-tags"></i>
+                    Nouvelle catégorie
+                </a>
+                <a href="/Produits/Create" class="btn-prod-new">
+                    <i class="bi bi-plus-lg"></i>
+                    Nouveau produit
+                </a>
+            </div>
+        }
     </div>
 
     @if (TempData["Succes"] != null)
@@ -115,16 +118,19 @@
                                            style="color:var(--accent)">
                                             <i class="bi bi-boxes"></i>
                                         </a>
-                                        <a href="/Produits/Edit/@row.IdProduit"
-                                           class="btn-prod-icon edit"
-                                           title="Modifier">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a href="/Produits/Delete/@row.IdProduit"
-                                           class="btn-prod-icon delete"
-                                           title="Supprimer">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                        @if (User.CanManageProduits())
+                                        {
+                                            <a href="/Produits/Edit/@row.IdProduit"
+                                               class="btn-prod-icon edit"
+                                               title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/Produits/Delete/@row.IdProduit"
+                                               class="btn-prod-icon delete"
+                                               title="Supprimer">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        }
                                     </div>
                                 </td>
                             </tr>
@@ -137,9 +143,12 @@
                 <div class="prod-empty">
                     <i class="bi bi-box-seam"></i>
                     <span>Aucun produit enregistré</span>
-                    <a href="/Produits/Create" class="btn-prod-new" style="margin-top:8px">
-                        <i class="bi bi-plus-lg"></i> Créer le premier
-                    </a>
+                    @if (User.CanManageProduits())
+                    {
+                        <a href="/Produits/Create" class="btn-prod-new" style="margin-top:8px">
+                            <i class="bi bi-plus-lg"></i> Créer le premier
+                        </a>
+                    }
                 </div>
             }
         </div>

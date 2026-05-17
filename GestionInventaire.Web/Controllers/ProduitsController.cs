@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestionInventaire.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Gestionnaire")]
     public class ProduitsController : Controller
     {
         private readonly IProduitService _produitService;

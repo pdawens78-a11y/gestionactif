@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestionInventaire.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class AuditController : Controller
     {
         private readonly IAuditService _auditService;
@@ -26,25 +26,41 @@ namespace GestionInventaire.Web.Controllers
 
         // ════════════════════════════════════════════
         // GET /Audit
-        // GET /Audit?Query=...&Action=...&DateDebut=...&DateFin=...
+        // Paramètre "Recherche" au lieu de "Action"
+        // pour éviter le conflit avec RouteData["action"]
         // ════════════════════════════════════════════
-        public async Task<IActionResult> Index(AuditFiltreViewModel? filtre)
+        public async Task<IActionResult> Index(
+            string? Query = null,
+            string? Recherche = null,
+            DateTime? DateDebut = null,
+            DateTime? DateFin = null)
         {
-            // Garantir que filtre n'est jamais null
-            filtre ??= new AuditFiltreViewModel();
+            var filtre = new AuditFiltreViewModel
+            {
+                Query = Query,
+                Action = Recherche,
+                DateDebut = DateDebut,
+                DateFin = DateFin
+            };
 
             try
             {
                 AuditListDto dto;
 
-                var aFiltre = !string.IsNullOrWhiteSpace(filtre.Query)
-                           || !string.IsNullOrWhiteSpace(filtre.Action)
-                           || filtre.DateDebut.HasValue
-                           || filtre.DateFin.HasValue;
+                var aFiltre = !string.IsNullOrWhiteSpace(Query)
+                           || !string.IsNullOrWhiteSpace(Recherche)
+                           || DateDebut.HasValue
+                           || DateFin.HasValue;
 
                 if (aFiltre)
                 {
-                    var filtreDto = _mapper.Map<AuditFiltreDto>(filtre);
+                    var filtreDto = new AuditFiltreDto
+                    {
+                        Query = Query,
+                        Action = Recherche,
+                        DateDebut = DateDebut,
+                        DateFin = DateFin
+                    };
                     dto = await _auditService.RechercherAsync(filtreDto);
                 }
                 else
@@ -62,7 +78,7 @@ namespace GestionInventaire.Web.Controllers
                 TempData["Erreur"] = "Erreur lors du chargement du journal d'audit.";
                 return View(new AuditIndexViewModel
                 {
-                    Filtre = new AuditFiltreViewModel()
+                    Filtre = filtre
                 });
             }
         }

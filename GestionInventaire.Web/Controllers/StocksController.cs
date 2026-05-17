@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestionInventaire.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Gestionnaire")]
     public class StocksController : Controller
     {
         private readonly IStockService _stockService;

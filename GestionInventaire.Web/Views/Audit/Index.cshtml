@@ -44,29 +44,34 @@
 
                 <div class="audit-filter-group">
                     <label class="audit-filter-label">Recherche</label>
-                    <input asp-for="Filtre.Query"
+                    <input name="Query"
+                           value="@Model.Filtre.Query"
                            class="audit-filter-input"
                            placeholder="Action, entité..." />
                 </div>
 
                 <div class="audit-filter-group">
                     <label class="audit-filter-label">Action</label>
-                    <input asp-for="Filtre.Action"
+                    @* ← "Recherche" au lieu de "Action" pour éviter le conflit avec RouteData *@
+                    <input name="Recherche"
+                           value="@Model.Filtre.Action"
                            class="audit-filter-input"
                            placeholder="ex. Création" />
                 </div>
 
                 <div class="audit-filter-group">
                     <label class="audit-filter-label">Date début</label>
-                    <input asp-for="Filtre.DateDebut"
+                    <input name="DateDebut"
                            type="date"
+                           value="@(Model.Filtre.DateDebut?.ToString("yyyy-MM-dd"))"
                            class="audit-filter-input" />
                 </div>
 
                 <div class="audit-filter-group">
                     <label class="audit-filter-label">Date fin</label>
-                    <input asp-for="Filtre.DateFin"
+                    <input name="DateFin"
                            type="date"
+                           value="@(Model.Filtre.DateFin?.ToString("yyyy-MM-dd"))"
                            class="audit-filter-input" />
                 </div>
 

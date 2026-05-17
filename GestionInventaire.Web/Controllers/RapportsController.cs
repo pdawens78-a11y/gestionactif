@@ -7,7 +7,7 @@ using System.Text;
 
 namespace GestionInventaire.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Gestionnaire")]
     public class RapportsController : Controller
     {
         private readonly IRapportService _rapportService;

@@ -126,16 +126,23 @@
                                 </td>
                                 <td>
                                     <div class="stock-actions">
-                                        <a href="/Stocks/Edit/@row.IdStock"
-                                           class="btn-stock-icon edit"
-                                           title="Modifier seuil/quantité">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a href="/Stocks/Mouvement/@row.IdStock"
-                                           class="btn-stock-icon mouvement"
-                                           title="Entrée / Sortie de stock">
-                                            <i class="bi bi-arrow-left-right"></i>
-                                        </a>
+                                        @if (User.CanManageStock())
+                                        {
+                                            <a href="/Stocks/Edit/@row.IdStock"
+                                               class="btn-stock-icon edit"
+                                               title="Modifier seuil/quantité">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="/Stocks/Mouvement/@row.IdStock"
+                                               class="btn-stock-icon mouvement"
+                                               title="Entrée / Sortie de stock">
+                                                <i class="bi bi-arrow-left-right"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted" style="font-size:0.75rem">Lecture seule</span>
+                                        }
                                     </div>
                                 </td>
                             </tr>

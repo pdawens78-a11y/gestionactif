@@ -89,6 +89,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 // EMAIL SERVICE
 // ======================
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<EmailSender>();
 
 // ======================
 // REPOSITORIES (DAL)

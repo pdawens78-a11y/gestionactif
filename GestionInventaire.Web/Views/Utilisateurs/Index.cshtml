@@ -1,0 +1,184 @@
+﻿@using GestionInventaire.Web.Models.Utilisateurs
+@model UtilisateurIndexViewModel
+
+@{
+    ViewData["Title"] = "Utilisateurs";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/utilisateurs.css" asp-append-version="true" />
+}
+
+<div class="utilisateurs-page">
+
+    <div class="user-header">
+        <div class="user-header-left">
+            <h1 class="user-heading">
+                <i class="bi bi-people"></i>
+                Utilisateurs
+            </h1>
+            <p class="user-heading-sub">
+                Gestion des comptes — accès réservé aux administrateurs
+            </p>
+        </div>
+        <a href="/Users/Create" class="btn-user-invite">
+            <i class="bi bi-person-plus"></i>
+            Créer un compte
+        </a>
+    </div>
+
+    @if (TempData["Succes"] != null)
+    {
+        <div class="user-alert succes">
+            <i class="bi bi-check-circle"></i>
+            @TempData["Succes"]
+        </div>
+    }
+    @if (TempData["Erreur"] != null)
+    {
+        <div class="user-alert erreur">
+            <i class="bi bi-exclamation-circle"></i>
+            @TempData["Erreur"]
+        </div>
+    }
+
+    @* ── KPI row ── *@
+    <div class="user-kpi-row">
+        <div class="user-kpi total">
+            <div class="user-kpi-icon"><i class="bi bi-people"></i></div>
+            <div>
+                <div class="user-kpi-val">@Model.TotalCount</div>
+                <div class="user-kpi-label">Total</div>
+            </div>
+        </div>
+        <div class="user-kpi admin">
+            <div class="user-kpi-icon"><i class="bi bi-shield"></i></div>
+            <div>
+                <div class="user-kpi-val">@Model.TotalAdmin</div>
+                <div class="user-kpi-label">Admins</div>
+            </div>
+        </div>
+        <div class="user-kpi verrouille">
+            <div class="user-kpi-icon"><i class="bi bi-lock"></i></div>
+            <div>
+                <div class="user-kpi-val">@Model.TotalVerrouilles</div>
+                <div class="user-kpi-label">Verrouillés</div>
+            </div>
+        </div>
+    </div>
+
+    @* ── Table ── *@
+    <div class="user-table-card">
+        <div class="user-table-toolbar">
+            <span class="user-table-title">
+                <i class="bi bi-table"></i>
+                Tous les comptes
+            </span>
+            <span class="user-count-badge">@Model.TotalCount</span>
+        </div>
+
+        <div class="user-table-wrap">
+            @if (Model.Utilisateurs.Any())
+            {
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th>Téléphone</th>
+                            <th>Rôle</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Utilisateurs)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="user-identity">
+                                        <div class="user-avatar">@row.InitialesAvatar</div>
+                                        <div>
+                                            <div class="user-nom">@row.NomComplet</div>
+                                            <div class="user-email">@row.Email</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-size:0.75rem;color:var(--muted)">
+                                        @(string.IsNullOrEmpty(row.Telephone) ? "—" : row.Telephone)
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="user-role-badge @row.RoleClass">
+                                        <i class="bi bi-shield-check"></i>
+                                        @row.Role
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="user-statut-badge @row.StatutClass">
+                                        <i class="bi @(row.EstVerrouille ? "bi-lock" : row.EmailConfirme ? "bi-check-circle" : "bi-envelope")"></i>
+                                        @row.StatutLabel
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="user-actions">
+                                        <a href="/Utilisateurs/Edit/@row.Id"
+                                           class="btn-user-icon edit"
+                                           title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        @if (row.EstVerrouille)
+                                        {
+                                            <form method="post"
+                                                  asp-action="Deverrouiller"
+                                                  asp-route-id="@row.Id"
+                                                  style="display:inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit"
+                                                        class="btn-user-icon unlock"
+                                                        title="Déverrouiller">
+                                                    <i class="bi bi-unlock"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form method="post"
+                                                  asp-action="Verrouiller"
+                                                  asp-route-id="@row.Id"
+                                                  style="display:inline"
+                                                  onsubmit="return confirm('Verrouiller ce compte ?')">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit"
+                                                        class="btn-user-icon lock"
+                                                        title="Verrouiller">
+                                                    <i class="bi bi-lock"></i>
+                                                </button>
+                                            </form>
+                                        }
+
+                                        <a href="/Utilisateurs/Delete/@row.Id"
+                                           class="btn-user-icon delete"
+                                           title="Supprimer">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div style="text-align:center;padding:40px;color:var(--muted)">
+                    <i class="bi bi-people" style="font-size:32px;opacity:0.25;display:block;margin-bottom:8px"></i>
+                    Aucun utilisateur enregistré
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,95 @@
+﻿@using GestionInventaire.Web.Models.Utilisateurs
+@model UtilisateurDeleteViewModel
+
+@{
+    ViewData["Title"] = "Supprimer l'utilisateur";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/utilisateurs.css" asp-append-version="true" />
+}
+
+<div class="utilisateur-form-page">
+
+    <div class="user-header">
+        <div class="user-header-left">
+            <h1 class="user-heading">
+                <i class="bi bi-trash" style="color:var(--danger)"></i>
+                Supprimer l'utilisateur
+            </h1>
+            <p class="user-heading-sub">Cette action est irréversible</p>
+        </div>
+        <a href="/Utilisateurs" class="btn-user-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="user-delete-card">
+        <div class="user-delete-header">
+            <div class="user-delete-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div>
+                <p class="user-form-card-title" style="color:var(--danger)">
+                    Confirmer la suppression
+                </p>
+                <p class="user-form-card-subtitle">
+                    Le compte sera définitivement supprimé
+                </p>
+            </div>
+        </div>
+
+        <div class="user-delete-body">
+
+            <div class="user-delete-info">
+                <div class="user-delete-row">
+                    <span class="dr-label">Nom</span>
+                    <span class="dr-val">@Model.NomComplet</span>
+                </div>
+                <div class="user-delete-row">
+                    <span class="dr-label">Email</span>
+                    <span class="dr-val">@Model.Email</span>
+                </div>
+                <div class="user-delete-row">
+                    <span class="dr-label">Rôle</span>
+                    <span class="dr-val">@Model.Role</span>
+                </div>
+            </div>
+
+            <div class="user-delete-warning">
+                <i class="bi bi-exclamation-circle"></i>
+                <span>
+                    Le compte de <strong>@Model.NomComplet</strong> sera
+                    définitivement supprimé. Cette action est irréversible.
+                    @if (Model.Role == "Admin")
+                    {
+                        <text>
+                            <br /><strong>Attention</strong> : vous ne pouvez pas
+                            supprimer le seul administrateur du système.
+                        </text>
+                    }
+                </span>
+            </div>
+
+        </div>
+
+        <div class="user-delete-footer">
+            <form method="post"
+                  asp-action="Delete"
+                  asp-route-id="@Model.Id">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-user-delete-confirm">
+                    <i class="bi bi-trash"></i>
+                    Confirmer la suppression
+                </button>
+            </form>
+            <a href="/Utilisateurs" class="btn-user-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>

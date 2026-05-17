@@ -16,11 +16,112 @@
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" />
 
     <!-- Layout styles -->
-    <link rel="stylesheet" href="~/css/layout.css"  asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/site.css"    asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GestionInventaire.Web.styles.css" asp-append-version="true" />
 
     @await RenderSectionAsync("Styles", required: false)
+
+    <style>
+        /* ── Menu "Plus" dropdown ── */
+        .nav-more {
+            position: relative;
+        }
+
+        .btn-nav-more {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 10px;
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all 150ms ease;
+            white-space: nowrap;
+        }
+
+            .btn-nav-more:hover,
+            .btn-nav-more.open {
+                color: var(--text);
+                border-color: var(--accent2);
+                background: rgba(59,130,246,0.08);
+            }
+
+            .btn-nav-more i.chevron {
+                font-size: 10px;
+                transition: transform 200ms ease;
+            }
+
+            .btn-nav-more.open i.chevron {
+                transform: rotate(180deg);
+            }
+
+        /* Dropdown */
+        .nav-more-dropdown {
+            display: none;
+            position: fixed;
+            top: 58px;
+            min-width: 200px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 6px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.55);
+            z-index: 99999;
+        }
+
+            .nav-more-dropdown.open {
+                display: block;
+            }
+
+            .nav-more-dropdown a {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 9px 12px;
+                border-radius: 7px;
+                color: var(--muted);
+                font-size: 0.82rem;
+                font-weight: 500;
+                text-decoration: none;
+                transition: all 150ms ease;
+            }
+
+                .nav-more-dropdown a:hover {
+                    background: var(--surface2);
+                    color: var(--text);
+                    text-decoration: none;
+                }
+
+                .nav-more-dropdown a.active {
+                    background: rgba(59,130,246,0.1);
+                    color: var(--accent2);
+                }
+
+                .nav-more-dropdown a i {
+                    font-size: 15px;
+                    width: 18px;
+                    text-align: center;
+                }
+
+            .nav-more-dropdown hr {
+                border: none;
+                border-top: 1px solid var(--border);
+                margin: 4px 0;
+            }
+
+        /* Badge "Plus" actif quand un sous-lien est actif */
+        .btn-nav-more.has-active {
+            color: var(--accent2);
+            border-color: var(--accent2);
+            background: rgba(59,130,246,0.08);
+        }
+    </style>
 </head>
 
 <body>
@@ -44,6 +145,13 @@
         <!-- NAV LINKS -->
         @{
             var ctrl = ViewContext.RouteData.Values["Controller"]?.ToString() ?? "";
+
+            // Contrôleurs visibles dans le menu "Plus"
+            var moreControllers = new[]
+            {
+                "Rapports", "Audit", "Utilisateurs", "Settings"
+                };
+            var isInMore = moreControllers.Contains(ctrl);
         }
 
         <div class="nav-links">
@@ -72,12 +180,6 @@
                 <span>Produits</span>
             </a>
 
-            <a href="/Categories"
-               class="nav-link @(ctrl == "Categories" ? "active" : "")">
-                <i class="bi bi-tags"></i>
-                <span>Catégories</span>
-            </a>
-
             <a href="/Stocks"
                class="nav-link @(ctrl == "Stocks" ? "active" : "")">
                 <i class="bi bi-archive"></i>
@@ -102,23 +204,47 @@
                 <span>Maintenance</span>
             </a>
 
-            <a href="/Rapports"
-               class="nav-link @(ctrl == "Rapports" ? "active" : "")">
-                <i class="bi bi-file-earmark-bar-graph"></i>
-                <span>Rapports</span>
-            </a>
+            @* ── Bouton "Plus" avec dropdown ── *@
+            <div class="nav-more">
+                <button class="btn-nav-more @(isInMore ? "has-active" : "")"
+                        id="navMoreBtn"
+                        type="button">
+                    <i class="bi bi-grid"></i>
+                    Plus
+                    <i class="bi bi-chevron-down chevron"></i>
+                </button>
 
-            <a href="/Audit"
-               class="nav-link @(ctrl == "Audit" ? "active" : "")">
-                <i class="bi bi-shield-check"></i>
-                <span>Audit</span>
-            </a>
+                <div class="nav-more-dropdown" id="navMoreDropdown">
 
-            <a asp-controller="Settings" asp-action="Index"
-               class="nav-link @(ctrl == "Settings" ? "active" : "")">
-                <i class="bi bi-sliders"></i>
-                <span>Paramètres</span>
-            </a>
+                    <a href="/Rapports"
+                       class="@(ctrl == "Rapports" ? "active" : "")">
+                        <i class="bi bi-file-earmark-bar-graph"></i>
+                        Rapports
+                    </a>
+
+                    <a href="/Audit"
+                       class="@(ctrl == "Audit" ? "active" : "")">
+                        <i class="bi bi-shield-check"></i>
+                        Audit
+                    </a>
+
+                    <hr />
+
+                    @* Utilisateurs — lien vers Index, création dans la vue *@
+                    <a href="/Utilisateurs"
+                       class="@(ctrl is "Utilisateurs" or "Users" ? "active" : "")">
+                        <i class="bi bi-person-gear"></i>
+                        Utilisateurs
+                    </a>
+
+                    <a asp-controller="Settings" asp-action="Index"
+                       class="@(ctrl == "Settings" ? "active" : "")">
+                        <i class="bi bi-sliders"></i>
+                        Paramètres
+                    </a>
+
+                </div>
+            </div>
 
         </div>
 
@@ -170,9 +296,10 @@
         <main class="app-main">
 
             @{
-                // Pages qui gèrent leur propre layout (padding, scroll, etc.)
-                // → pas de container-lg ni de breadcrumb injecté par le layout
-                var fullWidthControllers = new[] { "Dashboard", "Home", "Affectations" };
+                var fullWidthControllers = new[]
+                {
+                        "Dashboard", "Home", "Affectations"
+                        };
                 var isFullWidth = fullWidthControllers.Contains(ctrl);
             }
 
@@ -191,7 +318,6 @@
             }
             else if (isFullWidth)
             {
-                @* Home, Affectations et futures pages full-width gèrent leur propre padding *@
                 @RenderBody()
             }
             else
@@ -218,7 +344,43 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/layout.js" asp-append-version="true"></script>
-    <script src="~/js/site.js"   asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // ── Dropdown "Plus" ──
+        const moreBtn      = document.getElementById('navMoreBtn');
+        const moreDropdown = document.getElementById('navMoreDropdown');
+
+        moreBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = moreDropdown.classList.contains('open');
+
+            // Fermer tous les dropdowns ouverts
+            document.querySelectorAll('.nav-more-dropdown.open')
+                .forEach(d => d.classList.remove('open'));
+            document.querySelectorAll('.btn-nav-more.open')
+                .forEach(b => b.classList.remove('open'));
+
+            if (!isOpen) {
+                // Positionner le dropdown sous le bouton
+                const rect = moreBtn.getBoundingClientRect();
+                moreDropdown.style.left = (rect.right - 210) + 'px';
+                moreDropdown.classList.add('open');
+                moreBtn.classList.add('open');
+            }
+        });
+
+        // Fermer en cliquant ailleurs
+        document.addEventListener('click', () => {
+            moreDropdown?.classList.remove('open');
+            moreBtn?.classList.remove('open');
+        });
+
+        // Empêcher la fermeture en cliquant dans le dropdown
+        moreDropdown?.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 

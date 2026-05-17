@@ -1,0 +1,127 @@
+﻿@using GestionInventaire.Web.Models.Utilisateurs
+@model UtilisateurEditViewModel
+
+@{
+    ViewData["Title"] = "Modifier l'utilisateur";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/utilisateurs.css" asp-append-version="true" />
+}
+
+<div class="utilisateur-form-page">
+
+    <div class="user-header">
+        <div class="user-header-left">
+            <h1 class="user-heading">
+                <i class="bi bi-pencil-square"></i>
+                Modifier l'utilisateur
+            </h1>
+            <p class="user-heading-sub">@Model.Email</p>
+        </div>
+        <a href="/Utilisateurs" class="btn-user-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="user-form-card">
+        <div class="user-form-header">
+            <div class="user-form-icon">
+                <i class="bi bi-person-gear"></i>
+            </div>
+            <div>
+                <p class="user-form-card-title">Informations du compte</p>
+                <p class="user-form-card-subtitle">
+                    L'email ne peut pas être modifié ici
+                </p>
+            </div>
+        </div>
+
+        <div class="user-form-body">
+            <div asp-validation-summary="ModelOnly"
+                 class="user-alert erreur"
+                 style="margin-bottom:16px"></div>
+
+            <form method="post" id="userForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Email" />
+
+                <div class="user-form-group" style="margin-bottom:16px">
+                    <label class="user-form-label">
+                        <i class="bi bi-envelope"></i>
+                        Adresse e-mail
+                    </label>
+                    <input value="@Model.Email"
+                           class="user-input"
+                           readonly
+                           title="L'email ne peut pas être modifié" />
+                </div>
+
+                <div class="user-form-grid">
+
+                    <div class="user-form-group">
+                        <label class="user-form-label" asp-for="Prenom">
+                            <i class="bi bi-person"></i>
+                            Prénom
+                        </label>
+                        <input asp-for="Prenom" class="user-input" />
+                        <span asp-validation-for="Prenom" class="user-field-error"></span>
+                    </div>
+
+                    <div class="user-form-group">
+                        <label class="user-form-label" asp-for="Nom">
+                            <i class="bi bi-person"></i>
+                            Nom
+                        </label>
+                        <input asp-for="Nom" class="user-input" />
+                        <span asp-validation-for="Nom" class="user-field-error"></span>
+                    </div>
+
+                    <div class="user-form-group">
+                        <label class="user-form-label" asp-for="Telephone">
+                            <i class="bi bi-telephone"></i>
+                            Téléphone
+                            <span style="color:var(--muted);font-weight:400">(optionnel)</span>
+                        </label>
+                        <input asp-for="Telephone" class="user-input"
+                               placeholder="ex. +509 3700 0000" />
+                        <span asp-validation-for="Telephone" class="user-field-error"></span>
+                    </div>
+
+                    <div class="user-form-group">
+                        <label class="user-form-label" asp-for="Role">
+                            <i class="bi bi-shield-check"></i>
+                            Rôle
+                        </label>
+                        <select asp-for="Role"
+                                asp-items="Model.Roles"
+                                class="user-select">
+                            <option value="">— Sélectionner un rôle —</option>
+                        </select>
+                        <span asp-validation-for="Role" class="user-field-error"></span>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="user-form-footer">
+            <button type="submit" form="userForm" class="btn-user-submit">
+                <i class="bi bi-check-circle"></i>
+                Enregistrer
+            </button>
+            <a href="/Utilisateurs" class="btn-user-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

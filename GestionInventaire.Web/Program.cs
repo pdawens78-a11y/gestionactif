@@ -119,6 +119,8 @@ builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IEmployeService, EmployeService>();
 builder.Services.AddScoped<IMaintenanceService, MaintenanceService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<IRapportService, RapportService>();
+builder.Services.AddScoped<IUtilisateurService, UtilisateurService>();
 
 // ======================
 // AUTOMAPPER
@@ -135,6 +137,8 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<MaintenanceProfile>();
     cfg.AddProfile<AuditProfile>();
     cfg.AddProfile<ActifProfile>();
+    cfg.AddProfile<RapportProfile>();
+    cfg.AddProfile<UtilisateurProfile>();
 });
 
 // ======================

@@ -35,7 +35,7 @@ namespace GestionInventaire.Web.Controllers
                     .Select(c => c.Value)
                     .ToArray();
 
-                var dto = await _homeService.GetHomeDtoAsync(currentUserId, userRoles);
+                var dto = await _homeService.GetHomeDtoAsync();
                 var vm = _mapper.Map<HomeViewModel>(dto);
                 return View(vm);
             }

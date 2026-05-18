@@ -19,6 +19,11 @@ namespace GestionInventaire.DAL.Repositories
                 .ToList();
         }
 
+        public Task<List<AuditLog>> GetLogsAsync()
+        {
+            return Task.FromResult(GetLogs());
+        }
+
         public void Log(string action, string entite, int entiteId)
         {
             if (string.IsNullOrWhiteSpace(action))
@@ -49,6 +54,12 @@ namespace GestionInventaire.DAL.Repositories
 
             _context.AuditLogs.Add(log);
             _context.SaveChanges();
+        }
+
+        public Task LogAsync(string action, string entite, int entiteId)
+        {
+            Log(action, entite, entiteId);
+            return Task.CompletedTask;
         }
 
         public List<AuditLog> Rechercher(string? query, string? action, DateTime? dateDebut, DateTime? dateFin)
@@ -86,6 +97,11 @@ namespace GestionInventaire.DAL.Repositories
             return logs
                 .OrderByDescending(l => l.DateAction)
                 .ToList();
+        }
+
+        public Task<List<AuditLog>> RechercherAsync(string? query, string? action, DateTime? dateDebut, DateTime? dateFin)
+        {
+            return Task.FromResult(Rechercher(query, action, dateDebut, dateFin));
         }
     }
 }

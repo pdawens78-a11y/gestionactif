@@ -7,17 +7,12 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link rel="stylesheet"
+          href="~/css/auth.css"
+          asp-append-version="true" />
 }
 
 <div class="auth-card text-center">
-
-    @if (TempData["Warning"] is string warning && !string.IsNullOrWhiteSpace(warning))
-    {
-        <div class="alert alert-warning text-start mb-4">
-            @warning
-        </div>
-    }
 
     <div class="auth-success-icon">
 
@@ -49,7 +44,9 @@
 
     </p>
 
-    <a asp-controller="Users" asp-action="Create" class="auth-btn">
+    <a asp-controller="Users"
+       asp-action="Create"
+       class="auth-btn">
 
         <i class="bi bi-arrow-left-circle"></i>
 

@@ -236,9 +236,16 @@ namespace GestionInventaire.Web.Controllers
             try
             {
                 var dto = new ServiceCreateDto { NomService = request.NomService.Trim() };
-                var result = await _serviceService.CreateServiceAsync(dto);
+                await _serviceService.CreateServiceAsync(dto);
 
-                return Ok(new { idService = result.IdService, nomService = result.NomService });
+                var createdService = (await _serviceService.GetServicesSelectAsync())
+                    .FirstOrDefault(s => s.NomService.Equals(dto.NomService, StringComparison.OrdinalIgnoreCase));
+
+                return Ok(new
+                {
+                    idService = createdService?.IdService ?? 0,
+                    nomService = createdService?.NomService ?? dto.NomService
+                });
             }
             catch (InvalidOperationException ex)
             {

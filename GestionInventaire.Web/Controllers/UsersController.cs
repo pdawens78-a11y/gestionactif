@@ -14,17 +14,16 @@ namespace GestionInventaire.Web.Controllers
     public class UsersController : Controller
     {
         private readonly UserManager<Utilisateur> _userManager;
+
         private readonly IEmailSender _emailSender;
-        private readonly ILogger<UsersController> _logger;
 
         public UsersController(
             UserManager<Utilisateur> userManager,
-            IEmailSender emailSender,
-            ILogger<UsersController> logger)
+            IEmailSender emailSender)
         {
             _userManager = userManager;
+
             _emailSender = emailSender;
-            _logger = logger;
         }
 
         // =========================
@@ -80,7 +79,7 @@ namespace GestionInventaire.Web.Controllers
 
                 Telephone = model.Telephone,
 
-                EmailConfirmed = true
+                EmailConfirmed = false
             };
 
             var result =
@@ -165,20 +164,10 @@ namespace GestionInventaire.Web.Controllers
                 </div>";
 
             // SEND EMAIL
-            _logger.LogInformation("📧 Envoi invitation à {Email}...", user.Email);
-            try
-            {
-                await _emailSender.SendEmailAsync(
-                    user.Email,
-                    "Bienvenue sur TechnoLogis",
-                    htmlMessage);
-                _logger.LogInformation("✅ Invitation envoyée à {Email}", user.Email);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "❌ Erreur envoi invitation à {Email}", user.Email);
-                TempData["Warning"] = "L'utilisateur a été créé, mais l'envoi de l'invitation a échoué. Vérifiez les logs Mailjet.";
-            }
+            await _emailSender.SendEmailAsync(
+                user.Email,
+                "Bienvenue sur TechnoLogis",
+                htmlMessage);
 
             // REDIRECTION
             return RedirectToPage(

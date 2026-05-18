@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestionInventaire.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260515214905_UpdateIdentityWorkflow")]
-    partial class UpdateIdentityWorkflow
+    [Migration("20260518164425_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -156,6 +156,9 @@ namespace GestionInventaire.DAL.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<int?>("IdService")
+                        .HasColumnType("int");
+
                     b.Property<string>("Nom")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -166,15 +169,13 @@ namespace GestionInventaire.DAL.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Service")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Tel")
+                    b.Property<string>("Telephone")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("IdEmploye");
+
+                    b.HasIndex("IdService");
 
                     b.ToTable("Employes");
                 });
@@ -263,6 +264,28 @@ namespace GestionInventaire.DAL.Migrations
                     b.HasIndex("IdCategorie");
 
                     b.ToTable("Produits");
+                });
+
+            modelBuilder.Entity("GestionInventaire.Domain.Entities.Service", b =>
+                {
+                    b.Property<int>("IdService")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdService"));
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("NomService")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("IdService");
+
+                    b.ToTable("Service");
                 });
 
             modelBuilder.Entity("GestionInventaire.Domain.Entities.Stock", b =>
@@ -539,6 +562,15 @@ namespace GestionInventaire.DAL.Migrations
                         .HasForeignKey("IdUtilisateur")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GestionInventaire.Domain.Entities.Employe", b =>
+                {
+                    b.HasOne("GestionInventaire.Domain.Entities.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("IdService");
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("GestionInventaire.Domain.Entities.Maintenance", b =>

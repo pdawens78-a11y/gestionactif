@@ -68,20 +68,17 @@ namespace GestionInventaire.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Employes",
+                name: "Service",
                 columns: table => new
                 {
-                    IdEmploye = table.Column<int>(type: "int", nullable: false)
+                    IdService = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nom = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Prenom = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
-                    Tel = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Service = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    NomService = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employes", x => x.IdEmploye);
+                    table.PrimaryKey("PK_Service", x => x.IdService);
                 });
 
             migrationBuilder.CreateTable(
@@ -214,32 +211,6 @@ namespace GestionInventaire.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InvitationTokens",
-                columns: table => new
-                {
-                    IdInvitation = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Token = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    DateCreation = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateExpiration = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Utilisee = table.Column<bool>(type: "bit", nullable: false),
-                    DateUtilisation = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IdUtilisateur = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InvitationTokens", x => x.IdInvitation);
-                    table.ForeignKey(
-                        name: "FK_InvitationTokens_AspNetUsers_IdUtilisateur",
-                        column: x => x.IdUtilisateur,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Produits",
                 columns: table => new
                 {
@@ -258,6 +229,28 @@ namespace GestionInventaire.DAL.Migrations
                         principalTable: "Categories",
                         principalColumn: "IdCategorie",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Employes",
+                columns: table => new
+                {
+                    IdEmploye = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nom = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Prenom = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    Telephone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    IdService = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employes", x => x.IdEmploye);
+                    table.ForeignKey(
+                        name: "FK_Employes_Service_IdService",
+                        column: x => x.IdService,
+                        principalTable: "Service",
+                        principalColumn: "IdService");
                 });
 
             migrationBuilder.CreateTable(
@@ -437,22 +430,9 @@ namespace GestionInventaire.DAL.Migrations
                 column: "IdUtilisateur");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvitationTokens_Email",
-                table: "InvitationTokens",
-                column: "Email");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_InvitationTokens_IdUtilisateur",
-                table: "InvitationTokens",
-                column: "IdUtilisateur",
-                unique: true,
-                filter: "[IdUtilisateur] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_InvitationTokens_Token",
-                table: "InvitationTokens",
-                column: "Token",
-                unique: true);
+                name: "IX_Employes_IdService",
+                table: "Employes",
+                column: "IdService");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Maintenances_IdActif",
@@ -501,9 +481,6 @@ namespace GestionInventaire.DAL.Migrations
                 name: "AuditLogs");
 
             migrationBuilder.DropTable(
-                name: "InvitationTokens");
-
-            migrationBuilder.DropTable(
                 name: "Maintenances");
 
             migrationBuilder.DropTable(
@@ -523,6 +500,9 @@ namespace GestionInventaire.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Stocks");
+
+            migrationBuilder.DropTable(
+                name: "Service");
 
             migrationBuilder.DropTable(
                 name: "Produits");

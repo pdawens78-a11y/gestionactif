@@ -22,25 +22,18 @@ namespace GestionInventaire.Domain.Entities
 
         [Phone(ErrorMessage = "Numéro de téléphone invalide")]
         [StringLength(20)]
-        public string? Tel { get; set; }
+        public string? Telephone { get; set; }
 
-        [NotMapped]
-        public string? Telephone
-        {
-            get => Tel;
-            set => Tel = value;
-        }
+        // ── FK vers Service ──
+        public int? IdService { get; set; }
 
-        [StringLength(100)]
-        public string? Service { get; set; }
-
-        [NotMapped]
-        public int? IdService
-        {
-            get => int.TryParse(Service, out var id) ? id : null;
-            set => Service = value?.ToString();
-        }
+        [ForeignKey(nameof(IdService))]
+        public Service? Service { get; set; }
 
         public ICollection<Affectation> Affectations { get; set; } = new List<Affectation>();
+
+        // ── Propriétés calculées ──
+        public string NomComplet => $"{Prenom} {Nom}".Trim();
+        public string NomService => Service?.NomService ?? "—";
     }
 }

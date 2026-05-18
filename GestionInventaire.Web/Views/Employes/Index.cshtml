@@ -20,13 +20,10 @@
             </h1>
             <p class="emp-heading-sub">Gestion du personnel et affectations d'actifs</p>
         </div>
-        @if (User.CanManageEmployes())
-        {
-            <a href="/Employes/Create" class="btn-emp-new">
-                <i class="bi bi-person-plus"></i>
-                Nouvel employé
-            </a>
-        }
+        <a href="/Employes/Create" class="btn-emp-new">
+            <i class="bi bi-person-plus"></i>
+            Nouvel employé
+        </a>
     </div>
 
     @if (TempData["Succes"] != null)
@@ -87,7 +84,7 @@
                                         </span>
                                         <span class="emp-tel">
                                             <i class="bi bi-telephone" style="font-size:11px"></i>
-                                            @row.TelFormatted
+                                            @row.TelephoneFormatted
                                         </span>
                                     </div>
                                 </td>
@@ -104,23 +101,14 @@
                                 </td>
                                 <td>
                                     <div class="emp-actions">
-                                        @if (User.CanManageEmployes())
-                                        {
-                                            <a href="/Employes/Edit/@row.IdEmploye"
-                                               class="btn-emp-icon edit"
-                                               title="Modifier">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <a href="/Employes/Delete/@row.IdEmploye"
-                                               class="btn-emp-icon delete"
-                                               title="Supprimer">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <span class="text-muted" style="font-size:0.75rem">Lecture seule</span>
-                                        }
+                                        <a href="/Employes/Edit/@row.IdEmploye"
+                                           class="btn-emp-icon edit" title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/Employes/Delete/@row.IdEmploye"
+                                           class="btn-emp-icon delete" title="Supprimer">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
@@ -133,12 +121,9 @@
                 <div class="emp-empty">
                     <i class="bi bi-people"></i>
                     <span>Aucun employé enregistré</span>
-                    @if (User.CanManageEmployes())
-                    {
-                        <a href="/Employes/Create" class="btn-emp-new" style="margin-top:8px">
-                            <i class="bi bi-person-plus"></i> Ajouter le premier
-                        </a>
-                    }
+                    <a href="/Employes/Create" class="btn-emp-new" style="margin-top:8px">
+                        <i class="bi bi-person-plus"></i> Ajouter le premier
+                    </a>
                 </div>
             }
         </div>

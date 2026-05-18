@@ -15,8 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // ======================
 var configuration = builder.Configuration;
 
-var identityCfg =
-    configuration.GetSection("Identity");
+var identityCfg = configuration.GetSection("Identity");
 
 var cookieExpireMinutes =
     configuration.GetValue<int>("Cookie:ExpireMinutes", 30);
@@ -105,6 +104,7 @@ builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 
 // ======================
 // SERVICES (BLL)
+// ── ServiceService fully qualified — évite le conflit avec System.ServiceProcess
 // ======================
 builder.Services.AddScoped<IActifService, ActifService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
@@ -118,7 +118,8 @@ builder.Services.AddScoped<IMaintenanceService, MaintenanceService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<IRapportService, RapportService>();
 builder.Services.AddScoped<IUtilisateurService, UtilisateurService>();
-builder.Services.AddScoped<IServiceService, ServiceService>();
+builder.Services.AddScoped<IServiceService,
+    GestionInventaire.BLL.Services.ServiceService>();
 
 // ======================
 // AUTOMAPPER

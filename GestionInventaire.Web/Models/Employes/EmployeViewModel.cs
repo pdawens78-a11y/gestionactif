@@ -16,14 +16,14 @@ namespace GestionInventaire.Web.Models.Employes
         public string Nom { get; set; } = string.Empty;
         public string Prenom { get; set; } = string.Empty;
         public string? Email { get; set; }
-        public string? Tel { get; set; }
-        public string? Service { get; set; }
+        public string? Telephone { get; set; }   // ← Telephone (pas Tel)
+        public string NomService { get; set; } = string.Empty; // ← NomService (pas Service)
         public int NombreAffectations { get; set; }
         public int ActifsActifs { get; set; }
 
         public string EmailFormatted => string.IsNullOrEmpty(Email) ? "—" : Email;
-        public string TelFormatted => string.IsNullOrEmpty(Tel) ? "—" : Tel;
-        public string ServiceFormatted => string.IsNullOrEmpty(Service) ? "—" : Service;
+        public string TelephoneFormatted => string.IsNullOrEmpty(Telephone) ? "—" : Telephone;
+        public string ServiceFormatted => string.IsNullOrEmpty(NomService) ? "—" : NomService;
 
         public string InitialesAvatar =>
             $"{(Prenom.Length > 0 ? Prenom[0] : ' ')}{(Nom.Length > 0 ? Nom[0] : ' ')}".ToUpper();
@@ -52,12 +52,11 @@ namespace GestionInventaire.Web.Models.Employes
         [Phone(ErrorMessage = "Numéro de téléphone invalide")]
         [StringLength(20)]
         [Display(Name = "Téléphone")]
-        public string? Tel { get; set; }
+        public string? Telephone { get; set; }   // ← Telephone (pas Tel)
 
         [Display(Name = "Service / Département")]
         public int? IdService { get; set; }
 
-        // Services list for dropdown
         public List<ServiceDropdownItem> Services { get; set; } = new();
     }
 
@@ -92,12 +91,11 @@ namespace GestionInventaire.Web.Models.Employes
         [Phone(ErrorMessage = "Numéro de téléphone invalide")]
         [StringLength(20)]
         [Display(Name = "Téléphone")]
-        public string? Tel { get; set; }
+        public string? Telephone { get; set; }   // ← Telephone (pas Tel)
 
         [Display(Name = "Service / Département")]
         public int? IdService { get; set; }
 
-        // Services list for dropdown
         public List<ServiceDropdownItem> Services { get; set; } = new();
 
         public int NombreAffectations { get; set; }
@@ -109,7 +107,7 @@ namespace GestionInventaire.Web.Models.Employes
     {
         public int IdEmploye { get; set; }
         public string NomComplet { get; set; } = string.Empty;
-        public string? Service { get; set; }
+        public string NomService { get; set; } = string.Empty;
         public int NombreAffectations { get; set; }
         public int ActifsActifs { get; set; }
     }

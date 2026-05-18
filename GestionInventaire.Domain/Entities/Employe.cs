@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GestionInventaire.Domain.Entities
 {
@@ -23,8 +24,22 @@ namespace GestionInventaire.Domain.Entities
         [StringLength(20)]
         public string? Tel { get; set; }
 
+        [NotMapped]
+        public string? Telephone
+        {
+            get => Tel;
+            set => Tel = value;
+        }
+
         [StringLength(100)]
         public string? Service { get; set; }
+
+        [NotMapped]
+        public int? IdService
+        {
+            get => int.TryParse(Service, out var id) ? id : null;
+            set => Service = value?.ToString();
+        }
 
         public ICollection<Affectation> Affectations { get; set; } = new List<Affectation>();
     }

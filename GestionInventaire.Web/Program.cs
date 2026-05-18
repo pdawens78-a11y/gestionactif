@@ -3,7 +3,6 @@ using GestionInventaire.DAL.Data;
 using GestionInventaire.DAL.Repositories;
 using GestionInventaire.Domain.Entities;
 using GestionInventaire.Domain.IRepositories;
-using GestionInventaire.Web.Areas.Identity.Services;
 using GestionInventaire.Web.Mappings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -247,8 +246,6 @@ app.Use(async (context, next) =>
 // ======================
 // ROUTING
 // ======================
-app.MapControllers();
-
 app.MapRazorPages();
 
 app.MapControllerRoute(

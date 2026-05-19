@@ -80,7 +80,6 @@ namespace GestionInventaire.Web.Models.Produits
     public class ProduitEditViewModel
     {
         public int IdProduit { get; set; }
-        public int StockId { get; set; }
 
         [Required(ErrorMessage = "Le nom est obligatoire")]
         [StringLength(100, MinimumLength = 2,
@@ -95,15 +94,6 @@ namespace GestionInventaire.Web.Models.Produits
         [Required(ErrorMessage = "La catégorie est obligatoire")]
         [Display(Name = "Catégorie")]
         public int IdCategorie { get; set; }
-
-        // ── Stock ──
-        [Range(0, int.MaxValue, ErrorMessage = "La quantité ne peut pas être négative")]
-        [Display(Name = "Quantité en stock")]
-        public int StockQuantite { get; set; }
-
-        [Range(0, int.MaxValue, ErrorMessage = "Le seuil ne peut pas être négatif")]
-        [Display(Name = "Seuil d'alerte")]
-        public int StockSeuilAlerte { get; set; }
 
         public int NombreActifs { get; set; }
 

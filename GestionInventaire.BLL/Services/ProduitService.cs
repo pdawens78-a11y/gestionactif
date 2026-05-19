@@ -212,13 +212,7 @@ namespace GestionInventaire.BLL.Services
 
             await ValidateNomAsync(dto.NomProduit, dto.IdCategorie, dto.IdProduit);
 
-            if (dto.StockQuantite < 0)
-                throw new ArgumentException("La quantité en stock ne peut pas être négative.");
-
-            if (dto.StockSeuilAlerte < 0)
-                throw new ArgumentException("Le seuil d'alerte ne peut pas être négatif.");
-
-            // ── Mise à jour du produit ──
+            // ── Mise à jour du produit uniquement ──
             existing.NomProduit = dto.NomProduit.Trim();
             existing.Description = dto.Description?.Trim();
             existing.IdCategorie = dto.IdCategorie;
@@ -226,61 +220,8 @@ namespace GestionInventaire.BLL.Services
             _produitRepository.Update(existing);
             await _produitRepository.SaveAsync();
 
-            // ── Mise à jour du stock ──
-            var stocks = await _stockRepository.GetAllAsync();
-            var stock = stocks.FirstOrDefault(s => s.IdProduit == dto.IdProduit);
-
-            if (stock != null)
-            {
-                var ancienneQuantite = stock.Quantite;
-                var diff = dto.StockQuantite - ancienneQuantite;
-
-                stock.Quantite = dto.StockQuantite;
-                stock.SeuilAlerte = dto.StockSeuilAlerte;
-                _stockRepository.Update(stock);
-                await _stockRepository.SaveAsync();
-
-                if (diff != 0)
-                {
-                    await _mouvementRepository.CreateAsync(new MouvementStock
-                    {
-                        IdStock = stock.IdStock,
-                        Type = diff > 0 ? TypeMouvement.Entree : TypeMouvement.Sortie,
-                        Quantite = Math.Abs(diff),
-                        DateMouvement = DateTime.Now
-                    });
-
-                    await _mouvementRepository.SaveAsync();
-                }
-            }
-            else
-            {
-                var newStock = new Stock
-                {
-                    IdProduit = dto.IdProduit,
-                    Quantite = dto.StockQuantite,
-                    SeuilAlerte = dto.StockSeuilAlerte
-                };
-
-                await _stockRepository.CreateAsync(newStock);
-                await _stockRepository.SaveAsync();
-
-                if (dto.StockQuantite > 0)
-                {
-                    await _mouvementRepository.CreateAsync(new MouvementStock
-                    {
-                        IdStock = newStock.IdStock,
-                        Type = TypeMouvement.Entree,
-                        Quantite = dto.StockQuantite,
-                        DateMouvement = DateTime.Now
-                    });
-
-                    await _mouvementRepository.SaveAsync();
-                }
-            }
-
             await _auditRepository.LogAsync(
-                $"Modification produit : {existing.NomProduit} (stock={dto.StockQuantite}, seuil={dto.StockSeuilAlerte})",
+                $"Modification produit : {existing.NomProduit}",
                 "Produit", existing.IdProduit);
         }
 
@@ -352,7 +293,6 @@ namespace GestionInventaire.BLL.Services
             if (string.IsNullOrWhiteSpace(nom) || nom.Trim().Length < 2)
                 throw new ArgumentException("Le nom du produit est obligatoire (min. 2 caractères).");
 
-            // ── CS0201 corrigé : assignation explicite avant le throw ──
             var categorie = await _categorieRepository.GetByIdAsync(idCategorie);
             if (categorie == null)
                 throw new InvalidOperationException("La catégorie sélectionnée n'existe pas.");

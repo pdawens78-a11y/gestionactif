@@ -1,101 +1,120 @@
-﻿@using GestionInventaire.Web.Models.Actifs
-@model ActifEditViewModel
+﻿@using GestionInventaire.Web.Models.Produits
+@model ProduitEditViewModel
 
 @{
-    ViewData["Title"] = "Modifier l'actif";
+    ViewData["Title"] = "Modifier le produit";
     Layout = "/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/actifs.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/produits.css" asp-append-version="true" />
 }
 
-<div class="actif-form-page">
+<div class="produit-form-page">
 
-    <div class="actif-header">
-        <div class="actif-header-left">
-            <h1 class="actif-heading">
+    <div class="prod-header">
+        <div class="prod-header-left">
+            <h1 class="prod-heading">
                 <i class="bi bi-pencil-square"></i>
-                Modifier l'actif
+                Modifier le produit
             </h1>
-            <p class="actif-heading-sub">@Model.CodeInventaire — @Model.NomProduit</p>
+            <p class="prod-heading-sub">@Model.NomProduit</p>
         </div>
-        <a href="/Actifs" class="btn-actif-cancel">
+        <a href="/Produits" class="btn-prod-cancel">
             <i class="bi bi-arrow-left"></i>
             Retour
         </a>
     </div>
 
-    <div class="actif-form-card">
-        <div class="actif-form-header">
-            <div class="actif-form-icon">
-                <i class="bi bi-pencil"></i>
-            </div>
-            <div>
-                <p class="actif-form-card-title">Modifier localisation et statut</p>
-                <p class="actif-form-card-subtitle">
-                    Le code inventaire et le produit ne peuvent pas être modifiés
-                </p>
-            </div>
-        </div>
+    <form method="post" id="editForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="IdProduit" />
+        <input type="hidden" asp-for="NombreActifs" />
 
-        <div class="actif-form-body">
-            <div asp-validation-summary="ModelOnly"
-                 class="actif-alert erreur"
-                 style="margin-bottom:16px"></div>
-
-            @* Info lecture seule *@
-            <div class="actif-readonly-info">
-                <span class="actif-readonly-code">@Model.CodeInventaire</span>
-                <span class="actif-readonly-produit">@Model.NomProduit</span>
+        @* ══ SECTION 1 — Informations produit ══ *@
+        <div class="prod-form-card" style="margin-bottom:16px">
+            <div class="prod-form-header">
+                <div class="prod-form-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div>
+                    <p class="prod-form-card-title">Informations du produit</p>
+                    <p class="prod-form-card-subtitle">Nom, catégorie et description</p>
+                </div>
             </div>
 
-            <form method="post" id="editForm">
-                @Html.AntiForgeryToken()
-                <input type="hidden" asp-for="IdActif" />
-                <input type="hidden" asp-for="CodeInventaire" />
-                <input type="hidden" asp-for="NomProduit" />
+            <div class="prod-form-body">
+                <div asp-validation-summary="ModelOnly"
+                     class="prod-alert erreur"
+                     style="margin-bottom:16px"></div>
 
-                <div class="actif-form-group">
-                    <label class="actif-form-label" asp-for="Localisation">
-                        <i class="bi bi-geo-alt"></i>
-                        Localisation
+                <div class="prod-form-group">
+                    <label class="prod-form-label" asp-for="NomProduit">
+                        <i class="bi bi-box"></i> Nom du produit
                     </label>
-                    <input asp-for="Localisation"
-                           class="actif-input"
-                           placeholder="ex. Salle Serveur A, Bureau 201..." />
-                    <span asp-validation-for="Localisation" class="actif-field-error"></span>
+                    <input asp-for="NomProduit" class="prod-input" />
+                    <span asp-validation-for="NomProduit" class="prod-field-error"></span>
                 </div>
 
-                <div class="actif-form-group">
-                    <label class="actif-form-label" asp-for="Statut">
-                        <i class="bi bi-flag"></i>
-                        Statut
+                <div class="prod-form-group">
+                    <label class="prod-form-label" asp-for="IdCategorie">
+                        <i class="bi bi-tag"></i> Catégorie
                     </label>
-                    <select asp-for="Statut"
-                            asp-items="Model.Statuts"
-                            class="actif-select">
+                    <select asp-for="IdCategorie"
+                            asp-items="Model.Categories"
+                            class="prod-select">
+                        <option value="">— Sélectionner une catégorie —</option>
                     </select>
-                    <span asp-validation-for="Statut" class="actif-field-error"></span>
-                    <small style="font-size:0.72rem;color:var(--muted)">
-                        Seuls « Disponible » et « Hors service » sont modifiables manuellement.
-                    </small>
+                    <span asp-validation-for="IdCategorie" class="prod-field-error"></span>
                 </div>
 
-            </form>
+                <div class="prod-form-group">
+                    <label class="prod-form-label" asp-for="Description">
+                        <i class="bi bi-text-left"></i> Description
+                        <span style="color:var(--muted);font-weight:400">(optionnel)</span>
+                    </label>
+                    <textarea asp-for="Description" class="prod-textarea"></textarea>
+                    <span asp-validation-for="Description" class="prod-field-error"></span>
+                </div>
+            </div>
         </div>
 
-        <div class="actif-form-footer">
-            <button type="submit" form="editForm" class="btn-actif-submit">
+        @* ══ SECTION 2 — Actifs (info) ══ *@
+        <div class="prod-form-card" style="margin-bottom:16px">
+            <div class="prod-form-header">
+                <div class="prod-form-icon" style="background:linear-gradient(135deg,var(--accent),#00b894)">
+                    <i class="bi bi-boxes"></i>
+                </div>
+                <div>
+                    <p class="prod-form-card-title">Actifs associés</p>
+                    <p class="prod-form-card-subtitle">
+                        @Model.NombreActifs actif(s) actuellement enregistré(s) dans le système
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        @* ══ FOOTER ══ *@
+        <div class="prod-form-footer"
+             style="background:var(--surface);padding:16px 22px;border-radius:12px;
+                    display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+
+            @* 1. Enregistrer *@
+            <button type="submit"
+                    class="btn-prod-submit"
+                    style="cursor:pointer;border:none">
                 <i class="bi bi-check-circle"></i>
-                Enregistrer
+                Enregistrer les modifications
             </button>
-            <a href="/Actifs" class="btn-actif-cancel">
+
+            @* 2. Annuler *@
+            <a href="/Produits" class="btn-prod-cancel">
                 <i class="bi bi-x"></i>
                 Annuler
             </a>
         </div>
-    </div>
+
+    </form>
 
 </div>
 

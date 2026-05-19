@@ -16,14 +16,8 @@ namespace GestionInventaire.Web.Mappings
                 .ForMember(dest => dest.Produits,
                            opt => opt.MapFrom(src => src.Produits));
 
-            // ── Détail → Edit ViewModel (inclut stock) ──
+            // ── Détail → Edit ViewModel (produit uniquement) ──
             CreateMap<ProduitDetailDto, ProduitEditViewModel>()
-                .ForMember(dest => dest.StockId,
-                           opt => opt.MapFrom(src => src.IdStock ?? 0))
-                .ForMember(dest => dest.StockQuantite,
-                           opt => opt.MapFrom(src => src.StockQuantite ?? 0))
-                .ForMember(dest => dest.StockSeuilAlerte,
-                           opt => opt.MapFrom(src => src.StockSeuilAlerte ?? 0))
                 .ForMember(dest => dest.Categories,
                            opt => opt.Ignore());
 
@@ -31,13 +25,7 @@ namespace GestionInventaire.Web.Mappings
             CreateMap<ProduitDetailDto, ProduitDeleteViewModel>();
 
             // ── Edit ViewModel → ProduitEditDto ──
-            CreateMap<ProduitEditViewModel, ProduitEditDto>()
-                .ForMember(dest => dest.IdStock,
-                           opt => opt.MapFrom(src => src.StockId == 0 ? (int?)null : src.StockId))
-                .ForMember(dest => dest.StockQuantite,
-                           opt => opt.MapFrom(src => src.StockQuantite))
-                .ForMember(dest => dest.StockSeuilAlerte,
-                           opt => opt.MapFrom(src => src.StockSeuilAlerte));
+            CreateMap<ProduitEditViewModel, ProduitEditDto>();
 
             // ── Create ViewModel → ProduitCreateDto ──
             CreateMap<ProduitCreateViewModel, ProduitCreateDto>();

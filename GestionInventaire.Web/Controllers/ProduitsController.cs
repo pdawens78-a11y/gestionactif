@@ -117,7 +117,7 @@ namespace GestionInventaire.Web.Controllers
         // POST /Produits/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ProduitEditViewModel vm, string? redirectApres)
+        public async Task<IActionResult> Edit(ProduitEditViewModel vm)
         {
             if (!ModelState.IsValid)
             {
@@ -130,31 +130,6 @@ namespace GestionInventaire.Web.Controllers
             {
                 var dto = _mapper.Map<ProduitEditDto>(vm);
                 await _produitService.UpdateProduitAsync(dto);
-
-                // ── Bouton "Approvisionner" cliqué ──
-                if (redirectApres == "approvisionner")
-                {
-                    // Calculer la quantité manquante = stock - actifs existants
-                    var detail = await _produitService.GetProduitByIdAsync(vm.IdProduit);
-                    int stockCible = vm.StockQuantite;
-                    int actifsExistants = detail.NombreActifs;
-                    int quantiteManquante = stockCible - actifsExistants;
-
-                    if (quantiteManquante <= 0)
-                    {
-                        // Stock déjà cohérent avec les actifs
-                        TempData["Succes"] = $"Produit « {vm.NomProduit} » sauvegardé. " +
-                                             $"Le nombre d'actifs ({actifsExistants}) correspond déjà au stock ({stockCible}).";
-                        return RedirectToAction(nameof(Index));
-                    }
-
-                    // Passer la quantité manquante via TempData
-                    TempData["Succes"] = $"Produit « {vm.NomProduit} » sauvegardé.";
-                    TempData["ApproquantiteAuto"] = quantiteManquante;
-
-                    return RedirectToAction("Approvisionner", "Actifs",
-                        new { idProduit = vm.IdProduit, quantiteAuto = quantiteManquante });
-                }
 
                 TempData["Succes"] = $"Produit « {vm.NomProduit} » modifié avec succès.";
                 return RedirectToAction(nameof(Index));

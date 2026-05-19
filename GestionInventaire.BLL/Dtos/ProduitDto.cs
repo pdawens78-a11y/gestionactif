@@ -49,10 +49,6 @@
         public string NomProduit { get; set; } = string.Empty;
         public string? Description { get; set; }
         public int IdCategorie { get; set; }
-        // ── Stock ──
-        public int? IdStock { get; set; }
-        public int StockQuantite { get; set; }
-        public int StockSeuilAlerte { get; set; }
     }
 
     public class ProduitFormDataDto

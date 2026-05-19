@@ -30,8 +30,6 @@
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="IdProduit" />
         <input type="hidden" asp-for="NombreActifs" />
-        <input type="hidden" asp-for="StockId" />
-        <input type="hidden" id="redirectApres" name="redirectApres" value="" />
 
         @* ══ SECTION 1 — Informations produit ══ *@
         <div class="prod-form-card" style="margin-bottom:16px">
@@ -81,63 +79,7 @@
             </div>
         </div>
 
-        @* ══ SECTION 2 — Stock ══ *@
-        <div class="prod-form-card" style="margin-bottom:16px">
-            <div class="prod-form-header">
-                <div class="prod-form-icon" style="background:linear-gradient(135deg,var(--warn),#d97706)">
-                    <i class="bi bi-archive"></i>
-                </div>
-                <div>
-                    <p class="prod-form-card-title">Configuration du stock</p>
-                    <p class="prod-form-card-subtitle">Quantité cible et seuil d'alerte</p>
-                </div>
-            </div>
-
-            <div class="prod-form-body">
-                <div class="prod-form-group">
-                    <label class="prod-form-label" asp-for="StockQuantite">
-                        <i class="bi bi-archive"></i> Quantité en stock
-                    </label>
-                    <input asp-for="StockQuantite"
-                           type="number" min="0"
-                           class="prod-input"
-                           style="max-width:200px"
-                           placeholder="0" />
-                    <span asp-validation-for="StockQuantite" class="prod-field-error"></span>
-                    <small style="font-size:0.72rem;color:var(--muted)">
-                        Actifs actuellement créés : <strong>@Model.NombreActifs</strong>
-                        @if (Model.StockQuantite > Model.NombreActifs)
-                        {
-                            <span style="color:var(--warn)">
-                                — @(Model.StockQuantite - Model.NombreActifs) actif(s) manquant(s)
-                                → utilisez <strong>Approvisionner</strong>
-                            </span>
-                        }
-                        else if (Model.StockQuantite == Model.NombreActifs)
-                        {
-                            <span style="color:var(--accent)"> — Stock cohérent ✓</span>
-                        }
-                    </small>
-                </div>
-
-                <div class="prod-form-group">
-                    <label class="prod-form-label" asp-for="StockSeuilAlerte">
-                        <i class="bi bi-exclamation-triangle"></i> Seuil d'alerte
-                    </label>
-                    <input asp-for="StockSeuilAlerte"
-                           type="number" min="0"
-                           class="prod-input"
-                           style="max-width:200px"
-                           placeholder="5" />
-                    <span asp-validation-for="StockSeuilAlerte" class="prod-field-error"></span>
-                    <small style="font-size:0.72rem;color:var(--muted)">
-                        Une alerte sera déclenchée quand le stock ≤ ce seuil
-                    </small>
-                </div>
-            </div>
-        </div>
-
-        @* ══ SECTION 3 — Actifs (info) ══ *@
+        @* ══ SECTION 2 — Actifs (info) ══ *@
         <div class="prod-form-card" style="margin-bottom:16px">
             <div class="prod-form-header">
                 <div class="prod-form-icon" style="background:linear-gradient(135deg,var(--accent),#00b894)">
@@ -165,20 +107,7 @@
                 Enregistrer les modifications
             </button>
 
-            <span style="color:var(--border)">|</span>
-
-            @* 2. Enregistrer + Approvisionner *@
-            <button type="button"
-                    id="btnApprovisionner"
-                    class="btn-prod-submit"
-                    style="cursor:pointer;border:none;
-                           background:linear-gradient(135deg,var(--accent2),#1d4ed8)"
-                    title="Sauvegarde les modifications, puis génère automatiquement les actifs manquants">
-                <i class="bi bi-plus-circle"></i>
-                Enregistrer &amp; Approvisionner
-            </button>
-
-            @* 3. Annuler *@
+            @* 2. Annuler *@
             <a href="/Produits" class="btn-prod-cancel">
                 <i class="bi bi-x"></i>
                 Annuler
@@ -191,11 +120,4 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        document.getElementById('btnApprovisionner')
-            .addEventListener('click', function () {
-                document.getElementById('redirectApres').value = 'approvisionner';
-                document.getElementById('editForm').submit();
-            });
-    </script>
 }

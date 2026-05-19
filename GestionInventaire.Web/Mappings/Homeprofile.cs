@@ -9,15 +9,14 @@ namespace GestionInventaire.Web.Mappings
         public HomeProfile()
         {
             // ── AuditItemDto → HomeActiviteViewModel ──
-            // Les propriétés calculées (RelativeTime, TypeDot, IconeAction)
-            // sont des propriétés get-only dans le ViewModel — AutoMapper
-            // les ignore automatiquement, elles se calculent à l'accès.
             CreateMap<AuditItemDto, HomeActiviteViewModel>();
 
             // ── HomeDto → HomeViewModel ──
             CreateMap<HomeDto, HomeViewModel>()
                 .ForMember(dest => dest.DernieresActivites,
-                           opt => opt.Ignore());
+                           opt => opt.Ignore())
+                .ForMember(dest => dest.StockCritique,
+                           opt => opt.MapFrom(src => src.StocksCritiques));
         }
     }
 }

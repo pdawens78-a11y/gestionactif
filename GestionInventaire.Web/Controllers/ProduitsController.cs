@@ -25,9 +25,7 @@ namespace GestionInventaire.Web.Controllers
             _logger = logger;
         }
 
-        // ════════════════════════════════════════════
         // GET /Produits
-        // ════════════════════════════════════════════
         public async Task<IActionResult> Index()
         {
             try
@@ -44,9 +42,7 @@ namespace GestionInventaire.Web.Controllers
             }
         }
 
-        // ════════════════════════════════════════════
         // GET /Produits/Create
-        // ════════════════════════════════════════════
         public async Task<IActionResult> Create()
         {
             try
@@ -66,9 +62,7 @@ namespace GestionInventaire.Web.Controllers
             }
         }
 
-        // ════════════════════════════════════════════
         // POST /Produits/Create
-        // ════════════════════════════════════════════
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProduitCreateViewModel vm)
@@ -84,7 +78,6 @@ namespace GestionInventaire.Web.Controllers
             {
                 var dto = _mapper.Map<ProduitCreateDto>(vm);
                 await _produitService.CreateProduitAsync(dto);
-
                 TempData["Succes"] = $"Produit « {vm.NomProduit} » créé avec succès.";
                 return RedirectToAction(nameof(Index));
             }
@@ -103,19 +96,15 @@ namespace GestionInventaire.Web.Controllers
             }
         }
 
-        // ════════════════════════════════════════════
         // GET /Produits/Edit/{id}
-        // ════════════════════════════════════════════
         public async Task<IActionResult> Edit(int id)
         {
             try
             {
                 var detail = await _produitService.GetProduitByIdAsync(id);
                 var formData = await _produitService.GetFormDataAsync();
-
                 var vm = _mapper.Map<ProduitEditViewModel>(detail);
                 vm.Categories = _mapper.Map<List<SelectListItem>>(formData.Categories);
-
                 return View(vm);
             }
             catch (InvalidOperationException ex)
@@ -125,9 +114,7 @@ namespace GestionInventaire.Web.Controllers
             }
         }
 
-        // ════════════════════════════════════════════
         // POST /Produits/Edit/{id}
-        // ════════════════════════════════════════════
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProduitEditViewModel vm)
@@ -162,9 +149,7 @@ namespace GestionInventaire.Web.Controllers
             }
         }
 
-        // ════════════════════════════════════════════
         // GET /Produits/Delete/{id}
-        // ════════════════════════════════════════════
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -180,9 +165,7 @@ namespace GestionInventaire.Web.Controllers
             }
         }
 
-        // ════════════════════════════════════════════
         // POST /Produits/Delete/{id}
-        // ════════════════════════════════════════════
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -201,8 +184,7 @@ namespace GestionInventaire.Web.Controllers
                 _logger.LogError(ex, "Erreur suppression produit #{Id}", id);
                 TempData["Erreur"] = "Une erreur inattendue est survenue.";
             }
-
             return RedirectToAction(nameof(Index));
         }
     }
-}   
+}

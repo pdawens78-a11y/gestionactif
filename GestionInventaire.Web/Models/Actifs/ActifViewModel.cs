@@ -12,8 +12,6 @@ namespace GestionInventaire.Web.Models.Actifs
         public int TotalAffectes { get; set; }
         public int TotalEnMaintenance { get; set; }
         public int TotalHorsService { get; set; }
-
-        // Filtre actif
         public string? FiltreStatut { get; set; }
     }
 
@@ -42,7 +40,7 @@ namespace GestionInventaire.Web.Models.Actifs
             : "statut-hors-service";
     }
 
-    // ── Modification ──
+    // ── Modification actif ──
     public class ActifEditViewModel
     {
         public int IdActif { get; set; }
@@ -59,11 +57,10 @@ namespace GestionInventaire.Web.Models.Actifs
         [Display(Name = "Statut")]
         public string Statut { get; set; } = string.Empty;
 
-        // Seuls Disponible et HorsService sont modifiables manuellement
         public List<SelectListItem> Statuts { get; set; } = new()
         {
-            new SelectListItem("Disponible",    "Disponible"),
-            new SelectListItem("Hors service",  "HorsService")
+            new SelectListItem("Disponible",   "Disponible"),
+            new SelectListItem("Hors service", "HorsService")
         };
     }
 
@@ -73,7 +70,11 @@ namespace GestionInventaire.Web.Models.Actifs
         public int IdProduit { get; set; }
         public string NomProduit { get; set; } = string.Empty;
         public string NomCategorie { get; set; } = string.Empty;
-        public int StockActuel { get; set; }
+
+        // ── Infos contextuelles ──
+        public int StockActuel { get; set; }   // quantité cible dans le stock
+        public int NombreActifs { get; set; }   // actifs déjà créés
+        public bool QuantiteAuto { get; set; }   // true = quantité calculée automatiquement
 
         [Required(ErrorMessage = "La quantité est obligatoire")]
         [Range(1, 10000, ErrorMessage = "La quantité doit être entre 1 et 10 000")]
@@ -85,20 +86,20 @@ namespace GestionInventaire.Web.Models.Actifs
             ErrorMessage = "La localisation doit contenir entre 3 et 100 caractères")]
         [Display(Name = "Localisation")]
         public string Localisation { get; set; } = string.Empty;
+
+        // ── Calculés ──
+        public int ActifsManquants => Math.Max(0, StockActuel - NombreActifs);
+        public bool StockCoherent => NombreActifs >= StockActuel;
     }
 
-    // ── Résultat approvisionnement ──
+    // ── Résultat ──
     public class ApprovisionnerResultViewModel
     {
         public int NombreGenere { get; set; }
         public string NomProduit { get; set; } = string.Empty;
         public List<string> CodesGeneres { get; set; } = new();
 
-        // Afficher les 10 premiers + "et X autres"
-        public List<string> CodesAffiches =>
-            CodesGeneres.Take(10).ToList();
-
-        public int CodesRestants =>
-            Math.Max(0, CodesGeneres.Count - 10);
+        public List<string> CodesAffiches => CodesGeneres.Take(10).ToList();
+        public int CodesRestants => Math.Max(0, CodesGeneres.Count - 10);
     }
 }

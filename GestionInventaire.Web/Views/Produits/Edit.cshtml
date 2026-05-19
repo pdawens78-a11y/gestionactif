@@ -26,34 +26,31 @@
         </a>
     </div>
 
-    @* ══ SECTION 1 — Informations produit ══ *@
-    <div class="prod-form-card" style="margin-bottom:16px">
-        <div class="prod-form-header">
-            <div class="prod-form-icon">
-                <i class="bi bi-box-seam"></i>
-            </div>
-            <div>
-                <p class="prod-form-card-title">Informations du produit</p>
-                <p class="prod-form-card-subtitle">Nom, catégorie et description</p>
-            </div>
-        </div>
+    <form method="post" id="editForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="IdProduit" />
+        <input type="hidden" asp-for="NombreActifs" />
 
-        <div class="prod-form-body">
-            <div asp-validation-summary="ModelOnly"
-                 class="prod-alert erreur"
-                 style="margin-bottom:16px"></div>
+        @* ══ SECTION 1 — Informations produit ══ *@
+        <div class="prod-form-card" style="margin-bottom:16px">
+            <div class="prod-form-header">
+                <div class="prod-form-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div>
+                    <p class="prod-form-card-title">Informations du produit</p>
+                    <p class="prod-form-card-subtitle">Nom, catégorie et description</p>
+                </div>
+            </div>
 
-            <form method="post" id="editForm">
-                @Html.AntiForgeryToken()
-                <input type="hidden" asp-for="IdProduit" />
-                <input type="hidden" asp-for="NombreActifs" />
-                <input type="hidden" asp-for="StockQuantite" />
-                <input type="hidden" asp-for="StockId" />
+            <div class="prod-form-body">
+                <div asp-validation-summary="ModelOnly"
+                     class="prod-alert erreur"
+                     style="margin-bottom:16px"></div>
 
                 <div class="prod-form-group">
                     <label class="prod-form-label" asp-for="NomProduit">
-                        <i class="bi bi-box"></i>
-                        Nom du produit
+                        <i class="bi bi-box"></i> Nom du produit
                     </label>
                     <input asp-for="NomProduit" class="prod-input" />
                     <span asp-validation-for="NomProduit" class="prod-field-error"></span>
@@ -61,8 +58,7 @@
 
                 <div class="prod-form-group">
                     <label class="prod-form-label" asp-for="IdCategorie">
-                        <i class="bi bi-tag"></i>
-                        Catégorie
+                        <i class="bi bi-tag"></i> Catégorie
                     </label>
                     <select asp-for="IdCategorie"
                             asp-items="Model.Categories"
@@ -74,88 +70,51 @@
 
                 <div class="prod-form-group">
                     <label class="prod-form-label" asp-for="Description">
-                        <i class="bi bi-text-left"></i>
-                        Description
+                        <i class="bi bi-text-left"></i> Description
                         <span style="color:var(--muted);font-weight:400">(optionnel)</span>
                     </label>
                     <textarea asp-for="Description" class="prod-textarea"></textarea>
                     <span asp-validation-for="Description" class="prod-field-error"></span>
                 </div>
-            </form>
-        </div>
-    </div>
-
-    @* ══ SECTION 2 — Stock ══ *@
-    <div class="prod-form-card" style="margin-bottom:16px">
-        <div class="prod-form-header">
-            <div class="prod-form-icon" style="background:linear-gradient(135deg,var(--warn),#d97706)">
-                <i class="bi bi-archive"></i>
-            </div>
-            <div>
-                <p class="prod-form-card-title">Configuration du stock</p>
-                <p class="prod-form-card-subtitle">Quantité et seuil d'alerte</p>
             </div>
         </div>
 
-        <div class="prod-form-body">
-            <div class="prod-form-group">
-                <label class="prod-form-label" asp-for="StockQuantite">
-                    <i class="bi bi-archive"></i>
-                    Quantité en stock
-                </label>
-                <input asp-for="StockQuantite"
-                       type="number"
-                       min="0"
-                       class="prod-input"
-                       style="max-width:200px"
-                       placeholder="0" />
-                <span asp-validation-for="StockQuantite" class="prod-field-error"></span>
-            </div>
-
-            <div class="prod-form-group">
-                <label class="prod-form-label" asp-for="StockSeuilAlerte">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    Seuil d'alerte
-                </label>
-                <input asp-for="StockSeuilAlerte"
-                       type="number"
-                       min="0"
-                       class="prod-input"
-                       style="max-width:200px"
-                       placeholder="5" />
-                <span asp-validation-for="StockSeuilAlerte" class="prod-field-error"></span>
-                <small style="font-size:0.72rem;color:var(--muted)">
-                    Une alerte sera déclenchée quand le stock ≤ ce seuil
-                </small>
+        @* ══ SECTION 2 — Actifs (info) ══ *@
+        <div class="prod-form-card" style="margin-bottom:16px">
+            <div class="prod-form-header">
+                <div class="prod-form-icon" style="background:linear-gradient(135deg,var(--accent),#00b894)">
+                    <i class="bi bi-boxes"></i>
+                </div>
+                <div>
+                    <p class="prod-form-card-title">Actifs associés</p>
+                    <p class="prod-form-card-subtitle">
+                        @Model.NombreActifs actif(s) actuellement enregistré(s) dans le système
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
 
-    @* ══ SECTION 3 — Actifs ══ *@
-    <div class="prod-form-card">
-        <div class="prod-form-header">
-            <div class="prod-form-icon" style="background:linear-gradient(135deg,var(--accent),#00b894)">
-                <i class="bi bi-boxes"></i>
-            </div>
-            <div>
-                <p class="prod-form-card-title">Actifs associés</p>
-                <p class="prod-form-card-subtitle">
-                    @Model.NombreActifs actif(s) — pour ajouter ou approfonner, utilisez
-                    <a href="/Actifs/Approvisionner/@Model.IdProduit" style="color:var(--accent)">
-                        Approvisionner
-                    </a>
-                </p>
-            </div>
+        @* ══ FOOTER ══ *@
+        <div class="prod-form-footer"
+             style="background:var(--surface);padding:16px 22px;border-radius:12px;
+                    display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+
+            @* 1. Enregistrer *@
+            <button type="submit"
+                    class="btn-prod-submit"
+                    style="cursor:pointer;border:none">
+                <i class="bi bi-check-circle"></i>
+                Enregistrer les modifications
+            </button>
+
+            @* 2. Annuler *@
+            <a href="/Produits" class="btn-prod-cancel">
+                <i class="bi bi-x"></i>
+                Annuler
+            </a>
         </div>
-    </div>
 
-    <div class="prod-form-footer" style="background:var(--surface);padding:16px 22px;border-radius:12px">
-        <input type="submit" form="editForm" value="Enregistrer les modifications" class="btn-prod-submit" style="cursor: pointer; border: none;" />
-        <a href="/Produits" class="btn-prod-cancel">
-            <i class="bi bi-x"></i>
-            Annuler
-        </a>
-    </div>
+    </form>
 
 </div>
 

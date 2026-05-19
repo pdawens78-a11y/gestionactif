@@ -15,15 +15,7 @@ namespace GestionInventaire.Web.Mappings
                            opt => opt.MapFrom(src => src.Stocks));
             CreateMap<StockEditDto, StockEditViewModel>();
 
-            // ── Écriture ──
-            CreateMap<StockEditViewModel, StockUpdateDto>()
-                .ForMember(dest => dest.IdStock,
-                           opt => opt.MapFrom(src => src.IdStock))
-                .ForMember(dest => dest.Quantite,
-                           opt => opt.MapFrom(src => src.Quantite))
-                .ForMember(dest => dest.SeuilAlerte,
-                           opt => opt.MapFrom(src => src.SeuilAlerte));
-
+            // ── Mouvement ──
             CreateMap<StockMouvementViewModel, StockMouvementDto>();
 
             // ── Historique ──

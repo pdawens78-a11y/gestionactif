@@ -18,9 +18,7 @@
                 <i class="bi bi-boxes"></i>
                 Approvisionner
             </h1>
-            <p class="actif-heading-sub">
-                Générer des actifs en masse pour un produit
-            </p>
+            <p class="actif-heading-sub">Générer des actifs en masse pour un produit</p>
         </div>
         <a href="/Produits" class="btn-actif-cancel">
             <i class="bi bi-arrow-left"></i>
@@ -28,44 +26,101 @@
         </a>
     </div>
 
-    <div class="actif-form-card" style="max-width:580px">
-        <div class="actif-form-header">
-            <div class="actif-form-icon" style="background:linear-gradient(135deg,var(--accent),#00b894)">
-                <i class="bi bi-boxes"></i>
-            </div>
-            <div>
-                <p class="actif-form-card-title">Génération automatique d'actifs</p>
-                <p class="actif-form-card-subtitle">
-                    Les codes inventaire seront générés automatiquement
-                </p>
-            </div>
-        </div>
+    <form method="post" id="approForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="IdProduit" />
+        <input type="hidden" asp-for="NomProduit" />
+        <input type="hidden" asp-for="NomCategorie" />
+        <input type="hidden" asp-for="StockActuel" />
+        <input type="hidden" asp-for="NombreActifs" />
+        <input type="hidden" asp-for="QuantiteAuto" />
 
-        <div class="actif-form-body">
-            <div asp-validation-summary="ModelOnly"
-                 class="actif-alert erreur"
-                 style="margin-bottom:16px"></div>
-
-            @* Info produit *@
-            <div class="appro-produit-card">
-                <div class="appro-produit-icon">
-                    <i class="bi bi-box-seam"></i>
+        <div class="actif-form-card">
+            <div class="actif-form-header">
+                <div class="actif-form-icon">
+                    <i class="bi bi-boxes"></i>
                 </div>
                 <div>
-                    <div class="appro-produit-nom">@Model.NomProduit</div>
-                    <div class="appro-produit-cat">
-                        <i class="bi bi-tag" style="font-size:11px"></i>
-                        @Model.NomCategorie
-                    </div>
+                    <p class="actif-form-card-title">Génération automatique d'actifs</p>
+                    <p class="actif-form-card-subtitle">
+                        Les codes inventaire seront générés automatiquement
+                    </p>
                 </div>
             </div>
 
-            <form method="post" id="approForm">
-                @Html.AntiForgeryToken()
-                <input type="hidden" asp-for="IdProduit" />
-                <input type="hidden" asp-for="NomProduit" />
-                <input type="hidden" asp-for="NomCategorie" />
+            <div class="actif-form-body">
 
+                @* Info produit *@
+                <div style="background:var(--surface2);border:1px solid var(--border);
+                            border-radius:10px;padding:14px 16px;margin-bottom:20px;
+                            display:flex;align-items:center;gap:14px">
+                    <div style="width:38px;height:38px;border-radius:9px;
+                                background:linear-gradient(135deg,var(--accent2),#1d4ed8);
+                                display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                        <i class="bi bi-box-seam" style="color:#fff;font-size:17px"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight:600;color:var(--text);font-size:0.9rem">
+                            @Model.NomProduit
+                        </div>
+                        <div style="font-size:0.75rem;color:var(--muted)">
+                            <i class="bi bi-tag" style="font-size:11px"></i>
+                            @Model.NomCategorie
+                        </div>
+                    </div>
+                    @* Compteurs stock vs actifs *@
+                    <div style="margin-left:auto;display:flex;gap:16px;text-align:center">
+                        <div>
+                            <div style="font-family:'Space Mono',monospace;font-size:1.1rem;
+                                        font-weight:700;color:var(--warn)">
+                                @Model.StockActuel
+                            </div>
+                            <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase">
+                                Stock cible
+                            </div>
+                        </div>
+                        <div style="color:var(--border);font-size:1.2rem;align-self:center">—</div>
+                        <div>
+                            <div style="font-family:'Space Mono',monospace;font-size:1.1rem;
+                                        font-weight:700;color:var(--muted)">
+                                @Model.NombreActifs
+                            </div>
+                            <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase">
+                                Actifs créés
+                            </div>
+                        </div>
+                        <div style="color:var(--border);font-size:1.2rem;align-self:center">=</div>
+                        <div>
+                            <div style="font-family:'Space Mono',monospace;font-size:1.1rem;
+                                        font-weight:700;color:var(--accent)">
+                                @Model.ActifsManquants
+                            </div>
+                            <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase">
+                                À générer
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @* Bandeau info si quantité auto *@
+                @if (Model.QuantiteAuto)
+                {
+                    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;
+                                    background:rgba(0,212,170,0.07);
+                                    border:1px solid rgba(0,212,170,0.25);
+                                    border-radius:8px;margin-bottom:20px;
+                                    font-size:0.8rem;color:var(--accent)">
+                        <i class="bi bi-magic" style="font-size:16px;flex-shrink:0"></i>
+                        <span>
+                            Quantité calculée automatiquement :
+                            <strong>@Model.StockActuel stock</strong> −
+                            <strong>@Model.NombreActifs actifs existants</strong> =
+                            <strong>@Model.ActifsManquants actif(s) à créer</strong>
+                        </span>
+                    </div>
+                }
+
+                @* Nombre d'actifs *@
                 <div class="actif-form-group">
                     <label class="actif-form-label" asp-for="Quantite">
                         <i class="bi bi-hash"></i>
@@ -76,17 +131,29 @@
                            min="1"
                            max="10000"
                            class="actif-input"
-                           placeholder="ex. 50"
-                           id="quantiteInput" />
+                           id="quantiteInput"
+                           style="max-width:200px" />
                     <span asp-validation-for="Quantite" class="actif-field-error"></span>
-                    <div class="appro-preview" id="approPreview">
-                        <i class="bi bi-info-circle"></i>
-                        <span id="previewText">
+                    @if (!Model.QuantiteAuto)
+                    {
+                        <small style="font-size:0.72rem;color:var(--muted)">
                             Entrez une quantité pour voir l'aperçu des codes générés.
-                        </span>
-                    </div>
+                        </small>
+                    }
                 </div>
 
+                @* Aperçu codes *@
+                <div id="approPreview"
+                     style="display:none;padding:10px 14px;
+                            background:rgba(0,212,170,0.06);
+                            border:1px solid rgba(0,212,170,0.2);
+                            border-radius:8px;font-size:0.8rem;
+                            color:var(--accent);margin-bottom:16px">
+                    <i class="bi bi-info-circle"></i>
+                    <span id="previewText"></span>
+                </div>
+
+                @* Localisation *@
                 <div class="actif-form-group">
                     <label class="actif-form-label" asp-for="Localisation">
                         <i class="bi bi-geo-alt"></i>
@@ -98,43 +165,42 @@
                     <span asp-validation-for="Localisation" class="actif-field-error"></span>
                 </div>
 
-            </form>
-        </div>
+            </div>
 
-        <div class="actif-form-footer">
-            <button type="submit" form="approForm" class="btn-actif-submit"
-                    style="background:linear-gradient(135deg,var(--accent),#00b894);box-shadow:none">
-                <i class="bi bi-boxes"></i>
-                Générer les actifs
-            </button>
-            <a href="/Produits" class="btn-actif-cancel">
-                <i class="bi bi-x"></i>
-                Annuler
-            </a>
+            <div class="actif-form-footer">
+                <button type="submit" class="btn-actif-submit" style="cursor:pointer;border:none">
+                    <i class="bi bi-boxes"></i>
+                    Générer les actifs
+                </button>
+                <a href="/Produits" class="btn-actif-cancel">
+                    <i class="bi bi-x"></i>
+                    Annuler
+                </a>
+            </div>
         </div>
-    </div>
+    </form>
 
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        // Aperçu dynamique du premier et dernier code généré
-        const input    = document.getElementById('quantiteInput');
-        const preview  = document.getElementById('previewText');
-        const prodNom  = '@Model.NomProduit';
-        const firstLetter = prodNom.trim().charAt(0).toUpperCase();
+        const qInput   = document.getElementById('quantiteInput');
+        const preview  = document.getElementById('approPreview');
+        const prevText = document.getElementById('previewText');
 
-        input?.addEventListener('input', () => {
-            const qty = parseInt(input.value);
-            if (!qty || qty < 1) {
-                preview.textContent = 'Entrez une quantité pour voir l\'aperçu.';
-                return;
+        function updatePreview() {
+            const qty = parseInt(qInput.value) || 0;
+            if (qty > 0) {
+                preview.style.display = 'block';
+                prevText.textContent =
+                    `${qty} actif(s) seront générés avec des codes inventaire séquentiels.`;
+            } else {
+                preview.style.display = 'none';
             }
-            preview.textContent =
-                `${qty} actif(s) seront générés : ` +
-                `${firstLetter}001 → ${firstLetter}${String(qty).padStart(3, '0')} ` +
-                `(les numéros exacts dépendent des actifs existants)`;
-        });
+        }
+
+        qInput?.addEventListener('input', updatePreview);
+        updatePreview();
     </script>
 }

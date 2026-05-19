@@ -29,7 +29,6 @@ namespace GestionInventaire.Web.Controllers
 
         // ════════════════════════════════════════════
         // GET /Actifs
-        // GET /Actifs?filtreStatut=Disponible
         // ════════════════════════════════════════════
         public async Task<IActionResult> Index(string? filtreStatut)
         {
@@ -39,13 +38,8 @@ namespace GestionInventaire.Web.Controllers
                 var vm = _mapper.Map<ActifIndexViewModel>(dto);
                 vm.FiltreStatut = filtreStatut;
 
-                // Appliquer le filtre côté ViewModel
                 if (!string.IsNullOrWhiteSpace(filtreStatut))
-                {
-                    vm.Actifs = vm.Actifs
-                        .Where(a => a.Statut == filtreStatut)
-                        .ToList();
-                }
+                    vm.Actifs = vm.Actifs.Where(a => a.Statut == filtreStatut).ToList();
 
                 return View(vm);
             }
@@ -89,7 +83,6 @@ namespace GestionInventaire.Web.Controllers
             {
                 var dto = _mapper.Map<ActifUpdateDto>(vm);
                 await _actifService.UpdateActifDtoAsync(dto);
-
                 TempData["Succes"] = $"Actif {vm.CodeInventaire} mis à jour avec succès.";
                 return RedirectToAction(nameof(Index));
             }
@@ -107,22 +100,28 @@ namespace GestionInventaire.Web.Controllers
         }
 
         // ════════════════════════════════════════════
-        // GET /Actifs/Approvisionner/{idProduit}
+        // GET /Actifs/Approvisionner?idProduit=X&quantiteAuto=Y
+        // ── quantiteAuto : calculé automatiquement par ProduitsController
+        //    = StockQuantite - NombreActifsExistants
         // ════════════════════════════════════════════
-        public async Task<IActionResult> Approvisionner(int idProduit)
+        public async Task<IActionResult> Approvisionner(int idProduit, int? quantiteAuto)
         {
             try
             {
-                // Réutilise IProduitService pour récupérer les infos du produit
-                var produitDetail = await _produitService.GetProduitByIdAsync(idProduit);
+                var detail = await _produitService.GetProduitByIdAsync(idProduit);
 
                 var vm = new ApprovisionnerViewModel
                 {
-                    IdProduit = produitDetail.IdProduit,
-                    NomProduit = produitDetail.NomProduit,
-                    NomCategorie = produitDetail.NomCategorie,
-                    StockActuel = 0, // sera enrichi si besoin
-                    Quantite = 1
+                    IdProduit = detail.IdProduit,
+                    NomProduit = detail.NomProduit,
+                    NomCategorie = detail.NomCategorie,
+                    StockActuel = detail.StockQuantite ?? 0,
+                    NombreActifs = detail.NombreActifs,
+                    // ── Pré-remplir automatiquement si vient de Edit ──
+                    Quantite = quantiteAuto.HasValue && quantiteAuto.Value > 0
+                                         ? quantiteAuto.Value
+                                         : 1,
+                    QuantiteAuto = quantiteAuto.HasValue && quantiteAuto.Value > 0
                 };
 
                 return View(vm);
@@ -153,7 +152,6 @@ namespace GestionInventaire.Web.Controllers
                 TempData["Succes"] =
                     $"{result.NombreGenere} actif(s) générés avec succès pour « {result.NomProduit} ».";
 
-                // Passer le résultat via TempData pour la vue de confirmation
                 return View("ApprovisionnerResult", vmResult);
             }
             catch (InvalidOperationException ex)

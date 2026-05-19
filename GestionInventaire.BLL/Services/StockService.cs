@@ -11,7 +11,6 @@ namespace GestionInventaire.BLL.Services
         private readonly IMouvementStockRepository _mouvementRepository;
         private readonly IProduitRepository _produitRepository;
         private readonly ICategorieRepository _categorieRepository;
-        private readonly IActifRepository _actifRepository;
         private readonly IAuditRepository _auditRepository;
 
         public StockService(
@@ -19,14 +18,12 @@ namespace GestionInventaire.BLL.Services
             IMouvementStockRepository mouvementRepository,
             IProduitRepository produitRepository,
             ICategorieRepository categorieRepository,
-            IActifRepository actifRepository,
             IAuditRepository auditRepository)
         {
             _stockRepository = stockRepository;
             _mouvementRepository = mouvementRepository;
             _produitRepository = produitRepository;
             _categorieRepository = categorieRepository;
-            _actifRepository = actifRepository;
             _auditRepository = auditRepository;
         }
 
@@ -84,35 +81,6 @@ namespace GestionInventaire.BLL.Services
             };
         }
 
-        public async Task UpdateStockAsync(StockUpdateDto dto)
-        {
-            var stock = await _stockRepository.GetByIdAsync(dto.IdStock)
-                ?? throw new InvalidOperationException($"Le stock #{dto.IdStock} n'existe pas.");
-
-            if (dto.Quantite < 0)
-                throw new ArgumentException("La quantité ne peut pas être négative.");
-
-            if (dto.SeuilAlerte < 0)
-                throw new ArgumentException("Le seuil d'alerte ne peut pas être négatif.");
-
-            int ancienneQuantite = stock.Quantite;
-            int nouvelleQuantite = dto.Quantite;
-            int difference = nouvelleQuantite - ancienneQuantite;
-
-            stock.Quantite = nouvelleQuantite;
-            stock.SeuilAlerte = dto.SeuilAlerte;
-
-            _stockRepository.Update(stock);
-            await _stockRepository.SaveAsync();
-
-            // ── Synchroniser les actifs ──
-            await SynchroniserActifsAsync(stock.IdProduit, difference, ancienneQuantite, nouvelleQuantite);
-
-            await _auditRepository.LogAsync(
-                $"Modification stock #{stock.IdStock} : Quantité={ancienneQuantite}→{nouvelleQuantite}, Seuil={dto.SeuilAlerte}",
-                "Stock", stock.IdStock);
-        }
-
         public async Task AjouterMouvementAsync(StockMouvementDto dto)
         {
             var stock = await _stockRepository.GetByIdAsync(dto.IdStock)
@@ -128,14 +96,9 @@ namespace GestionInventaire.BLL.Services
                 throw new InvalidOperationException(
                     $"Stock insuffisant : {stock.Quantite} disponible(s), {dto.Quantite} demandé(s).");
 
-            int ancienneQuantite = stock.Quantite;
-
             stock.Quantite = type == TypeMouvement.Entree
                 ? stock.Quantite + dto.Quantite
                 : stock.Quantite - dto.Quantite;
-
-            int nouvelleQuantite = stock.Quantite;
-            int difference = type == TypeMouvement.Entree ? dto.Quantite : -dto.Quantite;
 
             _stockRepository.Update(stock);
 
@@ -148,9 +111,6 @@ namespace GestionInventaire.BLL.Services
             });
 
             await _stockRepository.SaveAsync();
-
-            // ── Synchroniser les actifs ──
-            await SynchroniserActifsAsync(stock.IdProduit, difference, ancienneQuantite, nouvelleQuantite);
 
             await _auditRepository.LogAsync(
                 $"Mouvement {dto.Type} stock #{dto.IdStock} : {dto.Quantite} unité(s)",
@@ -194,73 +154,6 @@ namespace GestionInventaire.BLL.Services
                 SeuilAlerte = stock.SeuilAlerte,
                 Mouvements = items
             };
-        }
-
-        // ════════════════════════════════════════════
-        // SYNCHRONISATION ACTIFS — Privée
-        // ════════════════════════════════════════════
-
-        private async Task SynchroniserActifsAsync(int idProduit, int difference, int ancienneQuantite, int nouvelleQuantite)
-        {
-            var actifs = await _actifRepository.GetAllAsync();
-            var actifsProduct = actifs.Where(a => a.IdProduit == idProduit).ToList();
-
-            if (difference > 0)
-            {
-                // ── Augmentation : créer des actifs disponibles ──
-                await CreerActifsDisponiblesAsync(idProduit, difference, actifsProduct.Count);
-            }
-            else if (difference < 0)
-            {
-                // ── Diminution : supprimer des actifs disponibles ──
-                await SupprimerActifsDisponiblesAsync(idProduit, Math.Abs(difference));
-            }
-        }
-
-        private async Task CreerActifsDisponiblesAsync(int idProduit, int quantite, int currentActifCount)
-        {
-            var produit = await _produitRepository.GetByIdAsync(idProduit)
-                ?? throw new InvalidOperationException($"Le produit #{idProduit} n'existe pas.");
-
-            char firstLetter = char.ToUpper(produit.NomProduit[0]);
-            int nextNumber = currentActifCount + 1;
-
-            for (int i = 0; i < quantite; i++)
-            {
-                var code = $"{firstLetter}{nextNumber:D6}";
-                nextNumber++;
-
-                await _actifRepository.CreateAsync(new Actif
-                {
-                    CodeInventaire = code,
-                    Statut = StatutActif.Disponible,
-                    Localisation = "Entrepôt",
-                    DateAcquisition = DateTime.Today,
-                    IdProduit = idProduit
-                });
-            }
-
-            await _actifRepository.SaveAsync();
-        }
-
-        private async Task SupprimerActifsDisponiblesAsync(int idProduit, int quantite)
-        {
-            var actifs = await _actifRepository.GetAllAsync();
-            var actifsProduct = actifs
-                .Where(a => a.IdProduit == idProduit && a.Statut == StatutActif.Disponible)
-                .OrderByDescending(a => a.IdActif)
-                .Take(quantite)
-                .ToList();
-
-            if (actifsProduct.Count < quantite)
-                throw new InvalidOperationException(
-                    $"Impossible de supprimer {quantite} actif(s) disponible(s) : " +
-                    $"seulement {actifsProduct.Count} disponible(s).");
-
-            foreach (var actif in actifsProduct)
-                _actifRepository.Delete(actif);
-
-            await _actifRepository.SaveAsync();
         }
     }
 }

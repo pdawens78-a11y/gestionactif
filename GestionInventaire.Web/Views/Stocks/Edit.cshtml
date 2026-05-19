@@ -44,24 +44,18 @@
                  class="stock-alert erreur"
                  style="margin-bottom:16px"></div>
 
-            @* Infos produit en lecture seule *@
-            <div class="stock-product-info">
-                <span class="stock-product-nom">
-                    <i class="bi bi-box"></i>
-                    @Model.NomProduit
-                </span>
-                <span class="stock-product-cat">
-                    <i class="bi bi-tag" style="font-size:11px"></i>
-                    @Model.NomCategorie
-                </span>
-            </div>
-
-            <form method="post" id="stockForm">
+            <form method="post" asp-action="Edit" asp-route-id="@Model.IdStock">
                 @Html.AntiForgeryToken()
+
                 <input type="hidden" asp-for="IdStock" />
-                <input type="hidden" asp-for="IdProduit" />
-                <input type="hidden" asp-for="NomProduit" />
-                <input type="hidden" asp-for="NomCategorie" />
+
+                @* Infos produit en lecture seule *@
+                <div class="stock-product-info">
+                    <span class="stock-product-nom">
+                        <i class="bi bi-box"></i>
+                        @Model.NomProduit
+                    </span>
+                </div>
 
                 <div class="stock-form-group">
                     <label class="stock-form-label" asp-for="Quantite">
@@ -72,7 +66,8 @@
                            type="number"
                            min="0"
                            class="stock-input"
-                           placeholder="0" />
+                           placeholder="0"
+                           required />
                     <span asp-validation-for="Quantite" class="stock-field-error"></span>
                 </div>
 
@@ -85,25 +80,25 @@
                            type="number"
                            min="0"
                            class="stock-input"
-                           placeholder="0" />
+                           placeholder="0"
+                           required />
                     <span asp-validation-for="SeuilAlerte" class="stock-field-error"></span>
                     <small style="font-size:0.72rem;color:var(--muted)">
                         Une alerte sera déclenchée quand la quantité ≤ ce seuil
                     </small>
                 </div>
 
+                <div class="stock-form-footer">
+                    <button type="submit" class="btn-stock-submit">
+                        <i class="bi bi-check-circle"></i>
+                        Enregistrer
+                    </button>
+                    <a href="/Stocks" class="btn-stock-cancel">
+                        <i class="bi bi-x"></i>
+                        Annuler
+                    </a>
+                </div>
             </form>
-        </div>
-
-        <div class="stock-form-footer">
-            <button type="submit" form="stockForm" class="btn-stock-submit">
-                <i class="bi bi-check-circle"></i>
-                Enregistrer
-            </button>
-            <a href="/Stocks" class="btn-stock-cancel">
-                <i class="bi bi-x"></i>
-                Annuler
-            </a>
         </div>
     </div>
 
@@ -111,4 +106,19 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const quantite = document.querySelector('input[name="Quantite"]');
+                    const seuil = document.querySelector('input[name="SeuilAlerte"]');
+
+                    console.log('Quantité:', quantite?.value);
+                    console.log('Seuil:', seuil?.value);
+                    console.log('Formulaire soumis vers:', form.action);
+                });
+            }
+        });
+    </script>
 }

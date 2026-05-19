@@ -29,6 +29,7 @@ namespace GestionInventaire.BLL.Dtos
     public class StockUpdateDto
     {
         public int IdStock      { get; set; }
+        public int Quantite     { get; set; }
         public int SeuilAlerte  { get; set; }
     }
 

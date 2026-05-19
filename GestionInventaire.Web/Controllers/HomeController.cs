@@ -27,22 +27,39 @@ namespace GestionInventaire.Web.Controllers
         {
             try
             {
-                var currentUserId = User.FindFirst(
-                    System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
-
-                var userRoles = User.Claims
-                    .Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
-                    .Select(c => c.Value)
-                    .ToArray();
-
                 var dto = await _homeService.GetHomeDtoAsync();
                 var vm = _mapper.Map<HomeViewModel>(dto);
+
+                // ── Récupérer le vrai prénom de l'utilisateur connecté ──
+                var userPrenom = User?.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value;
+                var userNom = User?.FindFirst(System.Security.Claims.ClaimTypes.Surname)?.Value;
+                var userEmail = User?.Identity?.Name ?? "Utilisateur";
+
+                // ── Si pas de prénom/nom, utiliser l'email ou "Utilisateur" ──
+                if (!string.IsNullOrEmpty(userPrenom))
+                {
+                    vm.NomUtilisateur = userPrenom;
+                }
+                else if (!string.IsNullOrEmpty(userNom))
+                {
+                    vm.NomUtilisateur = userNom;
+                }
+                else
+                {
+                    vm.NomUtilisateur = userEmail.Split('@')[0]; // Avant le @
+                }
+
+                // ── Récupérer le rôle ──
+                vm.RoleUtilisateur = User?.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "Utilisateur";
+                
+                // ── Date de connexion ──
+                vm.DateConnexion = DateTime.Now;
+
                 return View(vm);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur lors du chargement de la page d'accueil");
-                TempData["Erreur"] = "Une erreur est survenue lors du chargement de la page d'accueil.";
+                _logger.LogError(ex, "Erreur chargement page d'accueil");
                 return View(new HomeViewModel());
             }
         }

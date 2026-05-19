@@ -36,7 +36,7 @@ namespace GestionInventaire.BLL.Services
 
             var apiKey = _configuration["Mailjet:ApiKey"];
 
-            var apiSecret = _configuration["Mailjet:ApiSecret"];
+            var apiSecret = _configuration["Mailjet:Secret"];
 
             var senderEmail = _configuration["Mailjet:SenderEmail"];
 

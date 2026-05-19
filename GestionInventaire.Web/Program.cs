@@ -4,6 +4,7 @@ using GestionInventaire.DAL.Repositories;
 using GestionInventaire.Domain.Entities;
 using GestionInventaire.Domain.IRepositories;
 using GestionInventaire.Web.Mappings;
+using GestionInventaire.Web.Services; 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,24 @@ var seedAdminEmail =
 
 var seedAdminPassword =
     configuration.GetValue<string>("Seed:AdminPassword", "Admin123!");
+
+var seedCreateGestionnaire =
+    configuration.GetValue<bool>("Seed:CreateGestionnaire", true);
+
+var seedGestionnaireEmail =
+    configuration.GetValue<string>("Seed:GestionnaireEmail", "gestionnaire@technologis.com");
+
+var seedGestionnairePassword =
+    configuration.GetValue<string>("Seed:GestionnairePassword", "Gestionnaire123!");
+
+var seedCreateTechnicien =
+    configuration.GetValue<bool>("Seed:CreateTechnicien", true);
+
+var seedTechnicienEmail =
+    configuration.GetValue<string>("Seed:TechnicienEmail", "technicien@technologis.com");
+
+var seedTechnicienPassword =
+    configuration.GetValue<string>("Seed:TechnicienPassword", "Technicien123!");
 
 var seedRoles =
     configuration.GetSection("Seed:Roles").Get<string[]>()
@@ -67,7 +86,8 @@ builder.Services
         options.SignIn.RequireConfirmedEmail = true;
     })
     .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddClaimsPrincipalFactory<CustomUserClaimsPrincipalFactory>();  
 
 // ======================
 // COOKIE CONFIG
@@ -101,6 +121,8 @@ builder.Services.AddScoped<IProduitRepository, ProduitRepository>();
 builder.Services.AddScoped<IEmployeRepository, EmployeRepository>();
 builder.Services.AddScoped<IUtilisateurRepository, UtilisateurRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+// ── QR Code Service ──
+builder.Services.AddScoped<IQrCodeService, QrCodeService>();
 
 // ======================
 // SERVICES (BLL)
@@ -169,7 +191,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // ======================
-// SEED ROLES & ADMIN
+// SEED ROLES & COMPTES PAR DÉFAUT
 // ======================
 try
 {
@@ -182,6 +204,7 @@ try
 
     await dbContext.Database.MigrateAsync();
 
+    // ── 1. Créer les rôles ──────────────────────────────────────────────────
     foreach (var role in seedRoles ?? Array.Empty<string>())
     {
         if (!await roleManager.RoleExistsAsync(role))
@@ -191,34 +214,56 @@ try
         }
     }
 
-    if (seedCreateAdmin)
+    // ── Helper local pour éviter la duplication ─────────────────────────────
+    async Task SeedUserAsync(
+        string email, string password,
+        string nom, string prenom,
+        string role)
     {
-        var adminUser = await userManager.FindByEmailAsync(seedAdminEmail);
-        if (adminUser == null)
-        {
-            var newAdmin = new Utilisateur
-            {
-                UserName = seedAdminEmail,
-                Email = seedAdminEmail,
-                Nom = "Administrateur",
-                Prenom = "Système",
-                EmailConfirmed = true
-            };
+        if (await userManager.FindByEmailAsync(email) is not null) return;
 
-            var result = await userManager.CreateAsync(newAdmin, seedAdminPassword);
-            if (result.Succeeded)
-            {
-                await userManager.AddToRoleAsync(
-                    newAdmin, seedRoles?.FirstOrDefault() ?? "Admin");
-                logger.LogInformation("Admin créé : {Email}", seedAdminEmail);
-            }
-            else
-            {
-                foreach (var error in result.Errors)
-                    logger.LogError(error.Description);
-            }
+        var user = new Utilisateur
+        {
+            UserName = email,
+            Email = email,
+            Nom = nom,
+            Prenom = prenom,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(user, password);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(user, role);
+            logger.LogInformation("Compte créé : {Email} ({Role})", email, role);
+        }
+        else
+        {
+            foreach (var error in result.Errors)
+                logger.LogError("Seed [{Email}] – {Desc}", email, error.Description);
         }
     }
+
+    // ── 2. Admin ────────────────────────────────────────────────────────────
+    if (seedCreateAdmin)
+        await SeedUserAsync(
+            seedAdminEmail!, seedAdminPassword!,
+            "Administrateur", "Système",
+            "Admin");
+
+    // ── 3. Gestionnaire ─────────────────────────────────────────────────────
+    if (seedCreateGestionnaire)
+        await SeedUserAsync(
+            seedGestionnaireEmail!, seedGestionnairePassword!,
+            "Gestionnaire", "Défaut",
+            "Gestionnaire");
+
+    // ── 4. Technicien ───────────────────────────────────────────────────────
+    if (seedCreateTechnicien)
+        await SeedUserAsync(
+            seedTechnicienEmail!, seedTechnicienPassword!,
+            "Technicien", "Défaut",
+            "Technicien");
 }
 catch (Exception ex)
 {

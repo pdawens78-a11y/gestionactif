@@ -205,4 +205,4 @@ namespace GestionInventaire.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
     }
-}
+}   

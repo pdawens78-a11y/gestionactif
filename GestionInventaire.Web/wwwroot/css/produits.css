@@ -1,35 +1,161 @@
 ﻿/* ============================================================
    TechnoLogis — produits.css
-   Module Produits · Thème sombre · CRUD complet
+   Module Produits · Thème sombre · Design cohérent
    ============================================================ */
 
-.produits-page,
-.produit-form-page {
-    padding: 20px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    height: 100%;
-    overflow-y: auto;
+:root {
+    --prod-spacing: 20px;
+    --prod-radius: 12px;
+    --prod-radius-lg: 14px;
+    --prod-transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── En-tête ── */
+/* ══════════════════════════════════════════════════════════ */
+/* PAGE CONTAINER */
+/* ══════════════════════════════════════════════════════════ */
+:root {
+    --prod-spacing: 20px;
+    --prod-radius: 12px;
+    --prod-radius-lg: 14px;
+    --prod-transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ══════════════════════════════════════════════════════════ */
+/* PAGE CONTAINER */
+/* ══════════════════════════════════════════════════════════ */
+:root {
+    --prod-spacing: 20px;
+    --prod-radius: 12px;
+    --prod-radius-lg: 14px;
+    --prod-transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ══════════════════════════════════════════════════════════ */
+/* PAGE CONTAINER */
+/* ══════════════════════════════════════════════════════════ */
+:root {
+    --prod-spacing: 20px;
+    --prod-radius: 12px;
+    --prod-radius-lg: 14px;
+    --prod-transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ══════════════════════════════════════════════════════════ */
+/* PAGE CONTAINER */
+/* ══════════════════════════════════════════════════════════ */
+:root {
+    --prod-spacing: 20px;
+    --prod-radius: 12px;
+    --prod-radius-lg: 14px;
+    --prod-transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ══════════════════════════════════════════════════════════ */
+/* PAGE CONTAINER */
+/* ══════════════════════════════════════════════════════════ */
+:root {
+    --prod-spacing: 20px;
+    --prod-radius: 12px;
+    --prod-radius-lg: 14px;
+    --prod-transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ══════════════════════════════════════════════════════════ */
+/* PAGE CONTAINER */
+/* ══════════════════════════════════════════════════════════ */
+:root {
+    --prod-spacing: 20px;
+    --prod-radius: 12px;
+    --prod-radius-lg: 14px;
+    --prod-transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ══════════════════════════════════════════════════════════ */
+/* PAGE CONTAINER */
+/* ══════════════════════════════════════════════════════════ */
+:root {
+    --prod-spacing: 20px;
+    --prod-radius: 12px;
+    --prod-radius-lg: 14px;
+    --prod-transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ══════════════════════════════════════════════════════════ */
+/* PAGE CONTAINER */
+/* ══════════════════════════════════════════════════════════ */
+
+.produit-form-page {
+    padding:    20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+/* ──────────────────────────────────────────────────────────── */
+/* HEADER */
+/* ──────────────────────────────────────────────────────────── */
+
 .prod-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
     flex-shrink: 0;
 }
 
 .prod-header-left {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
 }
 
 .prod-heading {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700                    ;
     color: var(--text);
     display: flex;
     align-items: center;

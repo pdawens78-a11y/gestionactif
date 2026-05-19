@@ -88,20 +88,24 @@ namespace GestionInventaire.Web.Models.Produits
     public class ProduitEditViewModel
     {
         public int IdProduit { get; set; }
+        public int StockId { get; set; }
 
         [Required(ErrorMessage = "Le nom est obligatoire")]
-        [StringLength(100, MinimumLength = 2,
-            ErrorMessage = "Le nom doit contenir entre 2 et 100 caractères")]
-        [Display(Name = "Nom du produit")]
+        [StringLength(100, MinimumLength = 2)]
         public string NomProduit { get; set; } = string.Empty;
 
-        [StringLength(500, ErrorMessage = "Maximum 500 caractères")]
-        [Display(Name = "Description")]
+        [StringLength(500)]
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "La catégorie est obligatoire")]
-        [Display(Name = "Catégorie")]
         public int IdCategorie { get; set; }
+
+        // ── Stock ──
+        [Range(0, int.MaxValue)]
+        public int StockQuantite { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int StockSeuilAlerte { get; set; }
 
         public int NombreActifs { get; set; }
 

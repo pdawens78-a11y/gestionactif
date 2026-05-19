@@ -7,33 +7,36 @@ namespace GestionInventaire.BLL.Services
 {
     public class StockService : IStockService
     {
-        private readonly IStockRepository          _stockRepository;
-        private readonly IMouvementStockRepository  _mouvementRepository;
-        private readonly IProduitRepository        _produitRepository;
-        private readonly ICategorieRepository      _categorieRepository;
-        private readonly IAuditRepository          _auditRepository;
+        private readonly IStockRepository _stockRepository;
+        private readonly IMouvementStockRepository _mouvementRepository;
+        private readonly IProduitRepository _produitRepository;
+        private readonly ICategorieRepository _categorieRepository;
+        private readonly IActifRepository _actifRepository;
+        private readonly IAuditRepository _auditRepository;
 
         public StockService(
-            IStockRepository          stockRepository,
-            IMouvementStockRepository  mouvementRepository,
-            IProduitRepository        produitRepository,
-            ICategorieRepository      categorieRepository,
-            IAuditRepository          auditRepository)
+            IStockRepository stockRepository,
+            IMouvementStockRepository mouvementRepository,
+            IProduitRepository produitRepository,
+            ICategorieRepository categorieRepository,
+            IActifRepository actifRepository,
+            IAuditRepository auditRepository)
         {
-            _stockRepository     = stockRepository;
+            _stockRepository = stockRepository;
             _mouvementRepository = mouvementRepository;
-            _produitRepository   = produitRepository;
+            _produitRepository = produitRepository;
             _categorieRepository = categorieRepository;
-            _auditRepository     = auditRepository;
+            _actifRepository = actifRepository;
+            _auditRepository = auditRepository;
         }
 
         public async Task<StockListDto> GetAllStocksDtoAsync()
         {
-            var stocks     = await _stockRepository.GetAllAsync();
-            var produits   = await _produitRepository.GetAllAsync();
+            var stocks = await _stockRepository.GetAllAsync();
+            var produits = await _produitRepository.GetAllAsync();
             var categories = await _categorieRepository.GetAllAsync();
 
-            var produitsParId   = produits.ToDictionary(p => p.IdProduit);
+            var produitsParId = produits.ToDictionary(p => p.IdProduit);
             var categoriesParId = categories.ToDictionary(c => c.IdCategorie, c => c.NomCategorie);
 
             var items = stocks
@@ -47,36 +50,36 @@ namespace GestionInventaire.BLL.Services
 
                     return new StockItemDto
                     {
-                        IdStock      = s.IdStock,
-                        NomProduit   = produit?.NomProduit ?? $"Produit #{s.IdProduit}",
+                        IdStock = s.IdStock,
+                        NomProduit = produit?.NomProduit ?? $"Produit #{s.IdProduit}",
                         NomCategorie = nomCategorie,
-                        Quantite     = s.Quantite,
-                        SeuilAlerte  = s.SeuilAlerte,
-                        EstCritique  = s.Quantite <= s.SeuilAlerte
+                        Quantite = s.Quantite,
+                        SeuilAlerte = s.SeuilAlerte,
+                        EstCritique = s.Quantite <= s.SeuilAlerte
                     };
                 })
                 .ToList();
 
             return new StockListDto
             {
-                Stocks          = items,
-                TotalCount      = items.Count,
+                Stocks = items,
+                TotalCount = items.Count,
                 StocksCritiques = items.Count(i => i.EstCritique)
             };
         }
 
         public async Task<StockEditDto> GetStockByIdAsync(int id)
         {
-            var stock   = await _stockRepository.GetByIdAsync(id)
+            var stock = await _stockRepository.GetByIdAsync(id)
                 ?? throw new InvalidOperationException($"Le stock #{id} n'existe pas.");
 
             var produit = await _produitRepository.GetByIdAsync(stock.IdProduit);
 
             return new StockEditDto
             {
-                IdStock     = stock.IdStock,
-                NomProduit  = produit?.NomProduit ?? $"Produit #{stock.IdProduit}",
-                Quantite    = stock.Quantite,
+                IdStock = stock.IdStock,
+                NomProduit = produit?.NomProduit ?? $"Produit #{stock.IdProduit}",
+                Quantite = stock.Quantite,
                 SeuilAlerte = stock.SeuilAlerte
             };
         }
@@ -86,16 +89,27 @@ namespace GestionInventaire.BLL.Services
             var stock = await _stockRepository.GetByIdAsync(dto.IdStock)
                 ?? throw new InvalidOperationException($"Le stock #{dto.IdStock} n'existe pas.");
 
+            if (dto.Quantite < 0)
+                throw new ArgumentException("La quantité ne peut pas être négative.");
+
             if (dto.SeuilAlerte < 0)
                 throw new ArgumentException("Le seuil d'alerte ne peut pas être négatif.");
 
+            int ancienneQuantite = stock.Quantite;
+            int nouvelleQuantite = dto.Quantite;
+            int difference = nouvelleQuantite - ancienneQuantite;
+
+            stock.Quantite = nouvelleQuantite;
             stock.SeuilAlerte = dto.SeuilAlerte;
 
             _stockRepository.Update(stock);
             await _stockRepository.SaveAsync();
 
+            // ── Synchroniser les actifs ──
+            await SynchroniserActifsAsync(stock.IdProduit, difference, ancienneQuantite, nouvelleQuantite);
+
             await _auditRepository.LogAsync(
-                $"Modification seuil stock #{stock.IdStock} → {dto.SeuilAlerte}",
+                $"Modification stock #{stock.IdStock} : Quantité={ancienneQuantite}→{nouvelleQuantite}, Seuil={dto.SeuilAlerte}",
                 "Stock", stock.IdStock);
         }
 
@@ -114,21 +128,29 @@ namespace GestionInventaire.BLL.Services
                 throw new InvalidOperationException(
                     $"Stock insuffisant : {stock.Quantite} disponible(s), {dto.Quantite} demandé(s).");
 
+            int ancienneQuantite = stock.Quantite;
+
             stock.Quantite = type == TypeMouvement.Entree
                 ? stock.Quantite + dto.Quantite
                 : stock.Quantite - dto.Quantite;
+
+            int nouvelleQuantite = stock.Quantite;
+            int difference = type == TypeMouvement.Entree ? dto.Quantite : -dto.Quantite;
 
             _stockRepository.Update(stock);
 
             await _mouvementRepository.CreateAsync(new MouvementStock
             {
-                IdStock       = dto.IdStock,
-                Type          = type,
-                Quantite      = dto.Quantite,
+                IdStock = dto.IdStock,
+                Type = type,
+                Quantite = dto.Quantite,
                 DateMouvement = DateTime.Now
             });
 
             await _stockRepository.SaveAsync();
+
+            // ── Synchroniser les actifs ──
+            await SynchroniserActifsAsync(stock.IdProduit, difference, ancienneQuantite, nouvelleQuantite);
 
             await _auditRepository.LogAsync(
                 $"Mouvement {dto.Type} stock #{dto.IdStock} : {dto.Quantite} unité(s)",
@@ -137,11 +159,11 @@ namespace GestionInventaire.BLL.Services
 
         public async Task<StockHistoriqueDto> GetHistoriqueAsync(int idStock)
         {
-            var stock      = await _stockRepository.GetByIdAsync(idStock)
+            var stock = await _stockRepository.GetByIdAsync(idStock)
                 ?? throw new InvalidOperationException($"Le stock #{idStock} n'existe pas.");
 
             var mouvements = await _mouvementRepository.GetAllAsync();
-            var produit    = await _produitRepository.GetByIdAsync(stock.IdProduit);
+            var produit = await _produitRepository.GetByIdAsync(stock.IdProduit);
             var categories = await _categorieRepository.GetAllAsync();
 
             var nomCategorie = "—";
@@ -156,22 +178,89 @@ namespace GestionInventaire.BLL.Services
                 .OrderByDescending(m => m.DateMouvement)
                 .Select(m => new MouvementItemDto
                 {
-                    IdMouvement   = m.IdMouvement,
+                    IdMouvement = m.IdMouvement,
                     DateMouvement = m.DateMouvement,
-                    Type          = m.Type.ToString(),
-                    Quantite      = m.Quantite
+                    Type = m.Type.ToString(),
+                    Quantite = m.Quantite
                 })
                 .ToList();
 
             return new StockHistoriqueDto
             {
-                IdStock          = idStock,
-                NomProduit       = produit?.NomProduit ?? $"Produit #{stock.IdProduit}",
-                NomCategorie     = nomCategorie,
+                IdStock = idStock,
+                NomProduit = produit?.NomProduit ?? $"Produit #{stock.IdProduit}",
+                NomCategorie = nomCategorie,
                 QuantiteActuelle = stock.Quantite,
-                SeuilAlerte      = stock.SeuilAlerte,
-                Mouvements       = items
+                SeuilAlerte = stock.SeuilAlerte,
+                Mouvements = items
             };
+        }
+
+        // ════════════════════════════════════════════
+        // SYNCHRONISATION ACTIFS — Privée
+        // ════════════════════════════════════════════
+
+        private async Task SynchroniserActifsAsync(int idProduit, int difference, int ancienneQuantite, int nouvelleQuantite)
+        {
+            var actifs = await _actifRepository.GetAllAsync();
+            var actifsProduct = actifs.Where(a => a.IdProduit == idProduit).ToList();
+
+            if (difference > 0)
+            {
+                // ── Augmentation : créer des actifs disponibles ──
+                await CreerActifsDisponiblesAsync(idProduit, difference, actifsProduct.Count);
+            }
+            else if (difference < 0)
+            {
+                // ── Diminution : supprimer des actifs disponibles ──
+                await SupprimerActifsDisponiblesAsync(idProduit, Math.Abs(difference));
+            }
+        }
+
+        private async Task CreerActifsDisponiblesAsync(int idProduit, int quantite, int currentActifCount)
+        {
+            var produit = await _produitRepository.GetByIdAsync(idProduit)
+                ?? throw new InvalidOperationException($"Le produit #{idProduit} n'existe pas.");
+
+            char firstLetter = char.ToUpper(produit.NomProduit[0]);
+            int nextNumber = currentActifCount + 1;
+
+            for (int i = 0; i < quantite; i++)
+            {
+                var code = $"{firstLetter}{nextNumber:D6}";
+                nextNumber++;
+
+                await _actifRepository.CreateAsync(new Actif
+                {
+                    CodeInventaire = code,
+                    Statut = StatutActif.Disponible,
+                    Localisation = "Entrepôt",
+                    DateAcquisition = DateTime.Today,
+                    IdProduit = idProduit
+                });
+            }
+
+            await _actifRepository.SaveAsync();
+        }
+
+        private async Task SupprimerActifsDisponiblesAsync(int idProduit, int quantite)
+        {
+            var actifs = await _actifRepository.GetAllAsync();
+            var actifsProduct = actifs
+                .Where(a => a.IdProduit == idProduit && a.Statut == StatutActif.Disponible)
+                .OrderByDescending(a => a.IdActif)
+                .Take(quantite)
+                .ToList();
+
+            if (actifsProduct.Count < quantite)
+                throw new InvalidOperationException(
+                    $"Impossible de supprimer {quantite} actif(s) disponible(s) : " +
+                    $"seulement {actifsProduct.Count} disponible(s).");
+
+            foreach (var actif in actifsProduct)
+                _actifRepository.Delete(actif);
+
+            await _actifRepository.SaveAsync();
         }
     }
 }

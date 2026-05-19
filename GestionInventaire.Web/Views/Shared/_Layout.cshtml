@@ -49,7 +49,7 @@
             var moreControllers = new[]
             {
                 "Rapports", "Audit", "Utilisateurs", "Settings"
-            };
+                };
             var isInMore = moreControllers.Contains(ctrl);
         }
 
@@ -117,7 +117,6 @@
 
                     <hr />
 
-                    @* Utilisateurs — lien vers Index, création dans la vue *@
                     <a href="/Utilisateurs" class="@(ctrl is "Utilisateurs" or "Users" ? "active" : "")">
                         <i class="bi bi-person-gear"></i>
                         Utilisateurs
@@ -150,12 +149,21 @@
 
             <!-- USER MENU -->
             <div class="nav-user">
+                @{
+                    var userPrenom = User?.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value ?? User?.Identity?.Name ?? "User";
+                    var userEmail = User?.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? User?.Identity?.Name ?? "user@example.com";
+                    var userRole = User?.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "User";
+                }
+
                 <button class="btn-user" id="userMenuBtn">
                     <div class="user-avatar">
-                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=00d4aa&color=0b0f1a&bold=true"
-                             alt="Admin User" />
+                        <img src="https://ui-avatars.com/api/?name=@userPrenom&background=00d4aa&color=0b0f1a&bold=true"
+                             alt="@userPrenom" />
                     </div>
-                    <span class="user-name">Admin User</span>
+                    <div style="text-align: left; flex: 1;">
+                        <span class="user-name">@userPrenom</span>
+                        <span style="display: block; font-size: 0.7rem; color: var(--muted);">@userRole</span>
+                    </div>
                     <i class="bi bi-chevron-down" style="font-size:10px;color:var(--muted)"></i>
                 </button>
 
@@ -183,8 +191,8 @@
             @{
                 var fullWidthControllers = new[]
                 {
-                    "Dashboard", "Home", "Affectations"
-                };
+                        "Dashboard", "Home", "Affectations"
+                        };
                 var isFullWidth = fullWidthControllers.Contains(ctrl);
             }
 
@@ -237,33 +245,46 @@
         const moreDropdown = document.getElementById('navMoreDropdown');
 
         moreBtn?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isOpen = moreDropdown.classList.contains('open');
+            e.stopPropagation();
+            const isOpen = moreDropdown.classList.contains('open');
 
-        // Fermer tous les dropdowns ouverts
-        document.querySelectorAll('.nav-more-dropdown.open')
-        .forEach(d => d.classList.remove('open'));
-        document.querySelectorAll('.btn-nav-more.open')
-        .forEach(b => b.classList.remove('open'));
+            document.querySelectorAll('.nav-more-dropdown.open')
+                .forEach(d => d.classList.remove('open'));
+            document.querySelectorAll('.btn-nav-more.open')
+                .forEach(b => b.classList.remove('open'));
 
-        if (!isOpen) {
-        // Positionner le dropdown sous le bouton
-        const rect = moreBtn.getBoundingClientRect();
-        moreDropdown.style.left = (rect.right - 210) + 'px';
-        moreDropdown.classList.add('open');
-        moreBtn.classList.add('open');
-        }
+            if (!isOpen) {
+                const rect = moreBtn.getBoundingClientRect();
+                moreDropdown.style.left = (rect.right - 210) + 'px';
+                moreDropdown.classList.add('open');
+                moreBtn.classList.add('open');
+            }
         });
 
-        // Fermer en cliquant ailleurs
         document.addEventListener('click', () => {
-        moreDropdown?.classList.remove('open');
-        moreBtn?.classList.remove('open');
+            moreDropdown?.classList.remove('open');
+            moreBtn?.classList.remove('open');
         });
 
-        // Empêcher la fermeture en cliquant dans le dropdown
         moreDropdown?.addEventListener('click', (e) => {
-        e.stopPropagation();
+            e.stopPropagation();
+        });
+
+        // ── Dropdown User Menu ──
+        const userBtn = document.getElementById('userMenuBtn');
+        const userDropdown = document.getElementById('userDropdown');
+
+        userBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown?.classList.toggle('open');
+        });
+
+        document.addEventListener('click', () => {
+            userDropdown?.classList.remove('open');
+        });
+
+        userDropdown?.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
     </script>
 

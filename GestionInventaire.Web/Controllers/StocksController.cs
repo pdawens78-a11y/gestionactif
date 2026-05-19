@@ -48,15 +48,34 @@ namespace GestionInventaire.Web.Controllers
         // ════════════════════════════════════════════
         public async Task<IActionResult> Edit(int id)
         {
+            if (id <= 0)
+            {
+                TempData["Erreur"] = "ID de stock invalide.";
+                return RedirectToAction(nameof(Index));
+            }
+
             try
             {
                 var dto = await _stockService.GetStockByIdAsync(id);
                 var vm = _mapper.Map<StockEditViewModel>(dto);
+
+                if (vm == null)
+                {
+                    TempData["Erreur"] = "Le stock demandé n'existe pas.";
+                    return RedirectToAction(nameof(Index));
+                }
+
                 return View(vm);
             }
             catch (InvalidOperationException ex)
             {
                 TempData["Erreur"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur chargement stock #{Id}", id);
+                TempData["Erreur"] = "Une erreur inattendue est survenue.";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -66,10 +85,19 @@ namespace GestionInventaire.Web.Controllers
         // ════════════════════════════════════════════
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(StockEditViewModel vm)
+        public async Task<IActionResult> Edit(int id, StockEditViewModel vm)
         {
+            if (id <= 0 || vm.IdStock != id)
+            {
+                TempData["Erreur"] = "Données invalides.";
+                return RedirectToAction(nameof(Index));
+            }
+
             if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("ModelState invalide pour stock #{Id}", id);
                 return View(vm);
+            }
 
             try
             {
@@ -81,12 +109,13 @@ namespace GestionInventaire.Web.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return View(vm);
+                _logger.LogWarning(ex, "Stock #{Id} introuvable", id);
+                TempData["Erreur"] = ex.Message;
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erreur modification stock #{Id}", vm.IdStock);
+                _logger.LogError(ex, "Erreur modification stock #{Id}", id);
                 TempData["Erreur"] = "Une erreur inattendue est survenue.";
                 return RedirectToAction(nameof(Index));
             }

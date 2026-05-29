@@ -327,7 +327,6 @@
     border: 1px solid var(--border);
     border-radius: 14px;
     overflow: hidden;
-    max-width: 600px;
 }
 
 .emp-form-header {
@@ -498,7 +497,6 @@
     border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: 14px;
     overflow: hidden;
-    max-width: 520px;
 }
 
 .emp-delete-header {

@@ -502,7 +502,6 @@
     border: 1px solid var(--border);
     border-radius: 14px;
     overflow: hidden;
-    max-width: 520px;
 }
 
 .actif-form-header {
@@ -747,7 +746,6 @@
     border: 1px solid rgba(0,212,170,0.3);
     border-radius: 14px;
     overflow: hidden;
-    max-width: 600px;
 }
 
 .appro-result-header {

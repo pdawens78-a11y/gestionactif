@@ -22,8 +22,10 @@
     padding: 40px 32px 36px;
     background: linear-gradient(135deg, #0d1424 0%, #0b1829 60%, #0b0f1a 100%);
     border-bottom: 1px solid var(--border);
-    overflow: hidden;
+    overflow: visible;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
 }
 
     /* Grille décorative */
@@ -56,11 +58,12 @@
     align-items: center;
     justify-content: space-between;
     gap: 32px;
-    max-width: 1100px;
+    width: 100%;
 }
 
 .hero-left {
-    flex: 1;
+    flex: 0 0 auto;
+    max-width: 350px;
 }
 
 .hero-eyebrow {
@@ -163,34 +166,35 @@
 
 /* Stats rapides dans le héro */
 .hero-right {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex-shrink: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 12px;
+    flex: 1;
+    max-width: 600px;
+    margin-left: auto;
 }
 
 .hero-stat-row {
-    display: grid;
-    grid-template-columns: repeat(2, 120px);
-    gap: 8px;
+    display: contents;
 }
 
 .hero-stat {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 12px 14px;
+    padding: 24px 24px;
     text-align: center;
 }
 
 .hero-stat-val {
     font-family: 'Space Mono', monospace;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text);
     display: block;
     line-height: 1;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
     .hero-stat-val.accent {

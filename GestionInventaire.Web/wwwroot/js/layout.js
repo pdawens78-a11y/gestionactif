@@ -79,6 +79,85 @@ class AppLayout {
 
         // Placeholder dynamique avec le raccourci
         input.setAttribute('placeholder', 'Rechercher… (/)');
+
+        // Filtrage côté client généralisé pour les tableaux nommés "*-table".
+        // Ce comportement s'active sur toutes les pages contenant des
+        // tableaux avec une classe se terminant par "-table".
+        const setupGenericTableFiltering = () => {
+            const tables = Array.from(document.querySelectorAll('table'))
+                .filter(t => {
+                    const cls = (t.getAttribute('class') || '').trim();
+                    return /-table(\s|$)/.test(cls);
+                });
+
+            if (!tables.length) return null;
+
+            const tableData = tables.map(t => {
+                const tbody = t.querySelector('tbody');
+                const rows = tbody ? Array.from(tbody.querySelectorAll('tr')) : [];
+                return { table: t, rows };
+            }).filter(td => td.rows.length > 0);
+
+            if (!tableData.length) return null;
+
+            // Create a small result badge near the search input
+            let badge = document.querySelector('.nav-search .search-badge');
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = 'search-badge';
+                badge.style.cssText = 'margin-left:8px;background:rgba(255,255,255,0.06);padding:4px 8px;border-radius:12px;font-size:0.85rem;color:var(--muted)';
+                input.parentNode.appendChild(badge);
+            }
+
+            const filterAll = (q) => {
+                const normalized = q.trim().toLowerCase();
+                let totalVisible = 0;
+
+                tableData.forEach(td => {
+                    let visibleInTable = 0;
+                    td.rows.forEach(r => {
+                        const text = r.textContent.replace(/\s+/g, ' ').toLowerCase();
+                        const show = normalized === '' || text.includes(normalized);
+                        r.style.display = show ? '' : 'none';
+                        if (show) visibleInTable++;
+                    });
+
+                    totalVisible += visibleInTable;
+
+                    // If the table has a sibling toolbar with a count badge, update it
+                    const toolbar = td.table.closest('.user-table-card, .table-card')?.querySelector('.user-table-toolbar, .table-toolbar, .user-table-wrap .user-table-title');
+                    if (toolbar) {
+                        // try to find a badge element inside toolbar
+                        const tbBadge = toolbar.querySelector('.user-count-badge, .table-count-badge');
+                        if (tbBadge) tbBadge.textContent = visibleInTable;
+                    }
+                });
+
+                badge.textContent = totalVisible + ' résultats';
+                badge.style.display = '';
+            };
+
+            // events
+            input.addEventListener('input', (e) => filterAll(e.target.value));
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const firstVisible = tableData.flatMap(td => td.rows).find(r => r.style.display !== 'none');
+                    if (firstVisible) firstVisible.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+
+            // initialize badge text
+            filterAll(input.value || '');
+
+            return filterAll;
+        };
+
+        // Try to set up filtering now; if the DOM is updated later (partial render),
+        // retry once after a short delay.
+        if (!setupGenericTableFiltering()) {
+            setTimeout(setupGenericTableFiltering, 300);
+        }
     }
 }
 

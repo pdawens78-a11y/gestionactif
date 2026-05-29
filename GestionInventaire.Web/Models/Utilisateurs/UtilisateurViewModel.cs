@@ -9,6 +9,8 @@ namespace GestionInventaire.Web.Models.Utilisateurs
         public List<UtilisateurRowViewModel> Utilisateurs { get; set; } = new();
         public int TotalCount { get; set; }
         public int TotalAdmin { get; set; }
+        public int TotalGestionnaire { get; set; }
+        public int TotalTechnicien { get; set; }
         public int TotalVerrouilles { get; set; }
     }
 

@@ -18,6 +18,12 @@ namespace GestionInventaire.Web.Mappings
                 .ForMember(dest => dest.TotalAdmin,
                            opt => opt.MapFrom(src =>
                                src.Utilisateurs.Count(u => u.Role == "Admin")))
+                .ForMember(dest => dest.TotalGestionnaire,
+                           opt => opt.MapFrom(src =>
+                               src.Utilisateurs.Count(u => u.Role == "Gestionnaire")))
+                .ForMember(dest => dest.TotalTechnicien,
+                           opt => opt.MapFrom(src =>
+                               src.Utilisateurs.Count(u => u.Role == "Technicien")))
                 .ForMember(dest => dest.TotalVerrouilles,
                            opt => opt.MapFrom(src =>
                                src.Utilisateurs.Count(u => u.EstVerrouille)));

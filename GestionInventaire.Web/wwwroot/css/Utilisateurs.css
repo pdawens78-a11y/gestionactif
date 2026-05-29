@@ -110,6 +110,14 @@
         background: var(--danger);
     }
 
+    .user-kpi.gestionnaire::before {
+        background: var(--accent2);
+    }
+
+    .user-kpi.technicien::before {
+        background: var(--accent);
+    }
+
     .user-kpi.verrouille::before {
         background: var(--warn);
     }
@@ -135,6 +143,16 @@
     color: var(--danger);
 }
 
+.user-kpi.gestionnaire .user-kpi-icon {
+    background: rgba(59,130,246,0.1);
+    color: var(--accent2);
+}
+
+.user-kpi.technicien .user-kpi-icon {
+    background: rgba(0,212,170,0.1);
+    color: var(--accent);
+}
+
 .user-kpi.verrouille .user-kpi-icon {
     background: rgba(245,158,11,0.1);
     color: var(--warn);
@@ -153,6 +171,14 @@
 
 .user-kpi.admin .user-kpi-val {
     color: var(--danger);
+}
+
+.user-kpi.gestionnaire .user-kpi-val {
+    color: var(--accent2);
+}
+
+.user-kpi.technicien .user-kpi-val {
+    color: var(--accent);
 }
 
 .user-kpi.verrouille .user-kpi-val {

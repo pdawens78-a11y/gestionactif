@@ -19,6 +19,7 @@
 - [Modèle de données](#modèle-de-données)
 - [Règles métier importantes](#règles-métier-importantes)
 - [Sécurité](#sécurité)
+- [📋 Tableau Complet des Fonctionnalités par Rôle](#-tableau-complet-des-fonctionnalités-par-rôle)
 
 ---
 
@@ -270,6 +271,165 @@ Supporte jusqu'à **999 999 actifs** par produit.
 
 > ⚠️ Ne commitez jamais `appsettings.json` avec les vraies clés Mailjet sur GitHub.  
 > Utilisez `appsettings.Development.json` (ignoré par `.gitignore`) ou des variables d'environnement en production.
+
+---
+
+## 📋 Tableau Complet des Fonctionnalités par Rôle
+
+**TechnoLogis S.A. — Gestion d'Inventaire d'Actifs Informatiques**  
+*Document généré le 30 mai 2026*
+
+---
+
+## 🎯 Vue d'ensemble des rôles
+
+| **Rôle** | **Description** | **Cas d'usage** |
+|----------|-----------------|-----------------|
+| **Admin** | Accès complet à toutes les fonctionnalités | Directeur IT, Responsable système |
+| **Gestionnaire** | Gestion opérationnelle des stocks, produits, employés | Chef de projet, Manager inventaire |
+| **Technicien** | Gestion terrain : actifs, maintenances, affectations | Technicien, Support IT |
+
+---
+
+## 📊 Tableau complet des accès par module
+
+### 🏠 **Accueil (Home)**
+
+| Fonctionnalité | Description | Admin | Gestionnaire | Technicien |
+|---|---|:---:|:---:|:---:|
+| Consulter la page d'accueil | Voir le dashboard initial avec KPIs | ✅ | ✅ | ✅ |
+| Voir les activités récentes | Historique des actions système | ✅ | ✅ | ✅ |
+| Accéder aux actions rapides | Liens directs vers créations | ✅ | ✅ | ✅ |
+| Voir informations système | Version, statut, rôle, dernière connexion | ✅ | ✅ | ✅ |
+
+### 📈 **Dashboard**
+
+| Fonctionnalité | Description | Admin | Gestionnaire | Technicien |
+|---|---|:---:|:---:|:---:|
+| Consulter le dashboard | Vue globale des indicateurs clés | ✅ | ✅ | ✅ |
+| Voir les statistiques actifs | Disponibles, affectés, maintenance, hors service | ✅ | ✅ | ✅ |
+| Voir les statistiques stocks | Stocks critiques, épuisés | ✅ | ✅ | ✅ |
+| Voir les alertes maintenance | Maintenances imminentes | ✅ | ✅ | ✅ |
+
+### 📦 **Actifs**
+
+| Fonctionnalité | Description | Admin | Gestionnaire | Technicien |
+|---|---|:---:|:---:|:---:|
+| **Consulter** | Lister tous les actifs | ✅ | ✅ | ✅ |
+| **Modifier** | Éditer localisation et statut | ✅ | ✅ | ❌ |
+| **Approvisionner** | Créer des actifs en masse | ✅ | ✅ | ❌ |
+| **Filtrer par statut** | Disponible / Affecté / Maintenance / Hors service | ✅ | ✅ | ✅ |
+
+### 🏭 **Produits**
+
+| Fonctionnalité | Description | Admin | Gestionnaire | Technicien |
+|---|---|:---:|:---:|:---:|
+| **Consulter** | Lister tous les produits | ✅ | ✅ | ❌ |
+| **Créer** | Ajouter un nouveau produit + générer actifs | ✅ | ✅ | ❌ |
+| **Modifier** | Éditer nom, description, catégorie | ✅ | ✅ | ❌ |
+| **Supprimer** | Suppression si aucun actif actif | ✅ | ✅ | ❌ |
+
+### 📊 **Stock**
+
+| Fonctionnalité | Description | Admin | Gestionnaire | Technicien |
+|---|---|:---:|:---:|:---:|
+| **Consulter** | Lister tous les stocks | ✅ | ✅ | ❌ |
+| **Enregistrer mouvement** | Entrée / Sortie de stock | ✅ | ✅ | ❌ |
+| **Voir historique** | Traçabilité des mouvements | ✅ | ✅ | ❌ |
+
+### 👥 **Employés**
+
+| Fonctionnalité | Description | Admin | Gestionnaire | Technicien |
+|---|---|:---:|:---:|:---:|
+| **Consulter** | Lister tous les employés | ✅ | ✅ | ❌ |
+| **Créer** | Ajouter un nouvel employé | ✅ | ✅ | ❌ |
+| **Modifier** | Éditer informations | ✅ | ✅ | ❌ |
+| **Supprimer** | Suppression d'un employé | ✅ | ✅ | ❌ |
+
+### 🔗 **Affectations**
+
+| Fonctionnalité | Description | Admin | Gestionnaire | Technicien |
+|---|---|:---:|:---:|:---:|
+| **Consulter** | Lister toutes les affectations | ✅ | ✅ | ✅ |
+| **Créer** | Assigner un actif à un employé | ✅ | ✅ | ✅ |
+| **Modifier** | Éditer une affectation | ✅ | ✅ | ❌ |
+| **Retourner actif** | Marquer comme retourné | ✅ | ✅ | ✅ |
+
+### 🔧 **Maintenances**
+
+| Fonctionnalité | Description | Admin | Gestionnaire | Technicien |
+|---|---|:---:|:---:|:---:|
+| **Consulter** | Lister toutes les maintenances | ✅ | ✅ | ✅ |
+| **Créer** | Planifier une intervention | ✅ | ✅ | ✅ |
+| **Modifier** | Éditer description, date, coût | ✅ | ✅ | ❌ |
+| **Changer statut** | Planifiée → En cours → Terminée | ✅ | ✅ | ✅ |
+
+### 📑 **Rapports**
+
+| Fonctionnalité | Description | Admin | Gestionnaire | Technicien |
+|---|---|:---:|:---:|:---:|
+| **Consulter rapport** | Vue d'ensemble complète | ✅ | ✅ | ❌ |
+| **Exporter en CSV** | Export UTF-8 de chaque section | ✅ | ✅ | ❌ |
+| **Imprimer rapport** | Génération PDF/impression | ✅ | ✅ | ❌ |
+
+### 🔍 **Audit**
+
+| Fonctionnalité | Description | Admin | Gestionnaire | Technicien |
+|---|---|:---:|:---:|:---:|
+| **Consulter journal** | Voir l'historique des actions | ✅ | ❌ | ❌ |
+| **Rechercher/Filtrer** | Par action, utilisateur, date | ✅ | ❌ | ❌ |
+
+### 👤 **Utilisateurs**
+
+| Fonctionnalité | Description | Admin | Gestionnaire | Technicien |
+|---|---|:---:|:---:|:---:|
+| **Consulter** | Lister tous les utilisateurs | ✅ | ❌ | ❌ |
+| **Créer** | Ajouter nouvel utilisateur + invitation email | ✅ | ❌ | ❌ |
+| **Modifier** | Éditer rôle et données | ✅ | ❌ | ❌ |
+| **Supprimer** | Suppression d'un utilisateur | ✅ | ❌ | ❌ |
+| **Verrouiller/Déverrouiller** | Gestion d'accès des comptes | ✅ | ❌ | ❌ |
+
+---
+
+## 🔐 Résumé des permissions par rôle
+
+### **ADMIN** (Super Administrateur)
+✅ Accès COMPLET à tous les modules  
+✅ Gestion des utilisateurs & rôles  
+✅ Consultation du journal d'audit  
+✅ Création/modification/suppression  
+
+### **GESTIONNAIRE** (Manager)
+✅ Gestion: Produits, Stock, Actifs, Employés  
+✅ Gestion: Affectations, Maintenances  
+✅ Consultation: Rapports, Dashboard  
+❌ PAS d'accès: Audit & Utilisateurs  
+
+### **TECHNICIEN** (Support)
+✅ Consultation: Actifs (lecture seule)  
+✅ Gestion: Affectations, Maintenances  
+✅ Gestion: Catégories  
+❌ PAS d'accès: Produits, Stock, Employés, Rapports, Audit  
+
+---
+
+## 🔒 Sécurité & Audit
+
+- ✅ **Authentification obligatoire** sur toutes les pages
+- ✅ **[Authorize]** sur tous les contrôleurs
+- ✅ **Toutes les CRUD** enregistrées avec l'utilisateur
+- ✅ **Journal d'audit** consultable Admin uniquement
+- ✅ **Anti-CSRF** sur tous les formulaires POST
+
+---
+
+## 📝 Comptes de test par défaut
+
+| Rôle | Email | Mot de passe |
+|---|---|---|
+| Admin | admin@technologis.com | Admin123! |
+| Gestionnaire | gestionnaire@technologis.com | Gestionnaire123! |
+| Technicien | technicien@technologis.com | Technicien123! |
 
 ---
 

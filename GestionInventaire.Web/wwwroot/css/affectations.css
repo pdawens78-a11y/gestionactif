@@ -37,10 +37,10 @@
     margin: 0;
 }
 
-    .aff-heading i {
-        font-size: 17px;
-        color: var(--accent);
-    }
+.aff-heading i {
+    font-size: 17px;
+    color: var(--accent);
+}
 
 .aff-heading-sub {
     font-size: 0.75rem;
@@ -68,26 +68,26 @@
     overflow: hidden;
 }
 
-    .aff-kpi::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-    }
+.aff-kpi::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+}
 
-    .aff-kpi.active::before {
-        background: var(--accent);
-    }
+.aff-kpi.active::before {
+    background: var(--accent);
+}
 
-    .aff-kpi.closed::before {
-        background: var(--muted);
-    }
+.aff-kpi.closed::before {
+    background: var(--muted);
+}
 
-    .aff-kpi.total::before {
-        background: var(--accent2);
-    }
+.aff-kpi.total::before {
+    background: var(--accent2);
+}
 
 .aff-kpi-icon {
     width: 34px;
@@ -100,15 +100,15 @@
 }
 
 .aff-kpi.active .aff-kpi-icon {
-    background: rgba(0,212,170,0.1);
+    background: rgba(0, 212, 170, 0.1);
 }
 
 .aff-kpi.closed .aff-kpi-icon {
-    background: rgba(100,116,139,0.1);
+    background: rgba(100, 116, 139, 0.1);
 }
 
 .aff-kpi.total .aff-kpi-icon {
-    background: rgba(59,130,246,0.1);
+    background: rgba(59, 130, 246, 0.1);
 }
 
 .aff-kpi-icon i {
@@ -165,17 +165,17 @@
     flex-shrink: 0;
 }
 
-    .aff-alert.succes {
-        background: rgba(0,212,170,0.08);
-        border: 1px solid rgba(0,212,170,0.25);
-        color: var(--accent);
-    }
+.aff-alert.succes {
+    background: rgba(0, 212, 170, 0.08);
+    border: 1px solid rgba(0, 212, 170, 0.25);
+    color: var(--accent);
+}
 
-    .aff-alert.erreur {
-        background: rgba(239,68,68,0.08);
-        border: 1px solid rgba(239,68,68,0.25);
-        color: #fca5a5;
-    }
+.aff-alert.erreur {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+}
 
 /* ── Table card ── */
 .aff-table-card {
@@ -207,10 +207,10 @@
     gap: 6px;
 }
 
-    .aff-table-title i {
-        font-size: 15px;
-        color: var(--accent);
-    }
+.aff-table-title i {
+    font-size: 15px;
+    color: var(--accent);
+}
 
 .aff-table-wrap {
     overflow-y: auto;
@@ -225,39 +225,39 @@
     font-size: 0.8rem;
 }
 
-    .aff-table thead th {
-        padding: 9px 14px;
-        background: var(--surface2);
-        color: var(--muted);
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.7px;
-        border-bottom: 1px solid var(--border);
-        white-space: nowrap;
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
+.aff-table thead th {
+    padding: 9px 14px;
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
 
-    .aff-table tbody tr {
-        border-bottom: 1px solid var(--border);
-        transition: background 150ms ease;
-    }
+.aff-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 150ms ease;
+}
 
-        .aff-table tbody tr:last-child {
-            border-bottom: none;
-        }
+.aff-table tbody tr:last-child {
+    border-bottom: none;
+}
 
-        .aff-table tbody tr:hover {
-            background: var(--surface2);
-        }
+.aff-table tbody tr:hover {
+    background: var(--surface2);
+}
 
-    .aff-table td {
-        padding: 10px 14px;
-        color: var(--text);
-        vertical-align: middle;
-    }
+.aff-table td {
+    padding: 10px 14px;
+    color: var(--text);
+    vertical-align: middle;
+}
 
 /* Cellule actif */
 .aff-actif-cell {
@@ -309,13 +309,13 @@
 }
 
 .badge-active {
-    background: rgba(0,212,170,0.1);
+    background: rgba(0, 212, 170, 0.1);
     color: var(--accent);
-    border: 1px solid rgba(0,212,170,0.25);
+    border: 1px solid rgba(0, 212, 170, 0.25);
 }
 
 .badge-terminee {
-    background: rgba(100,116,139,0.1);
+    background: rgba(100, 116, 139, 0.1);
     color: var(--muted);
     border: 1px solid var(--border);
 }
@@ -334,8 +334,8 @@
     gap: 5px;
     padding: 5px 12px;
     border-radius: 6px;
-    background: rgba(239,68,68,0.08);
-    border: 1px solid rgba(239,68,68,0.25);
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
     color: #fca5a5;
     font-size: 0.75rem;
     font-weight: 500;
@@ -344,11 +344,11 @@
     transition: all 150ms ease;
 }
 
-    .btn-retour:hover {
-        background: rgba(239,68,68,0.15);
-        border-color: var(--danger);
-        color: var(--danger);
-    }
+.btn-retour:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: var(--danger);
+    color: var(--danger);
+}
 
 /* Empty state */
 .aff-empty {
@@ -362,10 +362,10 @@
     gap: 8px;
 }
 
-    .aff-empty i {
-        font-size: 32px;
-        opacity: 0.25;
-    }
+.aff-empty i {
+    font-size: 32px;
+    opacity: 0.25;
+}
 
 /* ════════════════════════════════════════════════════
    FORMULAIRE CRÉATION
@@ -386,6 +386,8 @@
     border-radius: 14px;
     overflow: hidden;
     max-width: 680px;
+    margin: 0 auto;
+    /* centre la carte comme sur la page de création d'utilisateur */
 }
 
 .aff-form-header {
@@ -394,7 +396,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background: linear-gradient(90deg, rgba(0,212,170,0.05), transparent);
+    background: linear-gradient(90deg, rgba(0, 212, 170, 0.05), transparent);
 }
 
 .aff-form-icon {
@@ -408,10 +410,10 @@
     flex-shrink: 0;
 }
 
-    .aff-form-icon i {
-        font-size: 17px;
-        color: #0b0f1a;
-    }
+.aff-form-icon i {
+    font-size: 17px;
+    color: #0b0f1a;
+}
 
 .aff-form-card-title {
     font-size: 0.9rem;
@@ -446,10 +448,10 @@
     gap: 5px;
 }
 
-    .aff-form-label i {
-        font-size: 13px;
-        color: var(--muted);
-    }
+.aff-form-label i {
+    font-size: 13px;
+    color: var(--muted);
+}
 
 .aff-select,
 .aff-input {
@@ -475,21 +477,21 @@
     cursor: pointer;
 }
 
-    .aff-select option {
-        background: var(--surface2);
-        color: var(--text);
-    }
+.aff-select option {
+    background: var(--surface2);
+    color: var(--text);
+}
 
-    .aff-select:focus,
-    .aff-input:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(0,212,170,0.12);
-    }
+.aff-select:focus,
+.aff-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.12);
+}
 
-    .aff-select::placeholder,
-    .aff-input::placeholder {
-        color: var(--muted);
-    }
+.aff-select::placeholder,
+.aff-input::placeholder {
+    color: var(--muted);
+}
 
 .aff-field-error {
     font-size: 0.73rem;
@@ -502,8 +504,8 @@
     align-items: flex-start;
     gap: 8px;
     padding: 10px 12px;
-    background: rgba(59,130,246,0.06);
-    border: 1px solid rgba(59,130,246,0.2);
+    background: rgba(59, 130, 246, 0.06);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 8px;
     margin-bottom: 20px;
     font-size: 0.78rem;
@@ -511,11 +513,11 @@
     line-height: 1.5;
 }
 
-    .aff-info-box i {
-        font-size: 15px;
-        flex-shrink: 0;
-        margin-top: 1px;
-    }
+.aff-info-box i {
+    font-size: 15px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
 
 /* Footer actions */
 .aff-form-footer {
@@ -543,10 +545,10 @@
     transition: all 150ms ease;
 }
 
-    .btn-aff-submit:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(0,212,170,0.3);
-    }
+.btn-aff-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 212, 170, 0.3);
+}
 
 .btn-aff-cancel {
     display: inline-flex;
@@ -565,11 +567,11 @@
     transition: all 150ms ease;
 }
 
-    .btn-aff-cancel:hover {
-        color: var(--text);
-        border-color: var(--muted);
-        text-decoration: none;
-    }
+.btn-aff-cancel:hover {
+    color: var(--text);
+    border-color: var(--muted);
+    text-decoration: none;
+}
 
 /* Bouton Nouvelle affectation (header) */
 .btn-aff-new {
@@ -589,12 +591,12 @@
     transition: all 150ms ease;
 }
 
-    .btn-aff-new:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(0,212,170,0.3);
-        text-decoration: none;
-        color: #0b0f1a;
-    }
+.btn-aff-new:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 212, 170, 0.3);
+    text-decoration: none;
+    color: #0b0f1a;
+}
 
 /* ── Responsive ── */
 @media (max-width: 768px) {

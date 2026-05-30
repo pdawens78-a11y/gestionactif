@@ -37,10 +37,10 @@
     margin: 0;
 }
 
-    .mnt-heading i {
-        font-size: 17px;
-        color: var(--warn);
-    }
+.mnt-heading i {
+    font-size: 17px;
+    color: var(--warn);
+}
 
 .mnt-heading-sub {
     font-size: 0.75rem;
@@ -66,12 +66,12 @@
     transition: all 150ms ease;
 }
 
-    .btn-mnt-new:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(245,158,11,0.3);
-        text-decoration: none;
-        color: #0b0f1a;
-    }
+.btn-mnt-new:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+    text-decoration: none;
+    color: #0b0f1a;
+}
 
 /* ── KPI row ── */
 .mnt-kpi-row {
@@ -93,30 +93,30 @@
     overflow: hidden;
 }
 
-    .mnt-kpi::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-    }
+.mnt-kpi::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+}
 
-    .mnt-kpi.total::before {
-        background: var(--accent2);
-    }
+.mnt-kpi.total::before {
+    background: var(--accent2);
+}
 
-    .mnt-kpi.planifiee::before {
-        background: var(--info);
-    }
+.mnt-kpi.planifiee::before {
+    background: var(--info);
+}
 
-    .mnt-kpi.encours::before {
-        background: var(--warn);
-    }
+.mnt-kpi.encours::before {
+    background: var(--warn);
+}
 
-    .mnt-kpi.terminee::before {
-        background: var(--accent);
-    }
+.mnt-kpi.terminee::before {
+    background: var(--accent);
+}
 
 .mnt-kpi-icon {
     width: 34px;
@@ -129,19 +129,19 @@
 }
 
 .mnt-kpi.total .mnt-kpi-icon {
-    background: rgba(59,130,246,0.1);
+    background: rgba(59, 130, 246, 0.1);
 }
 
 .mnt-kpi.planifiee .mnt-kpi-icon {
-    background: rgba(6,182,212,0.1);
+    background: rgba(6, 182, 212, 0.1);
 }
 
 .mnt-kpi.encours .mnt-kpi-icon {
-    background: rgba(245,158,11,0.1);
+    background: rgba(245, 158, 11, 0.1);
 }
 
 .mnt-kpi.terminee .mnt-kpi-icon {
-    background: rgba(0,212,170,0.1);
+    background: rgba(0, 212, 170, 0.1);
 }
 
 .mnt-kpi-icon i {
@@ -206,17 +206,17 @@
     flex-shrink: 0;
 }
 
-    .mnt-alert.succes {
-        background: rgba(0,212,170,0.08);
-        border: 1px solid rgba(0,212,170,0.25);
-        color: var(--accent);
-    }
+.mnt-alert.succes {
+    background: rgba(0, 212, 170, 0.08);
+    border: 1px solid rgba(0, 212, 170, 0.25);
+    color: var(--accent);
+}
 
-    .mnt-alert.erreur {
-        background: rgba(239,68,68,0.08);
-        border: 1px solid rgba(239,68,68,0.25);
-        color: #fca5a5;
-    }
+.mnt-alert.erreur {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+}
 
 /* ── Table card ── */
 .mnt-table-card {
@@ -248,19 +248,19 @@
     gap: 6px;
 }
 
-    .mnt-table-title i {
-        font-size: 15px;
-        color: var(--warn);
-    }
+.mnt-table-title i {
+    font-size: 15px;
+    color: var(--warn);
+}
 
 .mnt-count-badge {
     font-family: 'Space Mono', monospace;
     font-size: 0.72rem;
     padding: 2px 8px;
     border-radius: 20px;
-    background: rgba(245,158,11,0.1);
+    background: rgba(245, 158, 11, 0.1);
     color: var(--warn);
-    border: 1px solid rgba(245,158,11,0.2);
+    border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .mnt-table-wrap {
@@ -276,39 +276,39 @@
     font-size: 0.8rem;
 }
 
-    .mnt-table thead th {
-        padding: 9px 14px;
-        background: var(--surface2);
-        color: var(--muted);
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.7px;
-        border-bottom: 1px solid var(--border);
-        white-space: nowrap;
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
+.mnt-table thead th {
+    padding: 9px 14px;
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
 
-    .mnt-table tbody tr {
-        border-bottom: 1px solid var(--border);
-        transition: background 150ms ease;
-    }
+.mnt-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 150ms ease;
+}
 
-        .mnt-table tbody tr:last-child {
-            border-bottom: none;
-        }
+.mnt-table tbody tr:last-child {
+    border-bottom: none;
+}
 
-        .mnt-table tbody tr:hover {
-            background: var(--surface2);
-        }
+.mnt-table tbody tr:hover {
+    background: var(--surface2);
+}
 
-    .mnt-table td {
-        padding: 11px 14px;
-        color: var(--text);
-        vertical-align: middle;
-    }
+.mnt-table td {
+    padding: 11px 14px;
+    color: var(--text);
+    vertical-align: middle;
+}
 
 /* Actif cell */
 .mnt-actif-cell {
@@ -362,21 +362,21 @@
 }
 
 .statut-planifiee {
-    background: rgba(6,182,212,0.1);
+    background: rgba(6, 182, 212, 0.1);
     color: var(--info);
-    border: 1px solid rgba(6,182,212,0.25);
+    border: 1px solid rgba(6, 182, 212, 0.25);
 }
 
 .statut-encours {
-    background: rgba(245,158,11,0.1);
+    background: rgba(245, 158, 11, 0.1);
     color: var(--warn);
-    border: 1px solid rgba(245,158,11,0.25);
+    border: 1px solid rgba(245, 158, 11, 0.25);
 }
 
 .statut-terminee {
-    background: rgba(0,212,170,0.1);
+    background: rgba(0, 212, 170, 0.1);
     color: var(--accent);
-    border: 1px solid rgba(0,212,170,0.25);
+    border: 1px solid rgba(0, 212, 170, 0.25);
 }
 
 /* Actions */
@@ -403,21 +403,21 @@
     text-decoration: none;
 }
 
-    .btn-mnt-icon:hover {
-        color: var(--text);
-        border-color: var(--muted);
-        text-decoration: none;
-    }
+.btn-mnt-icon:hover {
+    color: var(--text);
+    border-color: var(--muted);
+    text-decoration: none;
+}
 
-    .btn-mnt-icon.edit:hover {
-        color: var(--accent2);
-        border-color: var(--accent2);
-    }
+.btn-mnt-icon.edit:hover {
+    color: var(--accent2);
+    border-color: var(--accent2);
+}
 
-    .btn-mnt-icon.delete:hover {
-        color: var(--danger);
-        border-color: var(--danger);
-    }
+.btn-mnt-icon.delete:hover {
+    color: var(--danger);
+    border-color: var(--danger);
+}
 
 .btn-statut {
     padding: 4px 10px;
@@ -433,17 +433,17 @@
     white-space: nowrap;
 }
 
-    .btn-statut.encours:hover {
-        background: rgba(245,158,11,0.1);
-        color: var(--warn);
-        border-color: var(--warn);
-    }
+.btn-statut.encours:hover {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warn);
+    border-color: var(--warn);
+}
 
-    .btn-statut.terminee:hover {
-        background: rgba(0,212,170,0.1);
-        color: var(--accent);
-        border-color: var(--accent);
-    }
+.btn-statut.terminee:hover {
+    background: rgba(0, 212, 170, 0.1);
+    color: var(--accent);
+    border-color: var(--accent);
+}
 
 /* Empty state */
 .mnt-empty {
@@ -457,10 +457,10 @@
     gap: 8px;
 }
 
-    .mnt-empty i {
-        font-size: 32px;
-        opacity: 0.25;
-    }
+.mnt-empty i {
+    font-size: 32px;
+    opacity: 0.25;
+}
 
 /* ════════════════════════════════════════════════════
    FORMULAIRES Create / Edit
@@ -472,6 +472,8 @@
     border-radius: 14px;
     overflow: hidden;
     max-width: 620px;
+    margin: 0 auto;
+    /* centre la carte comme sur la page de création d'utilisateur */
 }
 
 .mnt-form-header {
@@ -480,7 +482,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background: linear-gradient(90deg, rgba(245,158,11,0.05), transparent);
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.05), transparent);
 }
 
 .mnt-form-icon {
@@ -494,10 +496,10 @@
     flex-shrink: 0;
 }
 
-    .mnt-form-icon i {
-        font-size: 17px;
-        color: #0b0f1a;
-    }
+.mnt-form-icon i {
+    font-size: 17px;
+    color: #0b0f1a;
+}
 
 .mnt-form-card-title {
     font-size: 0.9rem;
@@ -528,9 +530,9 @@
     gap: 6px;
 }
 
-    .mnt-form-group.full-width {
-        grid-column: 1 / -1;
-    }
+.mnt-form-group.full-width {
+    grid-column: 1 / -1;
+}
 
 .mnt-form-label {
     font-size: 0.76rem;
@@ -541,10 +543,10 @@
     gap: 5px;
 }
 
-    .mnt-form-label i {
-        font-size: 13px;
-        color: var(--muted);
-    }
+.mnt-form-label i {
+    font-size: 13px;
+    color: var(--muted);
+}
 
 .mnt-input,
 .mnt-select,
@@ -577,17 +579,17 @@
     cursor: pointer;
 }
 
-    .mnt-select option {
-        background: var(--surface2);
-        color: var(--text);
-    }
+.mnt-select option {
+    background: var(--surface2);
+    color: var(--text);
+}
 
-    .mnt-input:focus,
-    .mnt-select:focus,
-    .mnt-textarea:focus {
-        border-color: var(--warn);
-        box-shadow: 0 0 0 3px rgba(245,158,11,0.12);
-    }
+.mnt-input:focus,
+.mnt-select:focus,
+.mnt-textarea:focus {
+    border-color: var(--warn);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
+}
 
 .mnt-field-error {
     font-size: 0.73rem;
@@ -607,9 +609,9 @@
     font-size: 0.82rem;
 }
 
-    .mnt-actif-info i {
-        color: var(--accent2);
-    }
+.mnt-actif-info i {
+    color: var(--accent2);
+}
 
 .mnt-form-footer {
     display: flex;
@@ -636,10 +638,10 @@
     transition: all 150ms ease;
 }
 
-    .btn-mnt-submit:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(245,158,11,0.3);
-    }
+.btn-mnt-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+}
 
 .btn-mnt-cancel {
     display: inline-flex;
@@ -658,16 +660,16 @@
     transition: all 150ms ease;
 }
 
-    .btn-mnt-cancel:hover {
-        color: var(--text);
-        border-color: var(--muted);
-        text-decoration: none;
-    }
+.btn-mnt-cancel:hover {
+    color: var(--text);
+    border-color: var(--muted);
+    text-decoration: none;
+}
 
 /* Delete card */
 .mnt-delete-card {
     background: var(--surface);
-    border: 1px solid rgba(239,68,68,0.3);
+    border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: 14px;
     overflow: hidden;
     max-width: 520px;
@@ -675,28 +677,28 @@
 
 .mnt-delete-header {
     padding: 16px 22px;
-    border-bottom: 1px solid rgba(239,68,68,0.2);
+    border-bottom: 1px solid rgba(239, 68, 68, 0.2);
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(239,68,68,0.04);
+    background: rgba(239, 68, 68, 0.04);
 }
 
 .mnt-delete-icon {
     width: 36px;
     height: 36px;
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.3);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: 9px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-    .mnt-delete-icon i {
-        font-size: 17px;
-        color: var(--danger);
-    }
+.mnt-delete-icon i {
+    font-size: 17px;
+    color: var(--danger);
+}
 
 .mnt-delete-body {
     padding: 22px;
@@ -720,24 +722,24 @@
     font-size: 0.82rem;
 }
 
-    .mnt-delete-row .dr-label {
-        color: var(--muted);
-        min-width: 90px;
-        flex-shrink: 0;
-    }
+.mnt-delete-row .dr-label {
+    color: var(--muted);
+    min-width: 90px;
+    flex-shrink: 0;
+}
 
-    .mnt-delete-row .dr-val {
-        color: var(--text);
-        font-weight: 500;
-    }
+.mnt-delete-row .dr-val {
+    color: var(--text);
+    font-weight: 500;
+}
 
 .mnt-delete-warning {
     display: flex;
     align-items: flex-start;
     gap: 8px;
     padding: 10px 12px;
-    background: rgba(239,68,68,0.06);
-    border: 1px solid rgba(239,68,68,0.2);
+    background: rgba(239, 68, 68, 0.06);
+    border: 1px solid rgba(239, 68, 68, 0.2);
     border-radius: 8px;
     font-size: 0.8rem;
     color: #fca5a5;
@@ -745,11 +747,11 @@
     margin-bottom: 16px;
 }
 
-    .mnt-delete-warning i {
-        font-size: 15px;
-        flex-shrink: 0;
-        margin-top: 1px;
-    }
+.mnt-delete-warning i {
+    font-size: 15px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
 
 .mnt-delete-footer {
     display: flex;
@@ -776,10 +778,10 @@
     transition: all 150ms ease;
 }
 
-    .btn-mnt-delete-confirm:hover {
-        background: #dc2626;
-        transform: translateY(-1px);
-    }
+.btn-mnt-delete-confirm:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
 
 @media (max-width: 640px) {
     .mnt-form-grid {
